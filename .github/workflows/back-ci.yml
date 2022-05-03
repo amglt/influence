@@ -29,8 +29,3 @@ jobs:
         working-directory: ${{env.working-directory}}
       - run: npm run build --if-present
         working-directory: ${{env.working-directory}}
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: back-dist
-          path: back/dist/*
