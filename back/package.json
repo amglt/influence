@@ -4,7 +4,7 @@
   "description": "Backend du site de la guilde Influence",
   "main": "src/index.ts",
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   },
   "scripts": {
     "build": "npx tsc",
