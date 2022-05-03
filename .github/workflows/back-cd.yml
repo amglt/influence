@@ -1,0 +1,50 @@
+name: Back CD
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+      runs-on: ubuntu-latest
+      env:
+        working-directory: back/
+
+      steps:
+        - uses: actions/checkout@v3
+        - name: Use Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: 16.13.1
+            cache: 'npm'
+            cache-dependency-path: back/package-lock.json
+        - run: npm ci
+          working-directory: ${{env.working-directory}}
+        - run: npm run build --if-present
+      
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: back-dist
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: MyApplicationName
+          environment_name: MyApplication-Environment
+          version_label: 12345
+          region: us-west-2
+          deployment_package: deploy.zip
