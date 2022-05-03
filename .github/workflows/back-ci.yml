@@ -5,13 +5,13 @@ name: Back CI
 
 on:
   push:
-    branches: [ main ]
-    paths: 
-      - back/
+    branches: [main]
+    paths:
+      - back/*
   pull_request:
-    branches: [ main ]
-    paths: 
-      - back/
+    branches: [main]
+    paths:
+      - back/*
 
 jobs:
   build:
@@ -22,16 +22,16 @@ jobs:
         node-version: [16.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    
-    - uses: actions/upload-artifact@v3
-      with:
-        name: my-artifact
-        path: dist/*
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build --if-present
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: dist/*
