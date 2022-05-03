@@ -61,6 +61,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: influence-api
           environment_name: Influenceapi-env
-          region: eu-west-1
+          region: eu-west-3
           version_label: ${{ steps.format-time.outputs.replaced }}
           deployment_package: deploy.zip
