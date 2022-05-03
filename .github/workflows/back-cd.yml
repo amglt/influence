@@ -4,6 +4,8 @@ name: Back CD
 on:
   push:
     branches: [main]
+    paths:
+      - back/*
 
   workflow_dispatch:
 
@@ -24,6 +26,7 @@ jobs:
       - run: npm ci
         working-directory: ${{env.working-directory}}
       - run: npm run build --if-present
+        working-directory: ${{env.working-directory}}
 
   deploy:
     runs-on: ubuntu-latest
