@@ -1,6 +1,5 @@
 name: Back CD
 
-# Controls when the workflow will run
 on:
   push:
     branches: [main]
@@ -14,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: back/
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
     strategy:
       matrix:
         node-version: [16.x]
@@ -29,32 +29,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Generate deployment package
-        run: |
-          zip -r deploy.zip * -x "**node_modules**"
-          mv deploy.zip ../
+  deploy:
+    name: Deploy to Fly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
         working-directory: ${{env.working-directory}}
-
-      - name: Get timestamp
-        uses: gerred/actions/current-time@master
-        id: current-time
-
-      - name: Run string replace
-        uses: frabert/replace-string-action@master
-        id: format-time
-        with:
-          pattern: '[:\.]+'
-          string: '${{ steps.current-time.outputs.time }}'
-          replace-with: '-'
-          flags: 'g'
-
-      - name: Beanstalk Deploy for app
-        uses: einaregilsson/beanstalk-deploy@v10
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: influence-api
-          environment_name: Influenceapi-env
-          region: eu-west-3
-          version_label: ${{ steps.format-time.outputs.replaced }}
-          deployment_package: deploy.zip
