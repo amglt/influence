@@ -4,19 +4,12 @@
   import Home from './routes/Home.svelte';
   import Public from './components/layout/Public.svelte';
   import Login from './routes/Login.svelte';
-  import { onMount } from 'svelte';
-  import auth from './services/auth.service';
-  import { client, isAuthenticated, user } from './store/app';
+  import { apiService, isAuthenticated, user } from './store/app';
+  import Providers from './Providers.svelte';
+  import CouncilLayout from './components/layout/CouncilLayout.svelte';
+  import RanksList from './routes/council/ranks/RanksList.svelte';
 
-  onMount(async () => {
-    const auth0Client = await auth.createClient();
-
-    client.set(auth0Client);
-    isAuthenticated.set(await auth0Client.isAuthenticated());
-    user.set(await auth0Client.getUser());
-  });
-
-  $: console.log($user);
+  let fetchedPermissions = false;
 
   const routes = [
     {
@@ -30,7 +23,33 @@
       layout: Public,
       onlyIf: { guard: !$isAuthenticated, redirect: '/' },
     },
+    {
+      name: 'management',
+      layout: Public,
+      onlyIf: { guard: !$isAuthenticated, redirect: '/' },
+      nestedRoutes: [
+        {
+          name: 'rangs',
+          layout: CouncilLayout,
+          component: RanksList,
+        },
+      ],
+    },
   ];
+
+  $: if ($user && !fetchedPermissions) {
+    $apiService
+      .get<string[]>(`/management/users/${$user.sub}/permissions`)
+      .then((data) => {
+        user.update((u) => ({ ...u, permissions: data }));
+      })
+      .catch((e) => console.log(e))
+      .finally(() => {
+        fetchedPermissions = true;
+      });
+  }
 </script>
 
-<Router {routes} />
+<Providers>
+  <Router {routes} />
+</Providers>

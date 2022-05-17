@@ -8,12 +8,19 @@
     auth.loginWithPopup($client);
   }
 
-  $: if ($isAuthenticated) navigateTo('/');
+  $: if ($isAuthenticated) {
+    navigateTo('/');
+  }
 </script>
 
 <div class="container">
-  <div>La connexion au site se fait via Discord</div>
-  <Button on:click={login} variant="raised">
-    <Label>Raised</Label>
-  </Button>
+  <div>
+    La connexion au site se fait via Discord. Dans la fenêtre de connexion,
+    choisi la connexion par Discord
+  </div>
+  <div>
+    <Button variant="raised" on:click={login}>
+      <Label>Connexion</Label>
+    </Button>
+  </div>
 </div>
