@@ -53,6 +53,73 @@ managementRouter.get(
   },
 );
 
+managementRouter.get(
+  '/roles/:roleId',
+  checkPermissions('read:roles'),
+  async (req: Request, res: Response) => {
+    try {
+      const roleId = req.params.roleId;
+      if (!roleId) return res.status(400).send({ message: 'Role ID manquant' });
+
+      const client = getManagementClient('read:roles');
+      const role = await client.getRole({ id: roleId });
+      const rolePermissions = await client.getPermissionsInRole({
+        id: role.id!,
+      });
+
+      return res.status(200).send({
+        name: role.name,
+        description: role.description,
+        permissions: rolePermissions,
+      });
+    } catch (e) {
+      return res.status(500).send();
+    }
+  },
+);
+
+managementRouter.patch(
+  '/roles/:roleId',
+  checkPermissions('read:roles'),
+  async (req: Request, res: Response) => {
+    try {
+      const roleId = req.params.roleId;
+      const body = req.body;
+
+      if (!roleId) return res.status(400).send({ message: `Role ID manquant` });
+      if (
+        !body.hasOwnProperty('name') ||
+        !body.hasOwnProperty('description') ||
+        !body.hasOwnProperty('permissions')
+      )
+        return res
+          .status(400)
+          .send({ message: `Nom ou description manquante` });
+
+      const client = getManagementClient('update:roles');
+      await client.updateRole(
+        { id: roleId },
+        {
+          name: body.name,
+          description: body.description,
+        },
+      );
+      await client.removePermissionsFromRole(
+        { id: roleId },
+        { permissions: body.permissions },
+      );
+      await client.addPermissionsInRole(
+        { id: roleId },
+        { permissions: body.permissions },
+      );
+      return res.status(200).send();
+    } catch (e) {
+      console.log(e);
+      return res.status(500).send();
+    }
+  },
+);
+
 managementRouter.post(
   '/roles',
   checkPermissions('write:roles'),
@@ -76,6 +143,23 @@ managementRouter.post(
           permissions: body.permissions,
         },
       );
+      return res.status(200).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+);
+
+managementRouter.delete(
+  '/roles/:roleId',
+  checkPermissions('delete:roles'),
+  async (req: Request, res: Response) => {
+    try {
+      const roleId = req.params.roleId;
+      if (!roleId) return res.status(400).send({ message: `Role ID manquant` });
+
+      const client = getManagementClient('delete:roles');
+      await client.deleteRole({ id: roleId });
       return res.status(200).send();
     } catch (err) {
       return res.status(500).send();

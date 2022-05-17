@@ -1,4 +1,5 @@
 <script lang="ts">
+  import CircularProgress from '@smui/circular-progress';
   import Dialog, { Title, Content, Actions } from '@smui/dialog';
   import Button, { Label as ButtonLabel } from '@smui/button';
   import LinearProgress from '@smui/linear-progress';
@@ -17,6 +18,7 @@
   import { navigateTo } from 'svelte-router-spa';
 
   let ranksLoaded = true;
+  let isDeleting = false;
   let isDeleteModalOpen = false;
   let rankToDelete: Rank = undefined;
 
@@ -27,10 +29,26 @@
   const fetchRoles = async () => {
     try {
       ranksLoaded = false;
-      items = await $apiService.get<Rank[]>(`/management/roles`);
+      const roles = await $apiService.get<Rank[]>(`/management/roles`);
+      items = [...roles];
     } catch (err) {
     } finally {
       ranksLoaded = true;
+    }
+  };
+
+  const deleteRole = async () => {
+    try {
+      if (rankToDelete) {
+        isDeleting = true;
+        await $apiService.delete(`/management/roles/${rankToDelete.id}`);
+        await fetchRoles();
+      }
+    } catch (err) {
+    } finally {
+      rankToDelete = undefined;
+      isDeleting = false;
+      isDeleteModalOpen = false;
     }
   };
 
@@ -71,19 +89,19 @@
     >
       <ButtonLabel>Non</ButtonLabel>
     </Button>
-    <Button
-      on:click={() => {
-        console.log('deleted');
-      }}
-    >
-      <ButtonLabel>Oui</ButtonLabel>
-    </Button>
+    {#if isDeleting}
+      <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+    {:else}
+      <Button on:click={deleteRole}>
+        <ButtonLabel>Oui</ButtonLabel>
+      </Button>
+    {/if}
   </Actions>
 </Dialog>
 <Button
   variant="raised"
   on:click={() => {
-    navigateTo('/management/rangs/add');
+    navigateTo('/management/rangs-add');
   }}>Créer un rang</Button
 >
 <div class="container">
@@ -114,14 +132,22 @@
           <Cell>{item.name}</Cell>
           <Cell>{item.description}</Cell>
           <Cell>
-            <span class="table-action" on:click={() => {}}>Modifier</span> -
-            <span
-              class="table-action"
-              on:click={() => {
-                isDeleteModalOpen = true;
-                rankToDelete = item;
-              }}>Supprimer</span
-            >
+            {#if item.id !== process.env.COUNCIL_ROLE_ID}
+              <span
+                class="table-action"
+                on:click={() => {
+                  navigateTo(`/management/rangs/${item.id}`);
+                }}>Modifier</span
+              >
+              -
+              <span
+                class="table-action"
+                on:click={() => {
+                  isDeleteModalOpen = true;
+                  rankToDelete = item;
+                }}>Supprimer</span
+              >
+            {/if}
           </Cell>
         </Row>
       {/each}

@@ -14,3 +14,9 @@ export type PermissionWithChecked = {
   resource_server_identifier: string;
   checked: boolean;
 };
+
+export type RoleWithPermissions = {
+  name: string;
+  description: string;
+  permissions: Permission[];
+};

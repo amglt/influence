@@ -9,14 +9,18 @@
   import type {
     Permission,
     PermissionWithChecked,
+    RoleWithPermissions,
   } from '../../../models/app.models';
   import { onMount } from 'svelte';
   import { Icon, Label } from '@smui/common';
   import Button from '@smui/button';
   import { navigateTo } from 'svelte-router-spa';
 
+  export let currentRoute;
+
+  let isLoadingRole = false;
   let loadedPermissions = true;
-  let isCreatingRole = false;
+  let isEditingRole = false;
   let checkedPermissions: PermissionWithChecked[] = [];
   let rankName = '';
   let rankDescription = '';
@@ -36,27 +40,57 @@
     }
   };
 
-  const createRole = async () => {
+  const fetchRole = async () => {
     try {
-      isCreatingRole = true;
-      await $apiService.post('/management/roles', {
-        name: rankName,
-        description: rankDescription,
-        permissions: [
-          ...checkedPermissions
-            .filter((perm) => perm.checked)
-            .map((perm) => ({
-              permission_name: perm.permission_name,
-              resource_server_identifier: perm.resource_server_identifier,
-            })),
-        ],
-      });
-      navigateTo('/management/rangs');
+      if (currentRoute?.namedParams?.roleId) {
+        isLoadingRole = false;
+        const role = await $apiService.get<RoleWithPermissions>(
+          `/management/roles/${currentRoute?.namedParams?.roleId}`,
+        );
+        rankName = role.name;
+        rankDescription = role.description;
+        for (const perm of role.permissions) {
+          const relatedPermIndex = checkedPermissions.findIndex(
+            (cPerm) => cPerm.permission_name === perm.permission_name,
+          );
+          if (relatedPermIndex > -1) {
+            checkedPermissions[relatedPermIndex].checked = true;
+          }
+        }
+      }
+    } catch (err) {
+    } finally {
+      loadedPermissions = true;
+    }
+  };
+
+  const editRole = async () => {
+    try {
+      if (currentRoute?.namedParams?.roleId) {
+        isEditingRole = true;
+        await $apiService.patch(
+          `/management/roles/${currentRoute?.namedParams?.roleId}`,
+          {
+            name: rankName,
+            description: rankDescription,
+            permissions: [
+              ...checkedPermissions
+                .filter((perm) => perm.checked)
+                .map((perm) => ({
+                  permission_name: perm.permission_name,
+                  resource_server_identifier: perm.resource_server_identifier,
+                })),
+            ],
+          },
+        );
+        navigateTo('/management/rangs');
+      }
     } catch (err) {}
   };
 
   onMount(async () => {
     await fetchPermissions();
+    await fetchRole();
   });
 </script>
 
@@ -97,15 +131,15 @@
         <CircularProgress style="height: 32px; width: 32px;" indeterminate />
       {/if}
     </FormField>
-    {#if isCreatingRole}
+    {#if isEditingRole}
       <div class="creation-loader">
         <CircularProgress style="height: 32px; width: 32px;" indeterminate />
       </div>
     {:else}
       <Button
         variant="raised"
-        on:click={() => createRole()}
-        disabled={!rankName || !rankDescription}>Créer</Button
+        on:click={() => editRole()}
+        disabled={!rankName || !rankDescription}>Modifier</Button
       >
     {/if}
   </Card>

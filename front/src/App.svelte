@@ -9,6 +9,7 @@
   import CouncilLayout from './components/layout/CouncilLayout.svelte';
   import RanksList from './routes/council/ranks/RanksList.svelte';
   import RankAdd from './routes/council/ranks/RankAdd.svelte';
+  import RankEdit from './routes/council/ranks/RankEdit.svelte';
 
   let fetchedPermissions = false;
 
@@ -35,9 +36,14 @@
           component: RanksList,
         },
         {
-          name: 'rangs/add',
+          name: 'rangs-add',
           layout: CouncilLayout,
           component: RankAdd,
+        },
+        {
+          name: 'rangs/:roleId',
+          layout: CouncilLayout,
+          component: RankEdit,
         },
       ],
     },

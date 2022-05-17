@@ -7,6 +7,7 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
 import replace from '@rollup/plugin-replace';
+import serve from 'rollup-plugin-serve';
 import { config } from 'dotenv';
 
 const configToReplace = {};
@@ -16,7 +17,7 @@ for (const [key, v] of Object.entries(config().parsed)) {
 
 const production = !process.env.ROLLUP_WATCH;
 
-function serve() {
+/*function serve() {
   let server;
 
   function toExit() {
@@ -39,7 +40,7 @@ function serve() {
       process.on('exit', toExit);
     },
   };
-}
+}*/
 
 export default {
   input: 'src/main.ts',
@@ -83,7 +84,14 @@ export default {
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated
-    !production && serve(),
+    !production &&
+      serve({
+        open: false,
+        contentBase: 'public',
+        historyApiFallback: true,
+        host: 'localhost',
+        port: 3000,
+      }),
 
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
