@@ -53,6 +53,36 @@ managementRouter.get(
   },
 );
 
+managementRouter.post(
+  '/roles',
+  checkPermissions('write:roles'),
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      if (!body.hasOwnProperty('name') || !body.hasOwnProperty('description')) {
+        return res.status(400).send({ message: 'Nom ou description manquant' });
+      }
+
+      const client = getManagementClient('create:roles update:roles');
+      const newRole = await client.createRole({
+        name: body.name,
+        description: body.description,
+      });
+      await client.addPermissionsInRole(
+        {
+          id: newRole.id!,
+        },
+        {
+          permissions: body.permissions,
+        },
+      );
+      return res.status(200).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+);
+
 managementRouter.get(
   '/roles/:roleId/permissions',
   checkPermissions('read:roles'),

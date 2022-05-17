@@ -3,3 +3,14 @@ export const enum AppPermissions {
   IsAdmin = 'is:admin',
   IsMember = 'is:member',
 }
+
+export type Permission = {
+  permission_name: string;
+  resource_server_identifier: string;
+};
+
+export type PermissionWithChecked = {
+  permission_name: string;
+  resource_server_identifier: string;
+  checked: boolean;
+};
