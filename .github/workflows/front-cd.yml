@@ -1,10 +1,10 @@
 name: Front CD
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - front/*
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - front/*
 
   workflow_dispatch:
 

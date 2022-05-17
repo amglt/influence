@@ -1,10 +1,10 @@
 name: Back CD
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - back/*
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - back/*
 
   workflow_dispatch:
 
