@@ -42,8 +42,22 @@
         {#if $user?.permissions.includes(AppPermissions.IsAdmin)}
           <Separator />
           <Header>
-            <Subtitle>Admin</Subtitle>
+            <Title>Admin</Title>
+            <Subtitle>Gestion réservée aux membres du staff</Subtitle>
           </Header>
+          {#if $user?.permissions.includes(AppPermissions.IsRecruitment)}
+            <Item
+              href="javascript:void(0)"
+              on:click={() => {
+                setActive('Rangs');
+                navigateTo('/admin/users');
+              }}
+              activated={active === 'Utilisateurs'}
+            >
+              <Graphic class="material-icons" aria-hidden="true">group</Graphic>
+              <Text>Utilisateurs</Text>
+            </Item>
+          {/if}
         {/if}
         {#if $user?.permissions.includes(AppPermissions.IsCouncil)}
           <Separator />

@@ -10,6 +10,8 @@
   import RanksList from './routes/council/ranks/RanksList.svelte';
   import RankAdd from './routes/council/ranks/RankAdd.svelte';
   import RankEdit from './routes/council/ranks/RankEdit.svelte';
+  import UsersList from './routes/admin/users/UsersList.svelte';
+  import RecruitmentLayout from './components/layout/admin/RecruitmentLayout.svelte';
 
   let fetchedPermissions = false;
 
@@ -24,6 +26,18 @@
       component: Login,
       layout: Public,
       onlyIf: { guard: !$isAuthenticated, redirect: '/' },
+    },
+    {
+      name: 'admin',
+      layout: Public,
+      onlyIf: { guard: !$isAuthenticated, redirect: '/' },
+      nestedRoutes: [
+        {
+          name: 'users',
+          layout: RecruitmentLayout,
+          component: UsersList,
+        },
+      ],
     },
     {
       name: 'management',

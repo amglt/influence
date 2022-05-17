@@ -2,6 +2,9 @@ export const enum AppPermissions {
   IsCouncil = 'is:council',
   IsAdmin = 'is:admin',
   IsMember = 'is:member',
+  IsRecruitment = 'is:recruitment',
+  DeleteUser = 'delete:users',
+  BanUser = 'ban:users',
 }
 
 export type Permission = {

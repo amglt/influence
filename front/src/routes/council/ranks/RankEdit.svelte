@@ -14,9 +14,9 @@
   import { onMount } from 'svelte';
   import { Icon, Label } from '@smui/common';
   import Button from '@smui/button';
-  import { navigateTo } from 'svelte-router-spa';
+  import { navigateTo, Route } from 'svelte-router-spa';
 
-  export let currentRoute;
+  export let currentRoute: Route;
 
   let isLoadingRole = false;
   let loadedPermissions = true;
