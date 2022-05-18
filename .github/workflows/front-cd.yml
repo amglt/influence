@@ -30,9 +30,6 @@ jobs:
         run: npm run build
         working-directory: ${{env.working-directory}}
 
-      - run: ls
-        working-directory: ${{env.working-directory}}/public
-
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -55,9 +52,7 @@ jobs:
         with:
           name: front-artifact
 
-      - run: ls
+      - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      # - uses: superfly/flyctl-actions/setup-flyctl@master
-
-      # - run: flyctl deploy --remote-only
-      #   working-directory: ${{env.working-directory}}
+      - run: flyctl deploy --remote-only
+        working-directory: ${{env.working-directory}}
