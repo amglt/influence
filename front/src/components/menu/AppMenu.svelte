@@ -49,7 +49,7 @@
             <Item
               href="javascript:void(0)"
               on:click={() => {
-                setActive('Rangs');
+                setActive('Utilisateurs');
                 navigateTo('/admin/users');
               }}
               activated={active === 'Utilisateurs'}
