@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { managementRouter } from './controllers/management.controller';
 import { authenticationMiddleware } from './middlewares/authentication.middleware';
+import { usersRouter } from './controllers/users.controller';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ app.use(morgan('tiny'));
 app.use(helmet());
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: [process.env.ORIGIN ?? 'http://localhost:3000'],
   }),
 );
 
@@ -26,6 +27,7 @@ app.get('/', (_req: Request, res: Response) => {
 
 app.use(authenticationMiddleware());
 app.use('/management', managementRouter);
+app.use('/users', usersRouter);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

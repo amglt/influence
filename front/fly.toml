@@ -1,16 +1,12 @@
-# fly.toml file generated for influence-site on 2022-05-04T13:18:21+02:00
+# fly.toml file generated for billowing-water-6231 on 2022-05-18T01:45:10+02:00
 
-app = "influence-site"
+app = "billowing-water-6231"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
-[build]
-  builder = "heroku/buildpacks:20"
-
 [env]
-  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []
@@ -18,7 +14,7 @@ processes = []
 
 [[services]]
   http_checks = []
-  internal_port = 8080
+  internal_port = 8043
   processes = ["app"]
   protocol = "tcp"
   script_checks = []

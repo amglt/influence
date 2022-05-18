@@ -14,7 +14,15 @@ export type User = {
 
 export const client = writable<Auth0Client>();
 export const isAuthenticated = writable(false);
-export const user = writable<User>();
+export const user = writable<User>({
+  sub: '',
+  permissions: [],
+  updated_at: new Date(),
+  picture: '',
+  nickname: '',
+  name: '',
+  id: '',
+});
 export const popupOpen = writable(false);
 export const error = writable();
 

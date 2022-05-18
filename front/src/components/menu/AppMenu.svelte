@@ -33,19 +33,19 @@
           <Graphic class="material-icons" aria-hidden="true">home</Graphic>
           <Text>Home</Text>
         </Item>
-        {#if $user?.permissions.includes(AppPermissions.IsMember)}
+        {#if $user.permissions.includes(AppPermissions.IsMember)}
           <Separator />
           <Header>
             <Subtitle>Membre</Subtitle>
           </Header>
         {/if}
-        {#if $user?.permissions.includes(AppPermissions.IsAdmin)}
+        {#if $user.permissions.includes(AppPermissions.IsAdmin)}
           <Separator />
           <Header>
             <Title>Admin</Title>
             <Subtitle>Gestion réservée aux membres du staff</Subtitle>
           </Header>
-          {#if $user?.permissions.includes(AppPermissions.IsRecruitment)}
+          {#if $user.permissions.includes(AppPermissions.IsRecruitment)}
             <Item
               href="javascript:void(0)"
               on:click={() => {
@@ -59,7 +59,7 @@
             </Item>
           {/if}
         {/if}
-        {#if $user?.permissions.includes(AppPermissions.IsCouncil)}
+        {#if $user.permissions.includes(AppPermissions.IsCouncil)}
           <Separator />
           <Header>
             <Title>Conseil</Title>

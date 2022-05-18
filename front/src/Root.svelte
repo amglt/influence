@@ -9,6 +9,7 @@
   let loadApp = false;
 
   onMount(async () => {
+    console.log(process.env.API_URL);
     const auth0Client = await auth.createClient();
     apiService.set(new ApiService(process.env.API_URL, auth0Client));
 
