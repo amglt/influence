@@ -52,6 +52,7 @@ jobs:
           name: front-artifact
 
       - run: ls
+        working-directory: ${{env.working-directory}}/public
 
       # - uses: superfly/flyctl-actions/setup-flyctl@master
 
