@@ -55,4 +55,3 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: flyctl deploy --remote-only
-        working-directory: ${{env.working-directory}}
