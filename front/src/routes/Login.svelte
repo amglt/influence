@@ -4,6 +4,9 @@
   import { client, isAuthenticated } from '../store/app';
   import { navigateTo } from 'svelte-router-spa';
 
+  export let currentRoute;
+  export let params = {};
+
   function login() {
     auth.loginWithPopup($client);
   }

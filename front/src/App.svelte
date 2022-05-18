@@ -63,7 +63,7 @@
     },
   ];
 
-  $: if ($user.id && !fetchedPermissions) {
+  $: if ($user?.id && !fetchedPermissions) {
     $apiService
       .get<string[]>(`/management/users/${$user.sub}/permissions`)
       .then((data) => {

@@ -5,17 +5,18 @@
   import auth from './services/auth.service';
   import { apiService, client, isAuthenticated, user } from './store/app';
   import ApiService from './services/api.service';
+  import { mapUser } from './shared/utils';
 
   let loadApp = false;
 
   onMount(async () => {
-    console.log(process.env.API_URL);
     const auth0Client = await auth.createClient();
     apiService.set(new ApiService(process.env.API_URL, auth0Client));
 
     client.set(auth0Client);
     isAuthenticated.set(await auth0Client.isAuthenticated());
-    user.set(await auth0Client.getUser());
+    const connectedUser = await auth0Client.getUser();
+    if (connectedUser) user.set(mapUser(connectedUser));
   });
 
   $: if ($client && $apiService) {

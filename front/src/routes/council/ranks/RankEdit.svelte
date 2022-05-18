@@ -17,6 +17,7 @@
   import { navigateTo, Route } from 'svelte-router-spa';
 
   export let currentRoute: Route;
+  export let params = {};
 
   let isLoadingRole = false;
   let loadedPermissions = true;

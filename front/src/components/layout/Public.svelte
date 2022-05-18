@@ -17,7 +17,8 @@
   import AppMenu from '../menu/AppMenu.svelte';
 
   export let currentRoute;
-  const params = {};
+  export let params = {};
+
   let topAppBar: TopAppBarComponentDev;
   let menu: MenuComponentDev;
   let isMenuOpen = false;
@@ -72,7 +73,6 @@
 </AutoAdjust>
 
 <style>
-  :global(app),
   :global(body),
   :global(html) {
     display: block !important;

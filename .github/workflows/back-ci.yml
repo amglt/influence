@@ -1,10 +1,10 @@
 name: Back CI
 
 on:
-  # pull_request:
-  #   branches: [main]
-  #   paths:
-  #     - back/*
+  pull_request:
+    branches: [main]
+    paths:
+      - back/*
 
   workflow_dispatch:
 

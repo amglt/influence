@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { Auth0Client } from '@auth0/auth0-spa-js';
 import type ApiService from '../services/api.service';
 
-export type User = {
+export type Auth0User = {
   name: string;
   nickname?: string;
   picture?: string;
@@ -14,7 +14,7 @@ export type User = {
 
 export const client = writable<Auth0Client>();
 export const isAuthenticated = writable(false);
-export const user = writable<User>({
+export const user = writable<Auth0User>({
   sub: '',
   permissions: [],
   updated_at: new Date(),

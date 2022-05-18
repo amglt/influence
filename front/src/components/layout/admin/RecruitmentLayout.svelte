@@ -5,7 +5,7 @@
   import { AppPermissions } from '../../../models/app.models';
 
   export let currentRoute;
-  const params = {};
+  export let params = {};
 
   onMount(() => {
     if (!$user || !$user.permissions.includes(AppPermissions.IsRecruitment)) {

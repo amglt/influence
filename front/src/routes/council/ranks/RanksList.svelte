@@ -17,6 +17,9 @@
   import type { Rank } from '../../../models/management.models';
   import { navigateTo } from 'svelte-router-spa';
 
+  export let currentRoute;
+  export let params = {};
+
   let ranksLoaded = true;
   let isDeleting = false;
   let isDeleteModalOpen = false;

@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <script lang="ts">
   import { format } from 'date-fns';
   import CircularProgress from '@smui/circular-progress';
@@ -15,10 +16,11 @@
   import IconButton from '@smui/icon-button';
   import { onMount } from 'svelte';
   import { apiService, user } from '../../../store/app';
-  import type { Rank } from '../../../models/management.models';
-  import { navigateTo } from 'svelte-router-spa';
   import type { User } from '../../../models/users.models';
   import { AppPermissions } from '../../../models/app.models';
+
+  export let currentRoute;
+  export let params = {};
 
   let usersLoaded = true;
   let isDeleting = false;
@@ -45,7 +47,7 @@
     try {
       if (selectedUser) {
         isDeleting = true;
-        await $apiService.delete(`/users/${selectedUser.id}`);
+        await $apiService.delete(`/users/${selectedUser.user_id}`);
         await fetchUsers();
       }
     } catch (err) {
@@ -60,7 +62,7 @@
     try {
       if (selectedUser) {
         isDeleting = true;
-        await $apiService.patch(`/users/${selectedUser.id}`);
+        await $apiService.patch(`/users/${selectedUser.user_id}`);
         await fetchUsers();
       }
     } catch (err) {
