@@ -16,15 +16,12 @@ jobs:
       NODE_ENV: production
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16.x
-
-      - name: Install typescript globally
-        run: npm install -g typescript
 
       - name: Install dependencies
         run: npm install
@@ -43,7 +40,7 @@ jobs:
       NODE_ENV: production
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         working-directory: ${{env.working-directory}}

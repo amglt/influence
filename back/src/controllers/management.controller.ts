@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { getManagementClient } from '../shared/utils';
 import { Permission } from 'auth0';
-import { requiredScopes } from 'express-oauth2-jwt-bearer';
 import { checkPermissions } from '../middlewares/permission.middleware';
 
 const managementRouter = Router();
