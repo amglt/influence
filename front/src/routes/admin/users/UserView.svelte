@@ -150,8 +150,17 @@
       bind:value={selectedRole}
       getOptionLabel={(option) => option?.name ?? ''}
       style="margin-bottom: 10px"
+      disabled={user.blocked}
     />
-    <Button variant="raised" on:click={saveUser}>Enregistrer</Button>
+    {#if isSavingUser}
+      <div class="centered-content">
+        <CircleSpinner />
+      </div>
+    {:else}
+      <Button variant="raised" on:click={saveUser} disabled={user.blocked}
+        >Enregistrer</Button
+      >
+    {/if}
   </Card>
 </div>
 

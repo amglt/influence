@@ -104,11 +104,12 @@ usersRouter.patch(
       if (!userId) return res.status(400).send({ message: 'User ID manquant' });
 
       const client = getManagementClient(
-        'update:users update:users_app_metadat',
+        'update:users update:users_app_metadata',
       );
       await client.updateUser({ id: userId }, { blocked: body.blocked });
       return res.status(200).send();
     } catch (err) {
+      console.log(err);
       return res.status(500).send();
     }
   },

@@ -49,6 +49,7 @@
       if (selectedUser) {
         isDeleting = true;
         await $apiService.delete(`/users/${selectedUser.user_id}`);
+        isDeleteModalOpen = false;
         await fetchUsers();
       }
     } catch (err) {
@@ -63,7 +64,10 @@
     try {
       if (selectedUser) {
         isDeleting = true;
-        await $apiService.patch(`/users/${selectedUser.user_id}/block`);
+        await $apiService.patch(`/users/${selectedUser.user_id}/block`, {
+          blocked: !selectedUser.blocked,
+        });
+        isBanModalOpen = false;
         await fetchUsers();
       }
     } catch (err) {
