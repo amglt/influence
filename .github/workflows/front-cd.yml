@@ -25,6 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: ${{env.working-directory}}
+        env: DOMAIN=${{secrets.DOMAIN}}
+          FRONT_CLIENT_ID=${{secrets.FRONT_CLIENT_ID}}
+          API_URL=${{secrets.API_URL}}
+          COUNCIL_ROLE_ID=${{secrets.COUNCIL_ROLE_ID}}
+          AUDIENCE=${{secrets.AUDIENCE}}
 
       - name: Build app
         run: npm run build
