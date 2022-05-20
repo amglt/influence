@@ -1,4 +1,6 @@
 <script>
+  import 'svelte-material-ui/bare.css';
+  import '@material/typography/dist/mdc.typography.min.css';
   import Providers from './Providers.svelte';
   import App from './App.svelte';
   import { onMount } from 'svelte';

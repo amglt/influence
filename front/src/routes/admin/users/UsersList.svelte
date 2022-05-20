@@ -1,7 +1,6 @@
 <!--suppress ALL -->
 <script lang="ts">
   import { format } from 'date-fns';
-  import CircularProgress from '@smui/circular-progress';
   import Dialog, { Title, Content, Actions } from '@smui/dialog';
   import Button, { Label as ButtonLabel } from '@smui/button';
   import LinearProgress from '@smui/linear-progress';
@@ -18,6 +17,8 @@
   import { apiService, user } from '../../../store/app';
   import type { User } from '../../../models/users.models';
   import { AppPermissions } from '../../../models/app.models';
+  import { navigateTo } from 'svelte-router-spa';
+  import CircleSpinner from '../../../components/spinner/CircleSpinner.svelte';
 
   export const currentRoute = {};
   export const params = {};
@@ -62,7 +63,7 @@
     try {
       if (selectedUser) {
         isDeleting = true;
-        await $apiService.patch(`/users/${selectedUser.user_id}`);
+        await $apiService.patch(`/users/${selectedUser.user_id}/block`);
         await fetchUsers();
       }
     } catch (err) {
@@ -111,7 +112,7 @@
       <ButtonLabel>Non</ButtonLabel>
     </Button>
     {#if isDeleting}
-      <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      <CircleSpinner />
     {:else}
       <Button on:click={deleteUser}>
         <ButtonLabel>Oui</ButtonLabel>
@@ -139,7 +140,7 @@
       <ButtonLabel>Non</ButtonLabel>
     </Button>
     {#if isDeleting}
-      <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      <CircleSpinner />
     {:else}
       <Button on:click={banUser}>
         <ButtonLabel>Oui</ButtonLabel>
@@ -178,36 +179,44 @@
       </Row>
     </Head>
     <Body>
-      {#each items as item (item.id)}
+      {#each items as item (item.user_id)}
         <Row>
-          <Cell>{item.name}</Cell>
+          <Cell
+            ><span
+              class="table-action"
+              on:click={() => navigateTo(`/admin/users/${item.user_id}`)}
+              >{item.name}</span
+            ></Cell
+          >
           <Cell>{format(new Date(item.updated_at), 'dd/MM/yyyy hh:mm')}</Cell>
           <Cell>{format(new Date(item.last_login), 'dd/MM/yyyy hh:mm')}</Cell>
           <Cell numeric>{item.logins_count}</Cell>
           <Cell>
-            {#if $user.permissions.includes(AppPermissions.DeleteUser)}
-              <span
-                class="table-action"
-                on:click={() => {
-                  isDeleteModalOpen = true;
-                  selectedUser = item;
-                }}>Supprimer</span
-              >
-              -
-            {/if}{#if $user.permissions.includes(AppPermissions.BanUser)}
-              <span
-                class="table-action"
-                on:click={() => {
-                  isBanModalOpen = true;
-                  selectedUser = item;
-                }}
-              >
-                {#if !item.blocked}
-                  Bannir
-                {:else}
-                  Unban
-                {/if}</span
-              >
+            {#if item.user_id !== $user.sub}
+              {#if $user.permissions.includes(AppPermissions.DeleteUser)}
+                <span
+                  class="table-action"
+                  on:click={() => {
+                    isDeleteModalOpen = true;
+                    selectedUser = item;
+                  }}>Supprimer</span
+                >
+                -
+              {/if}{#if $user.permissions.includes(AppPermissions.BanUser)}
+                <span
+                  class="table-action"
+                  on:click={() => {
+                    isBanModalOpen = true;
+                    selectedUser = item;
+                  }}
+                >
+                  {#if !item.blocked}
+                    Bannir
+                  {:else}
+                    Unban
+                  {/if}</span
+                >
+              {/if}
             {/if}
           </Cell>
         </Row>

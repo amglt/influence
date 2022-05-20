@@ -1,3 +1,5 @@
+import type { Rank } from './management.models';
+
 export type Identity = {
   provider: string;
   access_token: string;
@@ -7,7 +9,7 @@ export type Identity = {
   isSocial: boolean;
 };
 
-export type User = {
+export interface User {
   created_at: Date;
   identities: Identity[];
   name: string;
@@ -19,4 +21,8 @@ export type User = {
   last_ip: string;
   logins_count: number;
   blocked: boolean;
-};
+}
+
+export interface UserWithRole extends User {
+  role?: Rank;
+}

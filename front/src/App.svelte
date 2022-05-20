@@ -1,5 +1,4 @@
 <script lang="ts">
-  import 'svelte-material-ui/bare.css';
   import { Router } from 'svelte-router-spa';
   import Home from './routes/Home.svelte';
   import Public from './components/layout/Public.svelte';
@@ -12,6 +11,7 @@
   import RankEdit from './routes/council/ranks/RankEdit.svelte';
   import UsersList from './routes/admin/users/UsersList.svelte';
   import RecruitmentLayout from './components/layout/admin/RecruitmentLayout.svelte';
+  import UserView from './routes/admin/users/UserView.svelte';
 
   let fetchedPermissions = false;
 
@@ -36,6 +36,11 @@
           name: 'users',
           layout: RecruitmentLayout,
           component: UsersList,
+        },
+        {
+          name: 'users/:userId',
+          layout: RecruitmentLayout,
+          component: UserView,
         },
       ],
     },

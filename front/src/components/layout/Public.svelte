@@ -15,6 +15,7 @@
   import type { MenuComponentDev } from '@smui/menu';
   import auth from '../../services/auth.service';
   import AppMenu from '../menu/AppMenu.svelte';
+  import Avatar from '../avatar/Avatar.svelte';
 
   export let currentRoute;
   export let params = {};
@@ -45,8 +46,12 @@
     <Section align="end" toolbar>
       {#if $isAuthenticated && $user}
         <div>
-          <Button on:click={() => menu.setOpen(true)}>
-            <Label>{$user.name}</Label>
+          <Button
+            on:click={() => menu.setOpen(true)}
+            style="display: flex; align-items: center;"
+          >
+            {#if $user.picture}<Avatar src={$user.picture} isSmall />{/if}
+            <Label style="margin-left: 10px">{$user.name}</Label>
           </Button>
           <Menu bind:this={menu}>
             <List>

@@ -60,6 +60,21 @@ class ApiService {
     }).then((res) => checkResponseBody<Res>(res));
   }
 
+  async put<Res, Req extends {}>(url: string, body?: Req) {
+    const token = await this.client.getTokenSilently();
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    };
+
+    return fetch(`${this.apiUrl}${url}`, {
+      headers,
+      method: 'PUT',
+      body: body ? JSON.stringify(body) : undefined,
+    }).then((res) => checkResponseBody<Res>(res));
+  }
+
   async delete<T>(url: string) {
     const token = await this.client.getTokenSilently();
 

@@ -101,7 +101,7 @@
     Retour</Button
   >
 </div>
-<div class="add-role-card">
+<div class="centered-content">
   <Card padded style="width: 80%">
     <FormField style="width: 100%;">
       <Textfield
@@ -147,10 +147,6 @@
 </div>
 
 <style>
-  .add-role-card {
-    display: flex;
-    justify-content: center;
-  }
   .creation-loader {
     display: flex;
     justify-content: center;
