@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: front/
-      DOMAIN=${{secrets.DOMAIN}}
-      FRONT_CLIENT_ID=${{secrets.FRONT_CLIENT_ID}}
-      API_URL=${{secrets.API_URL}}
-      COUNCIL_ROLE_ID=${{secrets.COUNCIL_ROLE_ID}}
-      AUDIENCE=${{secrets.AUDIENCE}}
+      DOMAIN: ${{secrets.DOMAIN}}
+      FRONT_CLIENT_ID: ${{secrets.FRONT_CLIENT_ID}}
+      API_URL: ${{secrets.API_URL}}
+      COUNCIL_ROLE_ID: ${{secrets.COUNCIL_ROLE_ID}}
+      AUDIENCE: ${{secrets.AUDIENCE}}
 
     steps:
       - uses: actions/checkout@v3
@@ -30,7 +30,6 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: ${{env.working-directory}}
-        
 
       - name: Build app
         run: npm run build
