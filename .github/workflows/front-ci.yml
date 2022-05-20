@@ -33,6 +33,7 @@ jobs:
           echo "API_URL=${{secrets.API_URL}}" >> .env
           echo "COUNCIL_ROLE_ID=${{secrets.COUNCIL_ROLE_ID}}" >> .env
           echo "AUDIENCE=${{secrets.AUDIENCE}}" >> .env
+        working-directory: ${{env.working-directory}}
 
       - name: Build app
         run: npm run build
