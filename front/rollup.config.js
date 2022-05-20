@@ -11,6 +11,7 @@ import serve from 'rollup-plugin-serve';
 import { config } from 'dotenv';
 
 const configToReplace = {};
+console.log(config());
 for (const [key, v] of Object.entries(config().parsed)) {
   configToReplace[`process.env.${key}`] = `'${v}'`;
 }
