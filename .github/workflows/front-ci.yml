@@ -13,12 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: front/
+      DOMAIN: ${{secrets.DOMAIN}}
+      FRONT_CLIENT_ID: ${{secrets.FRONT_CLIENT_ID}}
+      API_URL: ${{secrets.API_URL}}
+      COUNCIL_ROLE_ID: ${{secrets.COUNCIL_ROLE_ID}}
+      AUDIENCE: ${{secrets.AUDIENCE}}
 
     steps:
       - uses: actions/checkout@v3
 
       - name: test
-        run: echo ${{ env }}
+        run: echo ${{ env.AUDIENCE }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -33,8 +38,3 @@ jobs:
         run: npm run build
         working-directory: ${{env.working-directory}}
         env:
-          DOMAIN: ${{secrets.DOMAIN}}
-          FRONT_CLIENT_ID: ${{secrets.FRONT_CLIENT_ID}}
-          API_URL: ${{secrets.API_URL}}
-          COUNCIL_ROLE_ID: ${{secrets.COUNCIL_ROLE_ID}}
-          AUDIENCE: ${{secrets.AUDIENCE}}
