@@ -15,9 +15,10 @@
   import { Icon, Label } from '@smui/common';
   import Button from '@smui/button';
   import { navigateTo, Route } from 'svelte-router-spa';
+  import CircleSpinner from '../../../components/spinner/CircleSpinner.svelte';
 
   export let currentRoute: Route;
-  export let params = {};
+  export const params = {};
 
   let isLoadingRole = false;
   let loadedPermissions = true;
@@ -101,7 +102,7 @@
     Retour</Button
   >
 </div>
-<div class="add-role-card">
+<div class="centered-content">
   <Card padded style="width: 80%">
     <FormField style="width: 100%;">
       <Textfield
@@ -133,8 +134,8 @@
       {/if}
     </FormField>
     {#if isEditingRole}
-      <div class="creation-loader">
-        <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      <div class="centered-content">
+        <CircleSpinner />
       </div>
     {:else}
       <Button
@@ -145,14 +146,3 @@
     {/if}
   </Card>
 </div>
-
-<style>
-  .add-role-card {
-    display: flex;
-    justify-content: center;
-  }
-  .creation-loader {
-    display: flex;
-    justify-content: center;
-  }
-</style>

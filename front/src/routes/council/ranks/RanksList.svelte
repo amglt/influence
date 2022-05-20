@@ -1,3 +1,4 @@
+<!--suppress HtmlRequiredTitleElement -->
 <script lang="ts">
   import CircularProgress from '@smui/circular-progress';
   import Dialog, { Title, Content, Actions } from '@smui/dialog';
@@ -17,8 +18,8 @@
   import type { Rank } from '../../../models/management.models';
   import { navigateTo } from 'svelte-router-spa';
 
-  export let currentRoute;
-  export let params = {};
+  export const currentRoute = {};
+  export const params = {};
 
   let ranksLoaded = true;
   let isDeleting = false;

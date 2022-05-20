@@ -18,6 +18,26 @@ usersRouter.get(
   },
 );
 
+usersRouter.get(
+  '/:userId',
+  checkPermissions('read:users'),
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.userId;
+      if (!userId) return res.status(400).send({ message: 'User ID manquant' });
+
+      const client = getManagementClient('read:users read:user_idp_tokens');
+      const user = await client.getUser({ id: userId });
+      const userRoles = await client.getUserRoles({ id: userId });
+      const userWithRole =
+        userRoles.length > 0 ? { ...user, role: userRoles[0] } : { ...user };
+      return res.status(200).send(userWithRole);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+);
+
 usersRouter.post(
   '/:userId',
   checkPermissions('write:users'),
@@ -41,8 +61,38 @@ usersRouter.post(
   },
 );
 
-usersRouter.patch(
+usersRouter.put(
   '/:userId',
+  checkPermissions('write:users'),
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      const userId = req.params.userId;
+      if (!userId) return res.status(400).send({ message: 'User ID manquant' });
+
+      const client = getManagementClient('update:users');
+      const actualRoles = await client.getUserRoles({ id: userId });
+      if (actualRoles.length > 0)
+        await client.removeRolesFromUser(
+          { id: userId },
+          { roles: actualRoles.filter((r) => r.id).map((r) => r.id!) },
+        );
+
+      const role = req.body.role;
+      if (role?.id) {
+        await client.assignRolestoUser({ id: userId }, { roles: [role.id] });
+      }
+
+      return res.status(200).send();
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send();
+    }
+  },
+);
+
+usersRouter.patch(
+  '/:userId/block',
   checkPermissions('delete:users'),
   async (req: Request, res: Response) => {
     try {
@@ -54,11 +104,12 @@ usersRouter.patch(
       if (!userId) return res.status(400).send({ message: 'User ID manquant' });
 
       const client = getManagementClient(
-        'update:users update:users_app_metadat',
+        'update:users update:users_app_metadata',
       );
       await client.updateUser({ id: userId }, { blocked: body.blocked });
       return res.status(200).send();
     } catch (err) {
+      console.log(err);
       return res.status(500).send();
     }
   },

@@ -1,8 +1,12 @@
 html,
-body,
-main {
+body {
   width: 100%;
   height: 100%;
+}
+
+main {
+  width: 100%;
+  height: calc(100% - 64px);
 }
 
 body {
@@ -63,4 +67,9 @@ body {
 .mdc-layout-grid {
   margin: unset !important;
   width: 100%;
+}
+
+.centered-content {
+  display: flex;
+  justify-content: center;
 }

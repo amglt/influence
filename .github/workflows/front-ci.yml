@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - front/*
+      - front/**
 
   workflow_dispatch:
 
@@ -16,14 +16,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js
+
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: 16.13.1
-          cache: 'npm'
-          cache-dependency-path: front/package-lock.json
+          node-version: 16.x
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm install
         working-directory: ${{env.working-directory}}
-      - run: npm run build
+
+      - name: Create env file
+        run: |
+          echo "DOMAIN=${{secrets.DOMAIN}}" > .env
+          echo "FRONT_CLIENT_ID=${{secrets.FRONT_CLIENT_ID}}" >> .env
+          echo "API_URL=${{secrets.API_URL}}" >> .env
+          echo "COUNCIL_ROLE_ID=${{secrets.COUNCIL_ROLE_ID}}" >> .env
+          echo "AUDIENCE=${{secrets.AUDIENCE}}" >> .env
+        working-directory: ${{env.working-directory}}
+
+      - name: Build app
+        run: npm run build
         working-directory: ${{env.working-directory}}
