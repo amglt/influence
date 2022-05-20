@@ -15,8 +15,8 @@
   import Button from '@smui/button';
   import { navigateTo } from 'svelte-router-spa';
 
-  export let currentRoute;
-  export let params = {};
+  export const currentRoute = {};
+  export const params = {};
 
   let loadedPermissions = true;
   let isCreatingRole = false;

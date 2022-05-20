@@ -19,8 +19,8 @@
   import type { User } from '../../../models/users.models';
   import { AppPermissions } from '../../../models/app.models';
 
-  export let currentRoute;
-  export let params = {};
+  export const currentRoute = {};
+  export const params = {};
 
   let usersLoaded = true;
   let isDeleting = false;

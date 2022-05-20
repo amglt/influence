@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let currentRoute;
-  export let params = {};
+  export const currentRoute = {};
+  export const params = {};
 </script>
 
 <div class="container">
