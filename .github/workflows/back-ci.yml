@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: back/
-      NODE_ENV: production
 
     steps:
       - uses: actions/checkout@v3
