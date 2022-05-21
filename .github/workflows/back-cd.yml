@@ -42,5 +42,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only --env PORT=${{secrets.PORT}} DATABASE_URL=${{secrets.DATABASE_URL}} DOMAIN=${{secrets.DOMAIN}} CLIENT_ID=${{secrets.CLIENT_ID}} CLIENT_SECRET=${{secrets.CLIENT_SECRET}} AUDIENCE=${{secrets.AUDIENCE}} COUNCIL_ROLE_ID=${{secrets.COUNCIL_ROLE_ID}} ORIGIN=${{secrets.ORIGIN}}
+      - run: flyctl deploy --remote-only --env "PORT=${{secrets.PORT}} DATABASE_URL=${{secrets.DATABASE_URL}} DOMAIN=${{secrets.DOMAIN}} CLIENT_ID=${{secrets.CLIENT_ID}} CLIENT_SECRET=${{secrets.CLIENT_SECRET}} AUDIENCE=${{secrets.AUDIENCE}} COUNCIL_ROLE_ID=${{secrets.COUNCIL_ROLE_ID}} ORIGIN=${{secrets.ORIGIN}}"
         working-directory: ${{env.working-directory}}
