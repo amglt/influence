@@ -5,6 +5,8 @@ export const enum AppPermissions {
   IsRecruitment = 'is:recruitment',
   DeleteUser = 'delete:users',
   BanUser = 'ban:users',
+  DeleteAccount = 'delete:accounts',
+  WriteUser = 'write:users',
 }
 
 export type Permission = {

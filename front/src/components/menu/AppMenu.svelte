@@ -39,6 +39,26 @@
             <Subtitle>Membre</Subtitle>
           </Header>
         {/if}
+        {#if $user.permissions.includes(AppPermissions.IsRecruitment)}
+          <Separator />
+          <Header>
+            <Title>Recrutement</Title>
+            <Subtitle>Pôle recrutement</Subtitle>
+          </Header>
+          <Item
+            href="javascript:void(0)"
+            on:click={() => {
+              setActive('Comptes');
+              navigateTo('/recrutement/comptes');
+            }}
+            activated={active === 'Comptes'}
+          >
+            <Graphic class="material-icons" aria-hidden="true"
+              >account_box</Graphic
+            >
+            <Text>Comptes</Text>
+          </Item>
+        {/if}
         {#if $user.permissions.includes(AppPermissions.IsAdmin)}
           <Separator />
           <Header>

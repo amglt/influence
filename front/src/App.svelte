@@ -12,6 +12,7 @@
   import UsersList from './routes/admin/users/UsersList.svelte';
   import RecruitmentLayout from './components/layout/admin/RecruitmentLayout.svelte';
   import UserView from './routes/admin/users/UserView.svelte';
+  import AccountsList from "./routes/recruitment/accounts/AccountsList.svelte";
 
   let fetchedPermissions = false;
 
@@ -26,6 +27,17 @@
       component: Login,
       layout: Public,
       onlyIf: { guard: !$isAuthenticated, redirect: '/' },
+    },
+    {
+      name: 'recrutement',
+      layout: Public,
+      onlyIf: { guard: !$isAuthenticated, redirect: '/' },
+      nestedRoutes: [
+        {
+          name: 'comptes',
+          component: AccountsList
+        }
+      ]
     },
     {
       name: 'admin',

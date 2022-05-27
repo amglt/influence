@@ -1,6 +1,8 @@
-<!--suppress ALL -->
+<!--suppress HtmlRequiredTitleElement -->
 <script lang="ts">
-  import { format } from 'date-fns';
+  import format from 'date-fns/format';
+  import Textfield from '@smui/textfield';
+  import Icon from '@smui/textfield/icon';
   import Dialog, { Title, Content, Actions } from '@smui/dialog';
   import Button, { Label as ButtonLabel } from '@smui/button';
   import LinearProgress from '@smui/linear-progress';
@@ -28,8 +30,10 @@
   let isDeleteModalOpen = false;
   let isBanModalOpen = false;
   let selectedUser: User = undefined;
+  let search = '';
 
   let items: User[] = [];
+  let filteredItems: User[] = [];
   let sort: keyof User = 'user_id';
   let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
 
@@ -83,7 +87,7 @@
   });
 
   function handleSort() {
-    items.sort((a, b) => {
+    filteredItems = filteredItems.sort((a, b) => {
       const [aVal, bVal] = [a[sort], b[sort]][
         sortDirection === 'ascending' ? 'slice' : 'reverse'
       ]();
@@ -92,7 +96,14 @@
       }
       return Number(aVal) - Number(bVal);
     });
-    items = items;
+  }
+
+  $: {
+    if (search)
+      filteredItems = items.filter((item) =>
+        item.name.toLowerCase().includes(search.toLowerCase()),
+      );
+    else filteredItems = items;
   }
 </script>
 
@@ -153,6 +164,9 @@
   </Actions>
 </Dialog>
 <div class="container">
+  <Textfield bind:value={search} label="Rechercher un nom" style="width: 100%">
+    <Icon class="material-icons" slot="trailingIcon">search</Icon>
+  </Textfield>
   <DataTable
     sortable
     bind:sort
@@ -183,7 +197,7 @@
       </Row>
     </Head>
     <Body>
-      {#each items as item (item.user_id)}
+      {#each filteredItems as item (item.user_id)}
         <Row>
           <Cell
             ><span

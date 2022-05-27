@@ -1,67 +1,71 @@
 <!--suppress HtmlRequiredTitleElement -->
 <script lang="ts">
-  import CircularProgress from '@smui/circular-progress';
+  import format from 'date-fns/format';
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
-  import Dialog, { Actions, Content, Title } from '@smui/dialog';
+  import Dialog, { Title, Content, Actions } from '@smui/dialog';
   import Button, { Label as ButtonLabel } from '@smui/button';
   import LinearProgress from '@smui/linear-progress';
   import DataTable, {
-    Body,
-    Cell,
     Head,
-    Label,
+    Body,
     Row,
+    Cell,
+    Label,
     SortValue,
   } from '@smui/data-table';
   import IconButton from '@smui/icon-button';
   import { onMount } from 'svelte';
-  import { apiService } from '../../../store/app';
-  import type { Rank } from '../../../models/management.models';
+  import { apiService, user } from '../../../store/app';
+  import type { User } from '../../../models/users.models';
+  import { AppPermissions } from '../../../models/app.models';
   import { navigateTo } from 'svelte-router-spa';
+  import CircleSpinner from '../../../components/spinner/CircleSpinner.svelte';
+  import type { AccountWithUser } from '../../../models/accounts.models';
 
   export const currentRoute = {};
   export const params = {};
 
-  let ranksLoaded = true;
+  let accountsLoaded = true;
   let isDeleting = false;
   let isDeleteModalOpen = false;
-  let rankToDelete: Rank = undefined;
+  let selectedAccount: AccountWithUser = undefined;
   let search = '';
 
-  let items: Rank[] = [];
-  let filteredItems: Rank[] = [];
-  let sort: keyof Rank = 'id';
+  let items: AccountWithUser[] = [];
+  let filteredItems: AccountWithUser[] = [];
+  let sort: keyof AccountWithUser = 'id';
   let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
 
-  const fetchRoles = async () => {
+  const fetchAccounts = async () => {
     try {
-      ranksLoaded = false;
-      const roles = await $apiService.get<Rank[]>(`/management/roles`);
-      items = [...roles];
+      accountsLoaded = false;
+      const accounts = await $apiService.get<AccountWithUser[]>(`/accounts`);
+      items = [...accounts];
     } catch (err) {
     } finally {
-      ranksLoaded = true;
+      accountsLoaded = true;
     }
   };
 
-  const deleteRole = async () => {
+  const deleteAccount = async () => {
     try {
-      if (rankToDelete) {
+      if (selectedAccount) {
         isDeleting = true;
-        await $apiService.delete(`/management/roles/${rankToDelete.id}`);
-        await fetchRoles();
+        await $apiService.delete(`/accounts/${selectedAccount.id}`);
+        isDeleteModalOpen = false;
+        await fetchAccounts();
       }
     } catch (err) {
     } finally {
-      rankToDelete = undefined;
+      selectedAccount = undefined;
       isDeleting = false;
       isDeleteModalOpen = false;
     }
   };
 
   onMount(async () => {
-    await fetchRoles();
+    await fetchAccounts();
   });
 
   function handleSort() {
@@ -87,38 +91,32 @@
 
 <Dialog
   bind:open={isDeleteModalOpen}
-  aria-labelledby="rank-delete-modal-title"
-  aria-describedby="rank-delete-modal-content"
+  aria-labelledby="account-delete-modal-title"
+  aria-describedby="account-delete-modal-content"
 >
-  <Title id="rank-delete-modal-title">Supprimer un rang</Title>
-  <Content id="rank-delete-modal-content"
-    >Es-tu sur de vouloir supprimer le rang {rankToDelete?.name} ? Attention c'est
-    irréversible !!</Content
+  <Title id="account-delete-modal-title">Supprimer un compte</Title>
+  <Content id="account-delete-modal-content"
+    >Es-tu sur de vouloir supprimer le compte {selectedAccount?.name} ? Attention
+    c'est irréversible !!</Content
   >
   <Actions>
     <Button
       on:click={() => {
-        rankToDelete = undefined;
+        selectedAccount = undefined;
         isDeleteModalOpen = false;
       }}
     >
       <ButtonLabel>Non</ButtonLabel>
     </Button>
     {#if isDeleting}
-      <CircularProgress style="height: 32px; width: 32px;" indeterminate />
+      <CircleSpinner />
     {:else}
-      <Button on:click={deleteRole}>
+      <Button on:click={deleteAccount}>
         <ButtonLabel>Oui</ButtonLabel>
       </Button>
     {/if}
   </Actions>
 </Dialog>
-<Button
-  variant="raised"
-  on:click={() => {
-    navigateTo('/management/rangs-add');
-  }}>Créer un rang</Button
->
 <div class="container">
   <Textfield bind:value={search} label="Rechercher un nom" style="width: 100%">
     <Icon class="material-icons" slot="trailingIcon">search</Icon>
@@ -128,7 +126,7 @@
     bind:sort
     bind:sortDirection
     on:SMUIDataTable:sorted={handleSort}
-    table$aria-label="User list"
+    table$aria-label="Accounts list"
     style="width: 100%;"
   >
     <Head>
@@ -137,8 +135,8 @@
           <Label>Nom</Label>
           <IconButton class="material-icons">arrow_upward</IconButton>
         </Cell>
-        <Cell columnId="description">
-          <Label>Description</Label>
+        <Cell columnId="user.name">
+          <Label>Utilisateur</Label>
           <IconButton class="material-icons">arrow_upward</IconButton>
         </Cell>
         <Cell sortable={false}>Actions</Cell>
@@ -148,21 +146,14 @@
       {#each filteredItems as item (item.id)}
         <Row>
           <Cell>{item.name}</Cell>
-          <Cell>{item.description}</Cell>
+          <Cell>{item.user.name}</Cell>
           <Cell>
-            {#if item.id !== process.env.COUNCIL_ROLE_ID}
-              <span
-                class="table-action"
-                on:click={() => {
-                  navigateTo(`/management/rangs/${item.id}`);
-                }}>Modifier</span
-              >
-              -
+            {#if $user.permissions.includes(AppPermissions.DeleteAccount)}
               <span
                 class="table-action"
                 on:click={() => {
                   isDeleteModalOpen = true;
-                  rankToDelete = item;
+                  selectedAccount = item;
                 }}>Supprimer</span
               >
             {/if}
@@ -172,7 +163,7 @@
     </Body>
     <LinearProgress
       indeterminate
-      bind:closed={ranksLoaded}
+      bind:closed={accountsLoaded}
       aria-label="Chargement des données"
       slot="progress"
     />

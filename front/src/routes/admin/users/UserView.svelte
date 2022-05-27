@@ -7,11 +7,12 @@
   import { onMount } from 'svelte';
   import format from 'date-fns/format';
   import type { UserWithRole } from '../../../models/users.models';
-  import { apiService } from '../../../store/app';
+  import { apiService, user } from '../../../store/app';
   import CircleSpinner from '../../../components/spinner/CircleSpinner.svelte';
   import Avatar from '../../../components/avatar/Avatar.svelte';
   import UserDataRow from '../../../components/user/UserDataRow.svelte';
   import { Rank } from '../../../models/management.models';
+  import { AppPermissions } from '../../../models/app.models';
 
   export let currentRoute: Route;
 
@@ -20,7 +21,7 @@
   let isSavingUser = false;
   let roles: Rank[] = [];
   let selectedRole: Rank;
-  let user: UserWithRole = {
+  let viewedUser: UserWithRole = {
     user_id: '',
     blocked: true,
     created_at: new Date(),
@@ -37,10 +38,10 @@
   const fetchUser = async () => {
     try {
       isLoadingUser = true;
-      user = await $apiService.get<UserWithRole>(
+      viewedUser = await $apiService.get<UserWithRole>(
         `/users/${currentRoute?.namedParams?.userId}`,
       );
-      selectedRole = user.role;
+      selectedRole = viewedUser.role;
     } catch (err) {
     } finally {
       isLoadingUser = false;
@@ -60,9 +61,9 @@
 
   const saveUser = async () => {
     try {
-      if (user.user_id) {
+      if (viewedUser.user_id) {
         isSavingUser = true;
-        await $apiService.put(`/users/${user.user_id}`, {
+        await $apiService.put(`/users/${viewedUser.user_id}`, {
           role: selectedRole,
         });
       }
@@ -86,47 +87,56 @@
 </div>
 <div style="width: 80%; margin: auto">
   <Card padded style="width: 100%">
-    {#if user.user_id}
+    {#if viewedUser.user_id}
       <div class="user-identity-wrapper">
-        {#if user.picture}
-          <Avatar src={user.picture} />
+        {#if viewedUser.picture}
+          <Avatar src={viewedUser.picture} />
         {/if}
         <div class="user-identity">
           <div class="user-identity-name">
-            <div class="mdc-typography--headline4">{user.name}</div>
-            {#if user.nickname && user.nickname !== user.name}<div
+            <div class="mdc-typography--headline4">{viewedUser.name}</div>
+            {#if viewedUser.nickname && viewedUser.nickname !== viewedUser.name}<div
                 class="mdc-typography--subtitle1"
               >
-                Surnom: {user.name}
+                Surnom: {viewedUser.name}
               </div>{/if}
           </div>
           <div class="user-identity-data">
             <div class="user-identity-data-left">
-              {#if user.created_at}<UserDataRow
+              {#if viewedUser.created_at}<UserDataRow
                   prefix="Créé le:"
-                  data={format(new Date(user.created_at), 'dd/MM/yyyy HH:mm')}
+                  data={format(
+                    new Date(viewedUser.created_at),
+                    'dd/MM/yyyy HH:mm',
+                  )}
                 />{/if}
-              {#if user.updated_at}<UserDataRow
+              {#if viewedUser.updated_at}<UserDataRow
                   prefix="Dernière modif.:"
-                  data={format(new Date(user.updated_at), 'dd/MM/yyyy HH:mm')}
+                  data={format(
+                    new Date(viewedUser.updated_at),
+                    'dd/MM/yyyy HH:mm',
+                  )}
                 />{/if}
-              {#if user.last_login}<UserDataRow
+              {#if viewedUser.last_login}<UserDataRow
                   prefix="Dernière connexion:"
-                  data={format(new Date(user.last_login), 'dd/MM/yyyy HH:mm')}
+                  data={format(
+                    new Date(viewedUser.last_login),
+                    'dd/MM/yyyy HH:mm',
+                  )}
                 />{/if}
             </div>
             <div class="user-identity-data-right">
-              {#if user.last_ip}<UserDataRow
+              {#if viewedUser.last_ip}<UserDataRow
                   prefix="Dernière IP:"
-                  data={user.last_ip}
+                  data={viewedUser.last_ip}
                 />{/if}
-              {#if user.logins_count > -1}<UserDataRow
+              {#if viewedUser.logins_count > -1}<UserDataRow
                   prefix="Nombre connexions:"
-                  data={user.logins_count}
+                  data={viewedUser.logins_count}
                 />{/if}
               <UserDataRow
                 prefix="Bloqué:"
-                data={user.blocked ? 'Oui' : 'Non'}
+                data={viewedUser.blocked ? 'Oui' : 'Non'}
               />
             </div>
           </div>
@@ -150,15 +160,19 @@
       bind:value={selectedRole}
       getOptionLabel={(option) => option?.name ?? ''}
       style="margin-bottom: 10px"
-      disabled={user.blocked}
+      disabled={!$user.permissions.includes(AppPermissions.WriteUser) ||
+        viewedUser.blocked}
     />
     {#if isSavingUser}
       <div class="centered-content">
         <CircleSpinner />
       </div>
     {:else}
-      <Button variant="raised" on:click={saveUser} disabled={user.blocked}
-        >Enregistrer</Button
+      <Button
+        variant="raised"
+        on:click={saveUser}
+        disabled={!$user.permissions.includes(AppPermissions.WriteUser) ||
+          viewedUser.blocked}>Enregistrer</Button
       >
     {/if}
   </Card>
