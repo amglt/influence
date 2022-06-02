@@ -1,8 +1,8 @@
-import { UserWithRole } from '@Models/root.models';
+import { AppUser } from '@Models/root.models';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type RootState = {
-  user: UserWithRole;
+  user: AppUser;
 };
 
 const initialState: RootState = {
@@ -18,6 +18,7 @@ const initialState: RootState = {
     identities: [],
     last_login: new Date(),
     logins_count: 0,
+    permissions: [],
   },
 };
 
@@ -25,7 +26,7 @@ export const rootSlice = createSlice({
   name: 'root',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<UserWithRole>) => {
+    setUser: (state, action: PayloadAction<AppUser>) => {
       state.user = action.payload;
     },
   },

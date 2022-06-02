@@ -1,4 +1,4 @@
-import { createElement, ReactNode, useState } from 'react';
+import { createElement, ReactNode, useEffect, useState } from 'react';
 import { Dropdown, Layout as AntLayout, Menu, Space } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -13,23 +13,49 @@ import { useNavigate } from 'react-router-dom';
 import { Text } from '@Components/typography';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useSelector } from '@Store/';
-import { Spinner } from '@Components/Spinner';
+import { Spinner } from '@Components/spinner';
+import { ItemType } from 'antd/lib/menu/hooks/useItems';
+import { AppPermissions } from '@Models/root.models';
 
-const { Header, Sider, Content } = AntLayout;
+const { Header, Sider } = AntLayout;
 
 interface LayoutProps {
   children?: ReactNode;
   isLoadingUser: boolean;
+  isLoadingPermissions: boolean;
 }
 
 export function Layout(props: LayoutProps) {
-  const { children, isLoadingUser } = props;
+  const { children, isLoadingUser, isLoadingPermissions } = props;
 
   const navigate = useNavigate();
   const { loginWithRedirect, logout } = useAuth0();
   const { user } = useSelector((state) => state.root);
 
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+  const [menuItems, setMenuItems] = useState<ItemType[]>([]);
+
+  useEffect(() => {
+    const updatedMenuItems = [];
+    if (user.user_id) {
+      if (user.permissions.includes(AppPermissions.IsCouncil)) {
+        updatedMenuItems.push({
+          key: 'council',
+          icon: <StarOutlined />,
+          label: 'Conseil',
+          children: [
+            {
+              key: 'roles',
+              label: 'Roles',
+              icon: <CrownOutlined />,
+              onClick: () => navigate('/conseil/roles'),
+            },
+          ],
+        });
+      }
+    }
+    setMenuItems(updatedMenuItems);
+  }, [navigate, user.permissions, user.user_id]);
 
   const userMenu = (
     <Menu
@@ -43,7 +69,7 @@ export function Layout(props: LayoutProps) {
     />
   );
 
-  function renderUser() {
+  const renderUser = () => {
     if (user.user_id) {
       return (
         <Dropdown
@@ -77,31 +103,17 @@ export function Layout(props: LayoutProps) {
         </span>
       );
     }
-  }
+  };
 
   return (
     <AntLayout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo"></div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          items={[
-            {
-              key: 'council',
-              icon: <StarOutlined />,
-              label: 'Conseil',
-              children: [
-                {
-                  key: 'roles',
-                  label: 'Roles',
-                  icon: <CrownOutlined />,
-                  onClick: () => navigate('/conseil/roles'),
-                },
-              ],
-            },
-          ]}
-        />
+        {isLoadingPermissions ? (
+          <Spinner color={'white'} />
+        ) : (
+          <Menu theme="dark" mode="inline" items={menuItems} />
+        )}
       </Sider>
       <AntLayout className="site-layout">
         <Header style={{ padding: 0 }} className={'site-layout-header'}>
@@ -112,16 +124,7 @@ export function Layout(props: LayoutProps) {
           })}
           {renderUser()}
         </Header>
-        <Content
-          className="site-layout-background"
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            minHeight: 280,
-          }}
-        >
-          {children}
-        </Content>
+        <div style={{ padding: '0 24px 24px' }}>{children}</div>
       </AntLayout>
     </AntLayout>
   );

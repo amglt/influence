@@ -1,12 +1,16 @@
 import { Layout } from '@Components/layout';
 import { Outlet } from 'react-router-dom';
-import { useUser } from '@Api/queries/root.queries';
+import { useUser, useUserPermissions } from '@Api/root.queries';
 
 export function App() {
-  const { isLoading } = useUser();
+  const { isLoading: isLoadingUser } = useUser();
+  const { isLoading: isLoadingUserPermissions } = useUserPermissions();
 
   return (
-    <Layout isLoadingUser={isLoading}>
+    <Layout
+      isLoadingUser={isLoadingUser}
+      isLoadingPermissions={isLoadingUserPermissions}
+    >
       <Outlet />
     </Layout>
   );

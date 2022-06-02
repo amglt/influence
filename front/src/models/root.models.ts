@@ -41,6 +41,7 @@ export interface User {
   blocked: boolean;
 }
 
-export interface UserWithRole extends User {
+export interface AppUser extends User {
   role?: Role;
+  permissions: string[];
 }
