@@ -50,6 +50,12 @@ export function Layout(props: LayoutProps) {
               icon: <CrownOutlined />,
               onClick: () => navigate('/conseil/roles'),
             },
+            {
+              key: 'accounts',
+              label: 'Accounts',
+              icon: <UserOutlined />,
+              onClick: () => navigate('/conseil/accounts'),
+            },
           ],
         });
       }

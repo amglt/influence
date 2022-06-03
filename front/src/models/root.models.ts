@@ -18,6 +18,12 @@ export type Role = {
   description: string;
 };
 
+export type Account = {
+  id: string;
+  name: string;
+  userId: string;
+};
+
 export type Identity = {
   provider: string;
   access_token: string;
