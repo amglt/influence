@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { useApi } from '@Hooks/api';
-import { RolesQueriesKey } from '@Api/council/roles.queries';
+import { RolesQueriesKey } from '@Api/council/roles/roles.queries';
 
 export function useDeleteRole() {
   const { del } = useApi();

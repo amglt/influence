@@ -1,25 +1,25 @@
-import { useRoles } from '@Api/council/roles/roles.queries';
 import { Listing } from '@Components/listing';
 import { Breadcrumb } from '@Components/breadcrumb';
 import { Content } from '@Components/content';
-import { Role } from '@Models/root.models';
+import { Account } from '@Models/account.model';
 import { DeleteOutlined } from '@ant-design/icons';
-import { useDeleteRole } from '@Api/council/roles/roles.mutations';
+import { useAccounts } from '@Api/council/accounts/accounts.queries';
+import { useDeleteAccount } from '@Api/council/accounts/accounts.mutations';
 
-export function RolesList() {
-  const { data, isLoading } = useRoles();
-  const { mutate: deleteRole } = useDeleteRole();
+export function AccountsList() {
+  const { data, isLoading } = useAccounts();
+  const { mutate: deleteAccount } = useDeleteAccount();
 
   return (
     <>
       <Breadcrumb
         items={[
           { key: 'council', label: 'Conseil' },
-          { key: 'roles', label: 'Roles' },
+          { key: 'accounts', label: 'Accounts' },
         ]}
       />
       <Content>
-        <Listing<Role>
+        <Listing<Account>
           columns={[
             {
               key: 'name',
@@ -29,17 +29,12 @@ export function RolesList() {
               sorter: (a, b) => a.name.localeCompare(b.name),
             },
             {
-              key: 'description',
-              dataIndex: 'description',
-              title: 'Description',
-              filtered: true,
-              sorter: (a, b) => a.description.localeCompare(b.description),
-            },
-            {
               key: 'actions',
               dataIndex: 'actions',
               render: (_, record) => {
-                return <DeleteOutlined onClick={() => deleteRole(record.id)} />;
+                return (
+                  <DeleteOutlined onClick={() => deleteAccount(record.id)} />
+                );
               },
             },
           ]}
