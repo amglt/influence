@@ -6,7 +6,7 @@ export function useDeleteAccount() {
   const { del } = useApi();
   const queryClient = useQueryClient();
 
-  return useMutation((accountId: string) => del(`/accounts/${accountId}`), {
+  return useMutation((accountId: number) => del(`/accounts/${accountId}`), {
     onSuccess: async () => {
       await queryClient.refetchQueries(AccountsQueriesKey.Accounts);
     },
