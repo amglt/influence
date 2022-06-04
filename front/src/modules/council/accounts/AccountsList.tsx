@@ -1,7 +1,7 @@
 import { Listing } from '@Components/listing';
 import { Breadcrumb } from '@Components/breadcrumb';
 import { Content } from '@Components/content';
-import { Account } from '@Models/root.models';
+import { Account } from '@Models/account.model';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useAccounts } from '@Api/council/accounts/accounts.queries';
 import { useDeleteAccount } from '@Api/council/accounts/accounts.mutations';

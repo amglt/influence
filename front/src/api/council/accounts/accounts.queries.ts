@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { useApi } from '@Hooks/api';
-import { Account } from '@Models/root.models';
+import { Account } from '@Models/account.model';
 
 export enum AccountsQueriesKey {
   Accounts = 'Accounts',
