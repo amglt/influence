@@ -15,7 +15,12 @@ export function AccountsList() {
 
   const showDeleteConfirm = (record: Account) => {
     confirm({
-      title: `Etes-vous sûr de vouloir supprimer le compte ${record.name} ?`,
+      title: (
+        <span>
+          Etes-vous sûr de vouloir supprimer le compte
+          <strong> {record.name}</strong> ?
+        </span>
+      ),
       icon: <ExclamationCircleOutlined />,
       content: 'Cette action est irréversible.',
       okText: 'Oui',
