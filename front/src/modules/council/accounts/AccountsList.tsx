@@ -5,6 +5,7 @@ import { Account } from '@Models/account.model';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useAccounts } from '@Api/council/accounts/accounts.queries';
 import { useDeleteAccount } from '@Api/council/accounts/accounts.mutations';
+import { ModalConfirmDelete } from '@Components/modalconfirmdelete';
 
 export function AccountsList() {
   const { data, isLoading } = useAccounts();
@@ -33,7 +34,20 @@ export function AccountsList() {
               dataIndex: 'actions',
               render: (_, record) => {
                 return (
-                  <DeleteOutlined onClick={() => deleteAccount(record.id)} />
+                  <DeleteOutlined
+                    onClick={() => {
+                      ModalConfirmDelete({
+                        title: (
+                          <span>
+                            Etes-vous sûr de vouloir supprimer le compte
+                            <strong> {record.name}</strong> ?
+                          </span>
+                        ),
+                        content: 'Cette action est irréversible.',
+                        onOk: () => deleteAccount(record.id),
+                      });
+                    }}
+                  />
                 );
               },
             },
