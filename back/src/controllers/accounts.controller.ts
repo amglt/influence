@@ -71,6 +71,31 @@ accountsRouter.get(
   },
 );
 
+accountsRouter.post(
+  '/',
+  checkPermissions('write:users'),
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      if (!body.hasOwnProperty('userId'))
+        return res.status(400).send({ message: 'Username manquant.' });
+
+      const accountName = req.params.name;
+      if (!accountName)
+        return res
+          .status(400)
+          .send({ message: 'Nom de compte Dofus manquant.' });
+
+      const client = getManagementClient(
+        'read:name update:user create:account',
+      );
+      return res.status(200).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+);
+
 accountsRouter.delete(
   '/:accountId',
   checkPermissions('delete:accounts'),
