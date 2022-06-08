@@ -11,6 +11,7 @@ app()
       console.log(`[server]: Server is running at http://localhost:${port}`);
     });
   })
-  .catch(async () => {
+  .catch(async (err) => {
+    console.log(err);
     await prisma.$disconnect();
   });
