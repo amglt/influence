@@ -80,16 +80,18 @@ accountsRouter.post(
       if (!body.hasOwnProperty('userId'))
         return res.status(400).send({ message: 'Username manquant.' });
 
-      const accountName = req.params.name;
-      if (!accountName)
+      if (!body.hasOwnProperty('accountName'))
         return res
           .status(400)
           .send({ message: 'Nom de compte Dofus manquant.' });
 
-      const client = getManagementClient(
-        'read:name update:user create:account',
-      );
-      return res.status(200).send();
+      const newAccount = await prisma.account.create({
+        data: {
+          userId: req.body.userId,
+          name: req.body.accountName,
+        },
+      });
+      return res.status(200).send(newAccount);
     } catch (err) {
       return res.status(500).send();
     }
