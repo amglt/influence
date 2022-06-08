@@ -2,39 +2,14 @@ import { Listing } from '@Components/listing';
 import { Breadcrumb } from '@Components/breadcrumb';
 import { Content } from '@Components/content';
 import { Account } from '@Models/account.model';
-import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import { useAccounts } from '@Api/council/accounts/accounts.queries';
 import { useDeleteAccount } from '@Api/council/accounts/accounts.mutations';
+import { ModalConfirmDelete } from '@Components/modalconfirmdelete';
 
 export function AccountsList() {
   const { data, isLoading } = useAccounts();
   const { mutate: deleteAccount } = useDeleteAccount();
-
-  const { confirm } = Modal;
-
-  const showDeleteConfirm = (record: Account) => {
-    confirm({
-      title: (
-        <span>
-          Etes-vous sûr de vouloir supprimer le compte
-          <strong> {record.name}</strong> ?
-        </span>
-      ),
-      icon: <ExclamationCircleOutlined />,
-      content: 'Cette action est irréversible.',
-      okText: 'Oui',
-      okType: 'danger',
-      cancelText: 'Non',
-      onOk() {
-        deleteAccount(record.id);
-        console.log('OK');
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
-  };
 
   return (
     <>
@@ -61,8 +36,16 @@ export function AccountsList() {
                 return (
                   <DeleteOutlined
                     onClick={() => {
-                      console.log('Delete account clicked');
-                      showDeleteConfirm(record);
+                      ModalConfirmDelete({
+                        title: (
+                          <span>
+                            Etes-vous sûr de vouloir supprimer le compte
+                            <strong> {record.name}</strong> ?
+                          </span>
+                        ),
+                        content: 'Cette action est irréversible.',
+                        onOk: () => deleteAccount(record.id),
+                      });
                     }}
                   />
                 );
