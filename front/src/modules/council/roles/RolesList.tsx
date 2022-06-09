@@ -24,8 +24,6 @@ export function RolesList() {
   const [selectedRole, setSelectedRole] = useState<Role | undefined>();
   const [addEditRoleForm] = useForm();
 
-  console.log(selectedRole);
-
   const { data: rolesData, isLoading: isLoadingRoles } = useRoles();
   const { data: roleData, isLoading: isRoleLoading } = useRole(
     selectedRole?.id,
@@ -52,12 +50,14 @@ export function RolesList() {
       const permissionsNames = addEditRoleForm.getFieldValue(
         'permissions',
       ) as string[];
-      for (const perm of permissionsNames) {
-        if (permissionsData) {
-          const relatedPerm = permissionsData.find(
-            (p) => p.permission_name === perm,
-          );
-          if (relatedPerm) permissions.push(relatedPerm);
+      if (permissionsNames) {
+        for (const perm of permissionsNames) {
+          if (permissionsData) {
+            const relatedPerm = permissionsData.find(
+              (p) => p.permission_name === perm,
+            );
+            if (relatedPerm) permissions.push(relatedPerm);
+          }
         }
       }
       if (selectedRole) {
