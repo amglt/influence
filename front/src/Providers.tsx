@@ -1,11 +1,40 @@
 import { Router } from './Router';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
+import { notification } from 'antd';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { Text } from '@Components/typography';
 import { store } from '@Store/';
+import { ApiError } from '@Models/root.models';
+import { isApiError } from '@Utils';
 
-const queryClient = new QueryClient();
+const globalErrorNotif = (err: ApiError) => {
+  notification.open({
+    message: err.message,
+    description: err.description,
+    type: 'error',
+    placement: 'bottomRight',
+  });
+};
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      onError: (err) => {
+        if (isApiError(err)) {
+          globalErrorNotif(err);
+        }
+      },
+    },
+    mutations: {
+      onError: (err) => {
+        if (isApiError(err)) {
+          globalErrorNotif(err);
+        }
+      },
+    },
+  },
+});
 
 export function Providers() {
   const domain = process.env.DOMAIN;
