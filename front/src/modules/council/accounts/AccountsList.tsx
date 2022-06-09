@@ -4,15 +4,60 @@ import { Content } from '@Components/content';
 import { Account } from '@Models/account.model';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useAccounts } from '@Api/council/accounts/accounts.queries';
-import { useDeleteAccount } from '@Api/council/accounts/accounts.mutations';
+import {
+  useAddAccount,
+  useDeleteAccount,
+} from '@Api/council/accounts/accounts.mutations';
 import { ModalConfirmDelete } from '@Components/modalconfirmdelete';
+import { Button, FormInstance } from 'antd';
+import { useState } from 'react';
+import { useForm } from 'antd/lib/form/Form';
+import { AddAccountModal } from './AddAccountModal';
+import { useUsers } from '@Api/council/users/users.queries';
 
 export function AccountsList() {
   const { data, isLoading } = useAccounts();
   const { mutate: deleteAccount } = useDeleteAccount();
 
+  const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
+  const [addAccountForm] = useForm();
+
+  const { data: usersData } = useUsers();
+
+  const { mutate: createAccount } = useAddAccount();
+
+  const closeAddAccountModal = () => {
+    addAccountForm.resetFields();
+    setIsAddAccountModalOpen(false);
+  };
+
+  const generateAccountBody = (form: FormInstance) => {
+    const accountName = form.getFieldValue('accountName');
+    const userId = form.getFieldValue('userId');
+    // TODO : checks
+    return {
+      accountName,
+      userId,
+    };
+  };
+
+  const handleOnOkCreateAccount = async () => {
+    try {
+      await addAccountForm.validateFields();
+      createAccount({ ...generateAccountBody(addAccountForm) });
+      closeAddAccountModal();
+    } catch {}
+  };
+
   return (
     <>
+      <AddAccountModal
+        isOpen={isAddAccountModalOpen}
+        onCancel={closeAddAccountModal}
+        onOk={handleOnOkCreateAccount}
+        form={addAccountForm}
+        users={usersData ?? []}
+      />
       <Breadcrumb
         items={[
           { key: 'council', label: 'Conseil' },
@@ -20,6 +65,9 @@ export function AccountsList() {
         ]}
       />
       <Content>
+        <Button type={'primary'} onClick={() => setIsAddAccountModalOpen(true)}>
+          Ajouter un compte
+        </Button>
         <Listing<Account>
           columns={[
             {
