@@ -38,7 +38,7 @@ export function AddAccountModal(props: AddAccountModalProps) {
           rules={[
             { required: true, message: 'Le compte Dofus est obligatoire' },
             {
-              pattern: /[0-9a-zA-Z-]{2,20}#[1-9][0-9]{3}/,
+              pattern: /^[0-9a-zA-Z-]{2,20}#[1-9][0-9]{3}$/,
               message: 'Veuillez entrer un nom de compte correct.',
             },
           ]}
