@@ -67,6 +67,7 @@ managementRouter.get(
       });
 
       return res.status(200).send({
+        id: role.id,
         name: role.name,
         description: role.description,
         permissions: rolePermissions,
