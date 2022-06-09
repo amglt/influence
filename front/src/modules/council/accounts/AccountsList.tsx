@@ -31,20 +31,12 @@ export function AccountsList() {
     setIsAddAccountModalOpen(false);
   };
 
-  const generateAccountBody = (form: FormInstance) => {
-    const accountName = form.getFieldValue('accountName');
-    const userId = form.getFieldValue('userId');
-    // TODO : checks
-    return {
-      accountName,
-      userId,
-    };
-  };
-
   const handleOnOkCreateAccount = async () => {
     try {
       await addAccountForm.validateFields();
-      createAccount({ ...generateAccountBody(addAccountForm) });
+      const accountName = addAccountForm.getFieldValue('accountName');
+      const userId = addAccountForm.getFieldValue('userId');
+      createAccount({ accountName, userId });
       closeAddAccountModal();
     } catch {}
   };

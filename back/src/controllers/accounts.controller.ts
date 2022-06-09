@@ -73,7 +73,7 @@ accountsRouter.get(
 
 accountsRouter.post(
   '/',
-  checkPermissions('write:users'),
+  checkPermissions('write:accounts'),
   async (req: Request, res: Response) => {
     try {
       const body = req.body;
@@ -84,6 +84,13 @@ accountsRouter.post(
         return res
           .status(400)
           .send({ message: 'Nom de compte Dofus manquant.' });
+
+      const accounts = await prisma.account.findMany();
+
+      if (!accounts?.some((account) => account.name === req.body.accountName))
+        return res
+          .status(400)
+          .send({ message: 'Ce nom de compte Dofus existe déjà.' });
 
       const newAccount = await prisma.account.create({
         data: {
