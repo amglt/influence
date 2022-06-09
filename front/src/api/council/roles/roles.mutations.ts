@@ -28,3 +28,20 @@ export function useAddRole() {
     },
   );
 }
+
+export function useEditRole() {
+  const { patch } = useApi();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (request: {
+      id: string;
+      body: { name: string; description: string; permissions: Permission[] };
+    }) => patch(`/management/roles/${request.id}`, { ...request.body }),
+    {
+      onSuccess: async () => {
+        await queryClient.refetchQueries(RolesQueriesKey.Roles);
+      },
+    },
+  );
+}

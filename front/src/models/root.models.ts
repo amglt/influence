@@ -18,6 +18,13 @@ export type Role = {
   description: string;
 };
 
+export type RoleWithPermissions = {
+  id: string;
+  name: string;
+  description: string;
+  permissions: Permission[];
+};
+
 export type Identity = {
   provider: string;
   access_token: string;

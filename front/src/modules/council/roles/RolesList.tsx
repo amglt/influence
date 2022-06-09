@@ -1,68 +1,87 @@
-import { usePermissions, useRoles } from '@Api/council/roles/roles.queries';
+import {
+  usePermissions,
+  useRole,
+  useRoles,
+} from '@Api/council/roles/roles.queries';
 import { Listing } from '@Components/listing';
 import { Breadcrumb } from '@Components/breadcrumb';
 import { Content } from '@Components/content';
 import { Permission, Role } from '@Models/root.models';
-import { DeleteOutlined } from '@ant-design/icons';
-import { useAddRole, useDeleteRole } from '@Api/council/roles/roles.mutations';
-import { Button, FormInstance } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import {
+  useAddRole,
+  useDeleteRole,
+  useEditRole,
+} from '@Api/council/roles/roles.mutations';
+import { Button, Space } from 'antd';
 import { useState } from 'react';
-import { AddRoleModal } from '@Modules/council/roles/AddRoleModal';
+import { AddEditRoleModal } from '@Modules/council/roles/AddEditRoleModal';
 import { useForm } from 'antd/lib/form/Form';
 import { ModalConfirmDelete } from '@Components/modalconfirmdelete';
 
 export function RolesList() {
-  const { data, isLoading } = useRoles();
-  const { mutate: deleteRole } = useDeleteRole();
+  const [isAddEditRoleModalOpen, setIsAddEditRoleModalOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<Role | undefined>();
+  const [addEditRoleForm] = useForm();
 
-  const [isAddRoleModalOpen, setIsAddRoleModalOpen] = useState(false);
-  const [addRoleForm] = useForm();
+  console.log(selectedRole);
 
+  const { data: rolesData, isLoading: isLoadingRoles } = useRoles();
+  const { data: roleData, isLoading: isRoleLoading } = useRole(
+    selectedRole?.id,
+    addEditRoleForm,
+  );
   const { data: permissionsData } = usePermissions();
 
+  const { mutate: deleteRole } = useDeleteRole();
   const { mutate: createRole } = useAddRole();
+  const { mutate: editRole } = useEditRole();
 
-  const closeAddRoleModal = () => {
-    addRoleForm.resetFields();
-    setIsAddRoleModalOpen(false);
-  };
-
-  const generateRoleBody = (form: FormInstance) => {
-    const name = form.getFieldValue('name');
-    const description = form.getFieldValue('description');
-    const permissions: Permission[] = [];
-    const permissionsNames = form.getFieldValue('permissions') as string[];
-    for (const perm of permissionsNames) {
-      if (permissionsData) {
-        const relatedPerm = permissionsData.find(
-          (p) => p.permission_name === perm,
-        );
-        if (relatedPerm) permissions.push(relatedPerm);
-      }
-    }
-    return {
-      name,
-      description,
-      permissions,
-    };
+  const closeAddEditRoleModal = () => {
+    setSelectedRole(undefined);
+    addEditRoleForm.resetFields();
+    setIsAddEditRoleModalOpen(false);
   };
 
   const handleOnOkCreateRole = async () => {
     try {
-      await addRoleForm.validateFields();
-      createRole({ ...generateRoleBody(addRoleForm) });
-      closeAddRoleModal();
+      await addEditRoleForm.validateFields();
+      const name = addEditRoleForm.getFieldValue('name');
+      const description = addEditRoleForm.getFieldValue('description');
+      const permissions: Permission[] = [];
+      const permissionsNames = addEditRoleForm.getFieldValue(
+        'permissions',
+      ) as string[];
+      for (const perm of permissionsNames) {
+        if (permissionsData) {
+          const relatedPerm = permissionsData.find(
+            (p) => p.permission_name === perm,
+          );
+          if (relatedPerm) permissions.push(relatedPerm);
+        }
+      }
+      if (selectedRole) {
+        editRole({
+          id: selectedRole.id,
+          body: { name, description, permissions },
+        });
+      } else {
+        createRole({ name, description, permissions });
+      }
+      closeAddEditRoleModal();
     } catch {}
   };
 
   return (
     <>
-      <AddRoleModal
-        isOpen={isAddRoleModalOpen}
-        onCancel={closeAddRoleModal}
+      <AddEditRoleModal
+        isOpen={isAddEditRoleModalOpen}
+        onCancel={closeAddEditRoleModal}
         onOk={handleOnOkCreateRole}
-        form={addRoleForm}
+        form={addEditRoleForm}
         permissions={permissionsData ?? []}
+        selectedRole={roleData}
+        isLoadingRole={isRoleLoading}
       />
       <Breadcrumb
         items={[
@@ -71,7 +90,10 @@ export function RolesList() {
         ]}
       />
       <Content>
-        <Button type={'primary'} onClick={() => setIsAddRoleModalOpen(true)}>
+        <Button
+          type={'primary'}
+          onClick={() => setIsAddEditRoleModalOpen(true)}
+        >
           Ajouter un role
         </Button>
         <Listing<Role>
@@ -95,29 +117,37 @@ export function RolesList() {
               dataIndex: 'actions',
               render: (_, record) => {
                 return record.id !== process.env.COUNCIL_ROLE_ID ? (
-                  <DeleteOutlined
-                    onClick={() =>
-                      ModalConfirmDelete({
-                        title: (
-                          <span>
-                            Vous êtes sur le point de supprimer le role{' '}
-                            <strong>{record.name}</strong>. Etes-vous certain de
-                            vouloir de le supprimer ?
-                          </span>
-                        ),
-                        content: 'Cette action est irréversible',
-                        onOk: () => deleteRole(record.id),
-                      })
-                    }
-                  />
+                  <Space>
+                    <EditOutlined
+                      onClick={() => {
+                        setSelectedRole(record);
+                        setIsAddEditRoleModalOpen(true);
+                      }}
+                    />
+                    <DeleteOutlined
+                      onClick={() =>
+                        ModalConfirmDelete({
+                          title: (
+                            <span>
+                              Vous êtes sur le point de supprimer le role{' '}
+                              <strong>{record.name}</strong>. Etes-vous certain
+                              de vouloir de le supprimer ?
+                            </span>
+                          ),
+                          content: 'Cette action est irréversible',
+                          onOk: () => deleteRole(record.id),
+                        })
+                      }
+                    />
+                  </Space>
                 ) : (
                   <span />
                 );
               },
             },
           ]}
-          data={data}
-          loading={isLoading}
+          data={rolesData}
+          loading={isLoadingRoles}
         />
       </Content>
     </>
