@@ -12,3 +12,17 @@ export function useDeleteAccount() {
     },
   });
 }
+
+export function useAddAccount() {
+  const { post } = useApi();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (body: { accountName: string; userId: string }) => post(`/accounts`, body),
+    {
+      onSuccess: async () => {
+        await queryClient.refetchQueries(AccountsQueriesKey.Accounts);
+      },
+    },
+  );
+}

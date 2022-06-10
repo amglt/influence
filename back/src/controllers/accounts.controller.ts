@@ -71,6 +71,40 @@ accountsRouter.get(
   },
 );
 
+accountsRouter.post(
+  '/',
+  checkPermissions('write:accounts'),
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      if (!body.hasOwnProperty('userId'))
+        return res.status(400).send({ message: 'Username manquant.' });
+
+      if (!body.hasOwnProperty('accountName'))
+        return res
+          .status(400)
+          .send({ message: 'Nom de compte Dofus manquant.' });
+
+      const accounts = await prisma.account.findMany();
+
+      if (accounts.some((account) => account.name === req.body.accountName))
+        return res
+          .status(400)
+          .send({ message: 'Ce nom de compte Dofus existe déjà.' });
+
+      const newAccount = await prisma.account.create({
+        data: {
+          userId: req.body.userId,
+          name: req.body.accountName,
+        },
+      });
+      return res.status(200).send(newAccount);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+);
+
 accountsRouter.delete(
   '/:accountId',
   checkPermissions('delete:accounts'),
