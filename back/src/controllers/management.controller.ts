@@ -130,7 +130,19 @@ managementRouter.post(
         return res.status(400).send({ message: 'Nom ou description manquant' });
       }
 
-      const client = getManagementClient('create:roles update:roles');
+      const client = getManagementClient(
+        'create:roles update:roles read:roles',
+      );
+      const existingRoles = await client.getRoles();
+      const existingRole = existingRoles.find(
+        (role) => role.name?.toLowerCase() === body.name.toLowerCase(),
+      );
+      if (existingRole) {
+        return res
+          .status(400)
+          .send({ message: 'Un role avec ce nom existe déjà' });
+      }
+
       const newRole = await client.createRole({
         name: body.name,
         description: body.description,

@@ -7,6 +7,11 @@ export const enum AppPermissions {
   BanUser = 'ban:users',
 }
 
+export type ApiError = {
+  message: string;
+  description?: string;
+};
+
 export type Permission = {
   permission_name: string;
   resource_server_identifier: string;
