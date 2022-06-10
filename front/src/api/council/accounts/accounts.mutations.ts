@@ -18,7 +18,22 @@ export function useAddAccount() {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (body: { accountName: string; userId: string }) => post(`/accounts`, body),
+    (body: { name: string; userId: string }) => post(`/accounts`, body),
+    {
+      onSuccess: async () => {
+        await queryClient.refetchQueries(AccountsQueriesKey.Accounts);
+      },
+    },
+  );
+}
+
+export function useEditAccount() {
+  const { put } = useApi();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (request: { id: number; body: { name: string; userId: string } }) =>
+      put(`/accounts/${request.id}`, { ...request.body }),
     {
       onSuccess: async () => {
         await queryClient.refetchQueries(AccountsQueriesKey.Accounts);

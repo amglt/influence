@@ -80,14 +80,14 @@ accountsRouter.post(
       if (!body.hasOwnProperty('userId'))
         return res.status(400).send({ message: 'Username manquant.' });
 
-      if (!body.hasOwnProperty('accountName'))
+      if (!body.hasOwnProperty('name'))
         return res
           .status(400)
           .send({ message: 'Nom de compte Dofus manquant.' });
 
       const accounts = await prisma.account.findMany();
 
-      if (accounts.some((account) => account.name === req.body.accountName))
+      if (accounts.some((account) => account.name === req.body.name))
         return res
           .status(400)
           .send({ message: 'Ce nom de compte Dofus existe déjà.' });
@@ -95,10 +95,54 @@ accountsRouter.post(
       const newAccount = await prisma.account.create({
         data: {
           userId: req.body.userId,
-          name: req.body.accountName,
+          name: req.body.name,
         },
       });
       return res.status(200).send(newAccount);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+);
+
+accountsRouter.put(
+  '/:id',
+  checkPermissions('write:accounts'),
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      const accountId = Number(req.params.id);
+      if (!body.hasOwnProperty('userId'))
+        return res.status(400).send({ message: 'Username manquant.' });
+
+      if (!body.hasOwnProperty('name'))
+        return res
+          .status(400)
+          .send({ message: 'Nom de compte Dofus manquant.' });
+
+      const accounts = await prisma.account.findMany();
+
+      if (
+        accounts.some(
+          (account) => account.id !== accountId && account.name === body.name,
+        )
+      )
+        return res
+          .status(400)
+          .send({ message: 'Ce nom de compte Dofus existe déjà.' });
+
+      // update account
+      await prisma.account.update({
+        where: {
+          id: accountId,
+        },
+        data: {
+          name: body.name,
+          userId: body.userId,
+        },
+      });
+
+      return res.status(200).send();
     } catch (err) {
       return res.status(500).send();
     }

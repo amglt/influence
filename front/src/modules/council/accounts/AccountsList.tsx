@@ -2,53 +2,73 @@ import { Listing } from '@Components/listing';
 import { Breadcrumb } from '@Components/breadcrumb';
 import { Content } from '@Components/content';
 import { Account } from '@Models/account.model';
-import { DeleteOutlined } from '@ant-design/icons';
-import { useAccounts } from '@Api/council/accounts/accounts.queries';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import {
+  useAccount,
+  useAccounts,
+} from '@Api/council/accounts/accounts.queries';
 import {
   useAddAccount,
   useDeleteAccount,
+  useEditAccount,
 } from '@Api/council/accounts/accounts.mutations';
 import { ModalConfirmDelete } from '@Components/modalconfirmdelete';
-import { Button, FormInstance } from 'antd';
+import { Button, Space } from 'antd';
 import { useState } from 'react';
 import { useForm } from 'antd/lib/form/Form';
-import { AddAccountModal } from './AddAccountModal';
+import { AddEditAccountModal } from './AddEditAccountModal';
 import { useUsers } from '@Api/council/users/users.queries';
 
 export function AccountsList() {
-  const { data, isLoading } = useAccounts();
-  const { mutate: deleteAccount } = useDeleteAccount();
+  const [isAddEditAccountModalOpen, setIsAddEditAccountModalOpen] =
+    useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<Account | undefined>();
+  const [addEditAccountForm] = useForm();
 
-  const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
-  const [addAccountForm] = useForm();
-
+  const { data: accountsData, isLoading: isLoadingAccounts } = useAccounts();
+  const { data: accountData, isLoading: isAccountLoading } = useAccount(
+    selectedAccount?.id,
+    addEditAccountForm,
+  );
   const { data: usersData } = useUsers();
 
+  const { mutate: deleteAccount } = useDeleteAccount();
   const { mutate: createAccount } = useAddAccount();
+  const { mutate: editAccount } = useEditAccount();
 
-  const closeAddAccountModal = () => {
-    addAccountForm.resetFields();
-    setIsAddAccountModalOpen(false);
+  const closeAddEditAccountModal = () => {
+    setSelectedAccount(undefined);
+    addEditAccountForm.resetFields();
+    setIsAddEditAccountModalOpen(false);
   };
 
   const handleOnOkCreateAccount = async () => {
     try {
-      await addAccountForm.validateFields();
-      const accountName = addAccountForm.getFieldValue('accountName');
-      const userId = addAccountForm.getFieldValue('userId');
-      createAccount({ accountName, userId });
-      closeAddAccountModal();
+      await addEditAccountForm.validateFields();
+      const name = addEditAccountForm.getFieldValue('name');
+      const userId = addEditAccountForm.getFieldValue('userId');
+      if (selectedAccount) {
+        editAccount({
+          id: selectedAccount.id,
+          body: { name, userId },
+        });
+      } else {
+        createAccount({ name, userId });
+      }
+      closeAddEditAccountModal();
     } catch {}
   };
 
   return (
     <>
-      <AddAccountModal
-        isOpen={isAddAccountModalOpen}
-        onCancel={closeAddAccountModal}
+      <AddEditAccountModal
+        isOpen={isAddEditAccountModalOpen}
+        onCancel={closeAddEditAccountModal}
         onOk={handleOnOkCreateAccount}
-        form={addAccountForm}
+        form={addEditAccountForm}
         users={usersData ?? []}
+        selectedAccount={accountData}
+        isLoadingAccount={isAccountLoading}
       />
       <Breadcrumb
         items={[
@@ -57,7 +77,10 @@ export function AccountsList() {
         ]}
       />
       <Content>
-        <Button type={'primary'} onClick={() => setIsAddAccountModalOpen(true)}>
+        <Button
+          type={'primary'}
+          onClick={() => setIsAddEditAccountModalOpen(true)}
+        >
           Ajouter un compte
         </Button>
         <Listing<Account>
@@ -74,26 +97,34 @@ export function AccountsList() {
               dataIndex: 'actions',
               render: (_, record) => {
                 return (
-                  <DeleteOutlined
-                    onClick={() => {
-                      ModalConfirmDelete({
-                        title: (
-                          <span>
-                            Etes-vous sûr de vouloir supprimer le compte
-                            <strong> {record.name}</strong> ?
-                          </span>
-                        ),
-                        content: 'Cette action est irréversible.',
-                        onOk: () => deleteAccount(record.id),
-                      });
-                    }}
-                  />
+                  <Space>
+                    <EditOutlined
+                      onClick={() => {
+                        setSelectedAccount(record);
+                        setIsAddEditAccountModalOpen(true);
+                      }}
+                    />
+                    <DeleteOutlined
+                      onClick={() => {
+                        ModalConfirmDelete({
+                          title: (
+                            <span>
+                              Etes-vous sûr de vouloir supprimer le compte
+                              <strong> {record.name}</strong> ?
+                            </span>
+                          ),
+                          content: 'Cette action est irréversible.',
+                          onOk: () => deleteAccount(record.id),
+                        });
+                      }}
+                    />
+                  </Space>
                 );
               },
             },
           ]}
-          data={data}
-          loading={isLoading}
+          data={accountsData}
+          loading={isLoadingAccounts}
         />
       </Content>
     </>
