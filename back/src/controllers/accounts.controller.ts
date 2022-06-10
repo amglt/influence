@@ -87,7 +87,7 @@ accountsRouter.post(
 
       const accounts = await prisma.account.findMany();
 
-      if (!accounts?.some((account) => account.name === req.body.accountName))
+      if (accounts.some((account) => account.name === req.body.accountName))
         return res
           .status(400)
           .send({ message: 'Ce nom de compte Dofus existe déjà.' });
