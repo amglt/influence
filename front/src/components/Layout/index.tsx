@@ -10,10 +10,10 @@ import {
 } from '@ant-design/icons';
 import './layout.less';
 import { useNavigate } from 'react-router-dom';
-import { Text } from '@Components/typography';
+import { Text } from '@Components/Typography';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useSelector } from '@Store/';
-import { Spinner } from '@Components/spinner';
+import { Spinner } from '@Components/Spinner';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { AppPermissions } from '@Models/root.models';
 
@@ -38,6 +38,20 @@ export function Layout(props: LayoutProps) {
   useEffect(() => {
     const updatedMenuItems = [];
     if (user.user_id) {
+      if (user.permissions.includes(AppPermissions.IsRecruitment)) {
+        updatedMenuItems.push({
+          key: 'recruitment',
+          label: 'Recrutement',
+          children: [
+            {
+              key: 'accounts',
+              label: 'Accounts',
+              icon: <UserOutlined />,
+              onClick: () => navigate('/recruitment/accounts'),
+            },
+          ],
+        });
+      }
       if (user.permissions.includes(AppPermissions.IsCouncil)) {
         updatedMenuItems.push({
           key: 'council',
@@ -48,13 +62,7 @@ export function Layout(props: LayoutProps) {
               key: 'roles',
               label: 'Roles',
               icon: <CrownOutlined />,
-              onClick: () => navigate('/conseil/roles'),
-            },
-            {
-              key: 'accounts',
-              label: 'Accounts',
-              icon: <UserOutlined />,
-              onClick: () => navigate('/conseil/accounts'),
+              onClick: () => navigate('/council/roles'),
             },
           ],
         });

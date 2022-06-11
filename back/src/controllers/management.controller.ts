@@ -96,7 +96,13 @@ managementRouter.patch(
           .status(400)
           .send({ message: `Nom ou description manquante` });
 
-      const client = getManagementClient('update:roles');
+      const client = getManagementClient('update:roles read:roles');
+      const roles = await client.getRoles();
+      if (roles.find((role) => role.name === body.name && role.id !== roleId))
+        return res
+          .status(400)
+          .send({ message: 'Un role avec ce nom existe deja' });
+
       await client.updateRole(
         { id: roleId },
         {

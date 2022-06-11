@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { notification } from 'antd';
 import { Auth0Provider } from '@auth0/auth0-react';
-import { Text } from '@Components/typography';
+import { Text } from '@Components/Typography';
 import { store } from '@Store/';
 import { ApiError } from '@Models/root.models';
 import { isApiError } from '@Utils';
@@ -25,6 +25,7 @@ const queryClient = new QueryClient({
           globalErrorNotif(err);
         }
       },
+      refetchOnWindowFocus: false,
     },
     mutations: {
       onError: (err) => {

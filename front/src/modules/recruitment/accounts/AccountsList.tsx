@@ -1,6 +1,6 @@
-import { Listing } from '@Components/listing';
-import { Breadcrumb } from '@Components/breadcrumb';
-import { Content } from '@Components/content';
+import { Listing } from '@Components/Listing';
+import { Breadcrumb } from '@Components/Breadcrumb';
+import { Content } from '@Components/Content';
 import { Account } from '@Models/account.model';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import {
@@ -12,7 +12,7 @@ import {
   useDeleteAccount,
   useEditAccount,
 } from '@Api/council/accounts/accounts.mutations';
-import { ModalConfirmDelete } from '@Components/modalconfirmdelete';
+import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
 import { Button, Space } from 'antd';
 import { useState } from 'react';
 import { useForm } from 'antd/lib/form/Form';

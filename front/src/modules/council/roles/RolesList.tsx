@@ -3,9 +3,9 @@ import {
   useRole,
   useRoles,
 } from '@Api/council/roles/roles.queries';
-import { Listing } from '@Components/listing';
-import { Breadcrumb } from '@Components/breadcrumb';
-import { Content } from '@Components/content';
+import { Listing } from '@Components/Listing';
+import { Breadcrumb } from '@Components/Breadcrumb';
+import { Content } from '@Components/Content';
 import { Permission, Role } from '@Models/root.models';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import {
@@ -17,7 +17,7 @@ import { Button, Space } from 'antd';
 import { useState } from 'react';
 import { AddEditRoleModal } from '@Modules/council/roles/AddEditRoleModal';
 import { useForm } from 'antd/lib/form/Form';
-import { ModalConfirmDelete } from '@Components/modalconfirmdelete';
+import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
 
 export function RolesList() {
   const [isAddEditRoleModalOpen, setIsAddEditRoleModalOpen] = useState(false);

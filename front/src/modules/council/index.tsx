@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { Outlet } from 'react-router-dom';
-import { Text } from '@Components/typography';
+import { Text } from '@Components/Typography';
 
 export function Council() {
   const { user } = useAuth0();

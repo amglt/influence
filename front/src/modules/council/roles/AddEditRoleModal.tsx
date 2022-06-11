@@ -1,6 +1,6 @@
 import { Checkbox, Col, Form, FormInstance, Input, Modal, Row } from 'antd';
 import { Permission, RoleWithPermissions } from '@Models/root.models';
-import { Spinner } from '@Components/spinner';
+import { Spinner } from '@Components/Spinner';
 
 export interface AddEditRoleModalProps {
   isOpen: boolean;
