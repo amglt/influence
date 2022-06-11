@@ -38,6 +38,20 @@ export function Layout(props: LayoutProps) {
   useEffect(() => {
     const updatedMenuItems = [];
     if (user.user_id) {
+      if (user.permissions.includes(AppPermissions.IsRecruitment)) {
+        updatedMenuItems.push({
+          key: 'recruitment',
+          label: 'Recrutement',
+          children: [
+            {
+              key: 'accounts',
+              label: 'Accounts',
+              icon: <UserOutlined />,
+              onClick: () => navigate('/recruitment/accounts'),
+            },
+          ],
+        });
+      }
       if (user.permissions.includes(AppPermissions.IsCouncil)) {
         updatedMenuItems.push({
           key: 'council',
@@ -48,13 +62,7 @@ export function Layout(props: LayoutProps) {
               key: 'roles',
               label: 'Roles',
               icon: <CrownOutlined />,
-              onClick: () => navigate('/conseil/roles'),
-            },
-            {
-              key: 'accounts',
-              label: 'Accounts',
-              icon: <UserOutlined />,
-              onClick: () => navigate('/conseil/accounts'),
+              onClick: () => navigate('/council/roles'),
             },
           ],
         });

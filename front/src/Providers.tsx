@@ -25,6 +25,7 @@ const queryClient = new QueryClient({
           globalErrorNotif(err);
         }
       },
+      refetchOnWindowFocus: false,
     },
     mutations: {
       onError: (err) => {
