@@ -2,7 +2,7 @@ import { Account } from '@Models/account.model';
 import { User } from '@Models/root.models';
 import { Form, Input, Select, FormInstance, Modal } from 'antd';
 import React from 'react';
-import { Spinner } from '@Components/spinner';
+import { Spinner } from '@Components/Spinner';
 
 export interface AddEditAccountModalProps {
   isOpen: boolean;

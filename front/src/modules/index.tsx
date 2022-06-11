@@ -1,4 +1,4 @@
-import { Layout } from '@Components/layout';
+import { Layout } from '@Components/Layout';
 import { Outlet } from 'react-router-dom';
 import { useUser, useUserPermissions } from '@Api/root.queries';
 

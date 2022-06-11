@@ -10,10 +10,10 @@ import {
 } from '@ant-design/icons';
 import './layout.less';
 import { useNavigate } from 'react-router-dom';
-import { Text } from '@Components/typography';
+import { Text } from '@Components/Typography';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useSelector } from '@Store/';
-import { Spinner } from '@Components/spinner';
+import { Spinner } from '@Components/Spinner';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { AppPermissions } from '@Models/root.models';
 
