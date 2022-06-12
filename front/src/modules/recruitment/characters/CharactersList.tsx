@@ -43,27 +43,35 @@ export function CharactersList() {
               sorter: (a, b) => a.rank.localeCompare(b.rank),
             },
             {
-              key: 'accountId',
-              dataIndex: 'accountId',
+              key: 'account.name',
+              dataIndex: ['account', 'name'],
               title: 'Compte',
               filtered: true,
               sorter: (a, b) => a.account.name.localeCompare(b.account.name),
             },
             {
-              key: 'discordTag',
-              dataIndex: 'discordTag',
+              key: 'account.userId',
+              dataIndex: ['account', 'userId'],
               title: 'Discord',
-              filtered: true,
-              sorter: (a, b) => a.discordTag.localeCompare(b.discordTag),
+              sorter: (a, b) =>
+                a.account.userId.localeCompare(b.account.userId),
+              render: (value) => {
+                return value.split('|').pop();
+              },
             },
             {
               key: 'recruitmentDate',
               dataIndex: 'recruitmentDate',
               title: 'Date de recrutement',
-              filtered: true,
+              // filtered: true,
               sorter: (a, b) =>
                 moment(a.recruitmentDate).unix() -
                 moment(b.recruitmentDate).unix(),
+              render: (value) => {
+                let date = value.split('T')[0].split('-');
+                date = `${date[1]}/${date[2]}/${date[0]}`;
+                return date;
+              },
             },
             {
               key: 'actions',

@@ -7,6 +7,5 @@ export type Character = {
   rank: string;
   account: Account;
   accountId: number;
-  discordTag: string;
   recruitmentDate: Date;
 };
