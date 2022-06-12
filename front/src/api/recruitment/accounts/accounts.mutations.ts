@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { useApi } from '@Hooks/api';
-import { AccountsQueriesKey } from '@Api/council/accounts/accounts.queries';
+import { AccountsQueriesKey } from '@Api/recruitment/accounts/accounts.queries';
 
 export function useDeleteAccount() {
   const { del } = useApi();
