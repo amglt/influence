@@ -9,6 +9,7 @@ import {
   DownOutlined,
 } from '@ant-design/icons';
 import './layout.less';
+import logo from '../../../public/assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { Text } from '@Components/Typography';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -122,7 +123,9 @@ export function Layout(props: LayoutProps) {
   return (
     <AntLayout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo"></div>
+        <div className="logo" onClick={() => navigate('/')}>
+          <img src={logo} alt={'Influence-logo'} height={35} width={35} />{' '}
+        </div>
         {isLoadingPermissions ? (
           <Spinner color={'white'} />
         ) : (

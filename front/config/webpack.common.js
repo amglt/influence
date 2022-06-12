@@ -43,6 +43,10 @@ module.exports = {
           filename: 'fonts/[name][ext][query]',
         },
       },
+      {
+        test: /\.png/,
+        type: 'asset/resource',
+      },
     ],
   },
   resolve: {
