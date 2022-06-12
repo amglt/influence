@@ -1,4 +1,4 @@
-import { Account } from './account.model';
+import { Account } from './account.models';
 
 export type Character = {
   id: number;
@@ -6,6 +6,5 @@ export type Character = {
   class: string;
   rank: string;
   account: Account;
-  accountId: number;
   recruitmentDate: Date;
 };

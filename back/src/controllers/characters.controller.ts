@@ -47,4 +47,40 @@ charactersRouter.get(
   },
 );
 
+charactersRouter.post(
+  '/',
+  checkPermissions('write:characters'),
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      console.log(body);
+      if (
+        !body.hasOwnProperty('name') ||
+        !body.hasOwnProperty('class') ||
+        !body.hasOwnProperty('rank') ||
+        !body.hasOwnProperty('accountId') ||
+        !body.hasOwnProperty('recruitmentDate')
+      )
+        return res.status(400).send({ message: 'Propriété manquante.' });
+
+      const characters = await prisma.character.findMany();
+      if (characters.some((character) => character.name === req.body.name))
+        return res.status(400).send({ message: 'Ce personnage existe déjà.' });
+
+      const newCharacter = await prisma.character.create({
+        data: {
+          name: req.body.name,
+          class: req.body.class,
+          rank: req.body.rank,
+          accountId: req.body.accountId,
+          recruitmentDate: req.body.recruitmentDate,
+        },
+      });
+      return res.status(200).send(newCharacter);
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+);
+
 export { charactersRouter };
