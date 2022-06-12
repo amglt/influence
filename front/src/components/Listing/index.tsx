@@ -6,6 +6,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import type { FilterConfirmProps } from 'antd/lib/table/interface';
 import type { ColumnsType, ColumnType } from 'antd/lib/table';
 import type { InputRef } from 'antd';
+import { v4 as uuid } from 'uuid';
 
 interface ListingProps<DataType> {
   columns: ColumnsType<DataType>;
@@ -132,5 +133,11 @@ export function Listing<DataType extends object = {}>(
     });
   };
 
-  return <Table columns={getCols()} dataSource={data} {...tableProps} />;
+  return (
+    <Table
+      columns={getCols()}
+      dataSource={data?.map((d) => ({ key: uuid(), ...d }))}
+      {...tableProps}
+    />
+  );
 }
