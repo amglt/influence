@@ -1,17 +1,17 @@
 import { Listing } from '@Components/Listing';
 import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
-import { Account } from '@Models/account.model';
+import { Account } from '@Models/account.models';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import {
   useAccount,
   useAccounts,
-} from '@Api/council/accounts/accounts.queries';
+} from '@Api/recruitment/accounts/accounts.queries';
 import {
   useAddAccount,
   useDeleteAccount,
   useEditAccount,
-} from '@Api/council/accounts/accounts.mutations';
+} from '@Api/recruitment/accounts/accounts.mutations';
 import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
 import { Button, Space } from 'antd';
 import { useState } from 'react';

@@ -1,11 +1,10 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Table, Input, Button, Space } from 'antd';
-// @ts-ignore
-import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import type { FilterConfirmProps } from 'antd/lib/table/interface';
 import type { ColumnsType, ColumnType } from 'antd/lib/table';
 import type { InputRef } from 'antd';
+import { v4 as uuid } from 'uuid';
 
 interface ListingProps<DataType> {
   columns: ColumnsType<DataType>;
@@ -20,23 +19,17 @@ export function Listing<DataType extends object = {}>(
 
   type DataIndex = keyof DataType;
 
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState<DataIndex>();
   const searchInput = useRef<InputRef>(null);
 
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: DataIndex,
   ) => {
     confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
   };
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
-    setSearchText('');
   };
 
   const getColumnSearchProps = (
@@ -56,17 +49,13 @@ export function Listing<DataType extends object = {}>(
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
             type="primary"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
+            onClick={() => handleSearch(selectedKeys as string[], confirm)}
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
@@ -85,8 +74,6 @@ export function Listing<DataType extends object = {}>(
             size="small"
             onClick={() => {
               confirm({ closeDropdown: false });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex);
             }}
           >
             Filter
@@ -106,17 +93,6 @@ export function Listing<DataType extends object = {}>(
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
   });
 
   const getCols = () => {
@@ -132,5 +108,11 @@ export function Listing<DataType extends object = {}>(
     });
   };
 
-  return <Table columns={getCols()} dataSource={data} {...tableProps} />;
+  return (
+    <Table
+      columns={getCols()}
+      dataSource={data?.map((d) => ({ key: uuid(), ...d }))}
+      {...tableProps}
+    />
+  );
 }

@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
@@ -42,6 +43,10 @@ module.exports = {
           filename: 'fonts/[name][ext][query]',
         },
       },
+      {
+        test: /\.png/,
+        type: 'asset/resource',
+      },
     ],
   },
   resolve: {
@@ -62,6 +67,7 @@ module.exports = {
       inject: 'body',
       template: './public/index.html',
     }),
+    new FaviconsWebpackPlugin('./public/assets/logo.png'),
     new webpack.ProvidePlugin({
       React: 'react',
     }),

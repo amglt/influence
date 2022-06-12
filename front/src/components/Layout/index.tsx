@@ -10,11 +10,11 @@ import {
   UsergroupAddOutlined,
 } from '@ant-design/icons';
 import './layout.less';
+import logo from '../../../public/assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { Text } from '@Components/Typography';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useSelector } from '@Store/';
-import { Spinner } from '@Components/Spinner';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { AppPermissions } from '@Models/root.models';
 
@@ -22,12 +22,10 @@ const { Header, Sider } = AntLayout;
 
 interface LayoutProps {
   children?: ReactNode;
-  isLoadingUser: boolean;
-  isLoadingPermissions: boolean;
 }
 
 export function Layout(props: LayoutProps) {
-  const { children, isLoadingUser, isLoadingPermissions } = props;
+  const { children } = props;
 
   const navigate = useNavigate();
   const { loginWithRedirect, logout } = useAuth0();
@@ -106,12 +104,6 @@ export function Layout(props: LayoutProps) {
           </Space>
         </Dropdown>
       );
-    } else if (isLoadingUser) {
-      return (
-        <span className={'user-menu'}>
-          <Spinner color={'white'} />
-        </span>
-      );
     } else {
       return (
         <span
@@ -130,12 +122,10 @@ export function Layout(props: LayoutProps) {
   return (
     <AntLayout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo"></div>
-        {isLoadingPermissions ? (
-          <Spinner color={'white'} />
-        ) : (
-          <Menu theme="dark" mode="inline" items={menuItems} />
-        )}
+        <div className="logo" onClick={() => navigate('/')}>
+          <img src={logo} alt={'Influence-logo'} height={35} width={35} />{' '}
+        </div>
+        <Menu theme="dark" mode="inline" items={menuItems} />
       </Sider>
       <AntLayout className="site-layout">
         <Header style={{ padding: 0 }} className={'site-layout-header'}>
