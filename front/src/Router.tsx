@@ -4,6 +4,7 @@ import { Council } from '@Modules/council';
 import { RolesList } from '@Modules/council/roles/RolesList';
 import { AccountsList } from '@Modules/recruitment/accounts/AccountsList';
 import { Recruitment } from '@Modules/recruitment';
+import { CharactersList } from '@Modules/recruitment/characters/CharactersList';
 
 export function Router() {
   return (
@@ -12,6 +13,7 @@ export function Router() {
         <Route path={'/'} element={<App />}>
           <Route path={'recruitment'} element={<Recruitment />}>
             <Route path={'accounts'} element={<AccountsList />} />
+            <Route path={'characters'} element={<CharactersList />} />
           </Route>
           <Route path={'council'} element={<Council />}>
             <Route path={'roles'} element={<RolesList />} />

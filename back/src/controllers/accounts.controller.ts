@@ -106,12 +106,12 @@ accountsRouter.post(
 );
 
 accountsRouter.put(
-  '/:id',
+  '/:accountId',
   checkPermissions('write:accounts'),
   async (req: Request, res: Response) => {
     try {
       const body = req.body;
-      const accountId = Number(req.params.id);
+      const accountId = Number(req.params.accountId);
       if (!body.hasOwnProperty('userId'))
         return res.status(400).send({ message: 'Username manquant.' });
 

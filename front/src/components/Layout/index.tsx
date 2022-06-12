@@ -7,6 +7,7 @@ import {
   CrownOutlined,
   UserOutlined,
   DownOutlined,
+  UsergroupAddOutlined,
 } from '@ant-design/icons';
 import './layout.less';
 import { useNavigate } from 'react-router-dom';
@@ -41,6 +42,7 @@ export function Layout(props: LayoutProps) {
       if (user.permissions.includes(AppPermissions.IsRecruitment)) {
         updatedMenuItems.push({
           key: 'recruitment',
+          icon: <UsergroupAddOutlined />,
           label: 'Recrutement',
           children: [
             {
@@ -48,6 +50,12 @@ export function Layout(props: LayoutProps) {
               label: 'Accounts',
               icon: <UserOutlined />,
               onClick: () => navigate('/recruitment/accounts'),
+            },
+            {
+              key: 'characters',
+              label: 'Characters',
+              icon: <UserOutlined />,
+              onClick: () => navigate('/recruitment/characters'),
             },
           ],
         });

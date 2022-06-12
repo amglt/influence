@@ -6,6 +6,7 @@ import { authenticationMiddleware } from './middlewares/authentication.middlewar
 import { managementRouter } from './controllers/management.controller';
 import { usersRouter } from './controllers/users.controller';
 import { accountsRouter } from './controllers/accounts.controller';
+import { charactersRouter } from './controllers/characters.controller';
 import { prisma } from './db';
 
 export const app = async () => {
@@ -30,6 +31,7 @@ export const app = async () => {
   app.use('/management', managementRouter);
   app.use('/users', usersRouter);
   app.use('/accounts', accountsRouter);
+  app.use('/characters', charactersRouter);
 
   return app;
 };

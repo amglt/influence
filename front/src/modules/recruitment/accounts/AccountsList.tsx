@@ -49,7 +49,7 @@ export function AccountsList() {
       const userId = addEditAccountForm.getFieldValue('userId');
       if (selectedAccount) {
         editAccount({
-          id: selectedAccount.id,
+          accountId: selectedAccount.id,
           body: { name, userId },
         });
       } else {
@@ -72,7 +72,7 @@ export function AccountsList() {
       />
       <Breadcrumb
         items={[
-          { key: 'council', label: 'Conseil' },
+          { key: 'recruitment', label: 'Recrutement' },
           { key: 'accounts', label: 'Accounts' },
         ]}
       />

@@ -32,8 +32,8 @@ export function useEditAccount() {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (request: { id: number; body: { name: string; userId: string } }) =>
-      put(`/accounts/${request.id}`, { ...request.body }),
+    (request: { accountId: number; body: { name: string; userId: string } }) =>
+      put(`/accounts/${request.accountId}`, { ...request.body }),
     {
       onSuccess: async () => {
         await queryClient.refetchQueries(AccountsQueriesKey.Accounts);

@@ -15,4 +15,15 @@ model Account {
   id            Int         @id @default(autoincrement())
   name          String      @unique
   userId        String
+  characters    Character[]
+}
+
+model Character {
+  id                      Int         @id @default(autoincrement())
+  name                    String      @unique
+  class                   String
+  rank                    String
+  account                 Account     @relation(fields: [accountId], references: [id])
+  accountId               Int
+  recruitmentDate         DateTime    @db.Date
 }
