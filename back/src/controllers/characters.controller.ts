@@ -27,7 +27,6 @@ charactersRouter.get(
   checkPermissions('read:characters'),
   async (req: Request, res: Response) => {
     try {
-      console.log('test');
       const characterId = req.params.characterId;
       if (!characterId) {
         return res.status(400).send({ message: 'Character ID manquant.' });
@@ -42,6 +41,8 @@ charactersRouter.get(
       if (!character) {
         return res.status(400).send({ message: 'Personnage non trouvé.' });
       }
+
+      return res.status(200).send({ character });
     } catch (err) {
       return res.status(500).send();
     }

@@ -21,7 +21,7 @@ export function useCharacter(id?: number, form?: FormInstance) {
 
   return useQuery(
     [CharactersQueriesKey.Character, id],
-    () => get<Character>(`characters/${id}`),
+    () => get<Character>(`/characters/${id}`),
     {
       enabled: !!id,
       onSuccess: (character) => {

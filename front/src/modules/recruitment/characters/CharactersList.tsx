@@ -156,7 +156,6 @@ export function CharactersList() {
                   <Space>
                     <EditOutlined
                       onClick={() => {
-                        console.log(record);
                         setSelectedCharacter(record);
                         setIsAddEditCharacterModalOpen(true);
                       }}
