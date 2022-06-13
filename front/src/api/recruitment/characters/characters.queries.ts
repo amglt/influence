@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 import { useApi } from '@Hooks/api';
 import { Character } from '@Models/character.model';
 import { FormInstance } from 'antd';
+import moment from 'moment';
 
 export enum CharactersQueriesKey {
   Characters = 'Characters',
@@ -29,9 +30,9 @@ export function useCharacter(id?: number, form?: FormInstance) {
           name: character.name,
           class: character.class,
           rank: character.rank,
-          accountName: character.account.name,
+          accountId: character.account.name,
           discordId: character.account.userId.split('|').pop(),
-          recruitmentDate: character.recruitmentDate.getTime(),
+          recruitmentDate: moment(character.recruitmentDate),
         });
       },
     },

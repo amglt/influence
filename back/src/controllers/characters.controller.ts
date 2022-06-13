@@ -42,7 +42,13 @@ charactersRouter.get(
         return res.status(400).send({ message: 'Personnage non trouvé.' });
       }
 
-      return res.status(200).send({ character });
+      const account = await prisma.account.findFirst({
+        where: {
+          id: Number(character.accountId),
+        },
+      });
+
+      return res.status(200).send({ ...character, account: { ...account } });
     } catch (err) {
       return res.status(500).send();
     }
