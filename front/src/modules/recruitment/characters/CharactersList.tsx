@@ -72,19 +72,17 @@ export function CharactersList() {
     } catch {}
   };
 
-  const addEditCharacterModelProps = {
-    isOpen: isAddEditCharacterModalOpen,
-    onCancel: closeAddEditCharacterModal,
-    onOk: handleOnOkCreateCharacter,
-    form: addEditCharacterForm,
-    accounts: accountsData ?? [],
-    selectedCharacter: characterData,
-    isLoadingCharacter: isCharacterLoading,
-  };
-
   return (
     <>
-      <AddEditCharacterModal {...addEditCharacterModelProps} />
+      <AddEditCharacterModal
+        isOpen={isAddEditCharacterModalOpen}
+        onCancel={closeAddEditCharacterModal}
+        onOk={handleOnOkCreateCharacter}
+        form={addEditCharacterForm}
+        accounts={accountsData ?? []}
+        selectedCharacter={characterData}
+        isLoadingCharacter={isCharacterLoading}
+      />
       <Breadcrumb
         items={[
           { key: 'recruitment', label: 'Recrutement' },
@@ -158,6 +156,7 @@ export function CharactersList() {
                   <Space>
                     <EditOutlined
                       onClick={() => {
+                        console.log(record);
                         setSelectedCharacter(record);
                         setIsAddEditCharacterModalOpen(true);
                       }}

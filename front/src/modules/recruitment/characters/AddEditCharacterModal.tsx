@@ -87,7 +87,9 @@ export function AddEditCharacterModal(props: AddEditCharacterModalProps) {
               placeholder="Sélectionnez la classe du personnage."
             >
               {classes.map((classe) => (
-                <Option value={classe}>{classe}</Option>
+                <Option key={classe} value={classe}>
+                  {classe}
+                </Option>
               ))}
             </Select>
           </Form.Item>
@@ -101,7 +103,9 @@ export function AddEditCharacterModal(props: AddEditCharacterModalProps) {
               placeholder="Sélectionnez le rang du personnage."
             >
               {ranks.map((rank) => (
-                <Option value={rank}>{rank}</Option>
+                <Option key={rank} value={rank}>
+                  {rank}
+                </Option>
               ))}
             </Select>
           </Form.Item>
@@ -115,7 +119,9 @@ export function AddEditCharacterModal(props: AddEditCharacterModalProps) {
               placeholder="Sélectionnez le compte du personnage."
             >
               {accounts.map((account) => (
-                <Option value={account.userId}>{account.name}</Option>
+                <Option key={account.id} value={account.id}>
+                  {account.name}
+                </Option>
               ))}
             </Select>
           </Form.Item>

@@ -7,7 +7,7 @@ const charactersRouter = Router();
 
 charactersRouter.get(
   '/',
-  /*checkPermissions('read:characters'), */
+  checkPermissions('read:characters'),
   async (_: Request, res: Response) => {
     try {
       const characters = await prisma.character.findMany({
@@ -27,6 +27,7 @@ charactersRouter.get(
   checkPermissions('read:characters'),
   async (req: Request, res: Response) => {
     try {
+      console.log('test');
       const characterId = req.params.characterId;
       if (!characterId) {
         return res.status(400).send({ message: 'Character ID manquant.' });
@@ -63,8 +64,12 @@ charactersRouter.post(
       )
         return res.status(400).send({ message: 'Propriété manquante.' });
 
-      const characters = await prisma.character.findMany();
-      if (characters.some((character) => character.name === req.body.name))
+      const character = await prisma.character.findFirst({
+        where: {
+          name: req.body.name,
+        },
+      });
+      if (character)
         return res.status(400).send({ message: 'Ce personnage existe déjà.' });
 
       const newCharacter = await prisma.character.create({

@@ -18,6 +18,7 @@ export function useCharacters() {
 
 export function useCharacter(id?: number, form?: FormInstance) {
   const { get } = useApi();
+
   return useQuery(
     [CharactersQueriesKey.Character, id],
     () => get<Character>(`characters/${id}`),
@@ -30,7 +31,7 @@ export function useCharacter(id?: number, form?: FormInstance) {
           rank: character.rank,
           accountName: character.account.name,
           discordId: character.account.userId.split('|').pop(),
-          recruitmentDate: character.recruitmentDate,
+          recruitmentDate: character.recruitmentDate.getTime(),
         });
       },
     },
