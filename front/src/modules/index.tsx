@@ -1,9 +1,9 @@
 import { Layout } from '@Components/Layout';
 import { Outlet } from 'react-router-dom';
-import { useUser, useUserPermissions } from '@Api/root.queries';
+import { useCurrentUser, useUserPermissions } from '@Api/root.queries';
 
 export function App() {
-  const { status: userStatus } = useUser();
+  const { status: userStatus } = useCurrentUser();
   const { status: permissionsStatus } = useUserPermissions();
 
   const renderApp = () => {

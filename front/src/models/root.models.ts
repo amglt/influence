@@ -53,6 +53,10 @@ export interface User {
   blocked: boolean;
 }
 
+export interface UserWithRole extends User {
+  role?: Role;
+}
+
 export interface AppUser extends User {
   role?: Role;
   permissions: string[];
