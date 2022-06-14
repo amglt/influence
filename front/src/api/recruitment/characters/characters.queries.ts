@@ -30,7 +30,7 @@ export function useCharacter(id?: number, form?: FormInstance) {
           name: character.name,
           class: character.class,
           rank: character.rank,
-          accountId: character.account.name,
+          accountId: character.account.id,
           discordId: character.account.userId.split('|').pop(),
           recruitmentDate: moment(character.recruitmentDate),
         });

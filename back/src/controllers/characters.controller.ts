@@ -95,4 +95,71 @@ charactersRouter.post(
   },
 );
 
+charactersRouter.delete(
+  '/:characterId',
+  checkPermissions('delete:characters'),
+  async (req: Request, res: Response) => {
+    try {
+      const characterId = req.params.characterId;
+      if (!characterId) {
+        return res.status(400).send({ message: 'Character ID manquant.' });
+      }
+
+      await prisma.character.delete({
+        where: {
+          id: Number(characterId),
+        },
+      });
+      return res.status(200).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+);
+
+charactersRouter.put(
+  '/:characterId',
+  checkPermissions('write:characters'),
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      const characterId = Number(req.params.characterId);
+      if (
+        !body.hasOwnProperty('name') ||
+        !body.hasOwnProperty('class') ||
+        !body.hasOwnProperty('rank') ||
+        !body.hasOwnProperty('accountId') ||
+        !body.hasOwnProperty('recruitmentDate')
+      )
+        return res.status(400).send({ message: 'Propriété manquante.' });
+
+      const characters = await prisma.character.findMany({
+        where: {
+          name: req.body.name,
+        },
+      });
+
+      if (characters.some((character) => character.id !== characterId))
+        return res.status(400).send({ message: 'Ce personnage existe déjà.' });
+
+      console.log(body);
+      await prisma.character.update({
+        where: {
+          id: characterId,
+        },
+        data: {
+          name: body.name,
+          class: body.class,
+          rank: body.rank,
+          accountId: req.body.accountId,
+          recruitmentDate: req.body.recruitmentDate,
+        },
+      });
+      return res.status(200).send();
+    } catch (err) {
+      return res.status(500).send();
+    }
+  },
+);
+
 export { charactersRouter };
