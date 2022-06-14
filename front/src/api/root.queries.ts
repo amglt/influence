@@ -5,7 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useDispatch, useSelector } from '@Store/';
 import { setUser } from '@Store/root.slice';
 
-export function useUser() {
+export function useCurrentUser() {
   const { get } = useApi();
   const { user } = useAuth0();
   const dispatch = useDispatch();

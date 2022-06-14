@@ -66,7 +66,6 @@ usersRouter.put(
   checkPermissions('write:users'),
   async (req: Request, res: Response) => {
     try {
-      const body = req.body;
       const userId = req.params.userId;
       if (!userId) return res.status(400).send({ message: 'User ID manquant' });
 
