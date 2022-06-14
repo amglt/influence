@@ -3,6 +3,7 @@ import { Form, Input, Select, FormInstance, Modal, DatePicker } from 'antd';
 import React from 'react';
 import { Spinner } from '@Components/Spinner';
 import { Account } from '@Models/account.models';
+import { Classes, Ranks } from '../../../shared/root.enums';
 
 export interface AddEditCharacterModalProps {
   isOpen: boolean;
@@ -25,29 +26,6 @@ export function AddEditCharacterModal(props: AddEditCharacterModalProps) {
     isLoadingCharacter,
   } = props;
   const { Option } = Select;
-
-  const classes = [
-    'Cra',
-    'Écaflip',
-    'Éliotrope',
-    'Éniripsa',
-    'Énutrof',
-    'Féca',
-    'Huppermage',
-    'Iop',
-    'Osamodas',
-    'Ouginak',
-    'Pandawa',
-    'Roublard',
-    'Sacrieur',
-    'Sadida',
-    'Sram',
-    'Steamer',
-    'Xélor',
-    'Zobal',
-  ];
-
-  const ranks = ['Meneur', 'Bras droit', 'Staff', 'Guide', 'Mule', "A l'essai"];
 
   return (
     <Modal
@@ -85,13 +63,11 @@ export function AddEditCharacterModal(props: AddEditCharacterModalProps) {
             <Select
               showSearch
               placeholder="Sélectionnez la classe du personnage."
-            >
-              {classes.map((classe) => (
-                <Option key={classe} value={classe}>
-                  {classe}
-                </Option>
-              ))}
-            </Select>
+              options={Object.values(Classes).map((c) => ({
+                label: c,
+                value: c,
+              }))}
+            />
           </Form.Item>
           <Form.Item
             label="Rang"
@@ -101,13 +77,11 @@ export function AddEditCharacterModal(props: AddEditCharacterModalProps) {
             <Select
               showSearch
               placeholder="Sélectionnez le rang du personnage."
-            >
-              {ranks.map((rank) => (
-                <Option key={rank} value={rank}>
-                  {rank}
-                </Option>
-              ))}
-            </Select>
+              options={Object.values(Ranks).map((r) => ({
+                label: r,
+                value: r,
+              }))}
+            />
           </Form.Item>
           <Form.Item
             label="Compte"

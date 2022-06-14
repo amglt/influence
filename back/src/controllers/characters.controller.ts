@@ -36,19 +36,15 @@ charactersRouter.get(
         where: {
           id: Number(characterId),
         },
+        include: {
+          account: true,
+        },
       });
-
       if (!character) {
         return res.status(400).send({ message: 'Personnage non trouvé.' });
       }
 
-      const account = await prisma.account.findFirst({
-        where: {
-          id: Number(character.accountId),
-        },
-      });
-
-      return res.status(200).send({ ...character, account: { ...account } });
+      return res.status(200).send(character);
     } catch (err) {
       return res.status(500).send();
     }
@@ -61,7 +57,6 @@ charactersRouter.post(
   async (req: Request, res: Response) => {
     try {
       const body = req.body;
-      console.log(body);
       if (
         !body.hasOwnProperty('name') ||
         !body.hasOwnProperty('class') ||
@@ -142,7 +137,6 @@ charactersRouter.put(
       if (characters.some((character) => character.id !== characterId))
         return res.status(400).send({ message: 'Ce personnage existe déjà.' });
 
-      console.log(body);
       await prisma.character.update({
         where: {
           id: characterId,

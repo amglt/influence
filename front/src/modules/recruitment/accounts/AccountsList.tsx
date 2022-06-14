@@ -73,7 +73,7 @@ export function AccountsList() {
       <Breadcrumb
         items={[
           { key: 'recruitment', label: 'Recrutement' },
-          { key: 'accounts', label: 'Accounts' },
+          { key: 'accounts', label: 'Comptes de jeu' },
         ]}
       />
       <Content>

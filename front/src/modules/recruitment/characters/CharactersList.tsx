@@ -86,7 +86,7 @@ export function CharactersList() {
       <Breadcrumb
         items={[
           { key: 'recruitment', label: 'Recrutement' },
-          { key: 'characters', label: 'Characters' },
+          { key: 'characters', label: 'Personnages' },
         ]}
       />
       <Content>
