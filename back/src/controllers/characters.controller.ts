@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
-import { getManagementClient } from '../shared/utils';
 
 const charactersRouter = Router();
 
