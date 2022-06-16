@@ -27,3 +27,39 @@ model Character {
   accountId               Int
   recruitmentDate         DateTime    @db.Date
 }
+
+model Period {
+  id                      Int         @id @default(autoincrement())
+  startDate               DateTime    @db.Date
+  endDate                 DateTime?   @db.Date
+  pvpGames                PVPGame[]
+}
+
+model Opponent {
+  id                      Int         @id @default(autoincrement())
+  percoWinPoints          Int
+  percoNDPoints           Int
+  percoLoosePoints        Int
+  prismWinPoints          Int
+  prismNDPoints           Int
+  prismLoosePoints        Int
+  avaWin                  Int
+  avaLoose                Int
+  pvpGames                PVPGame[]
+}
+
+model PVPGame {
+  id                      Int         @id @default(autoincrement())
+  earnedPoints            Int
+  result                  String
+  type                    String
+  player1                 String
+  player2                 String?
+  player3                 String?
+  player4                 String?
+  player5                 String?
+  opponent                Opponent    @relation(fields: [opponentId], references: [id])
+  opponentId              Int
+  period                  Period      @relation(fields: [periodId], references: [id])
+  periodId                Int
+}
