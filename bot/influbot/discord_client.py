@@ -1,11 +1,15 @@
 from discord import Client, Message
-from events.ready import on_ready
-from events.message import on_message
+from events.ready import handle_ready
+from events.message import handle_message
+
+client = Client()
 
 
-class DiscordClient(Client):
-    async def on_ready(self):
-        await on_ready(self)
+@client.event
+async def on_ready():
+    await handle_ready(client)
 
-    async def on_message(self, message: Message):
-        await on_message(message)
+
+@client.event
+async def on_message(message: Message):
+    await handle_message(client, message)

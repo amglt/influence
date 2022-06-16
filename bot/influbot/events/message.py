@@ -1,5 +1,8 @@
-from discord import Message
+from discord import Message, Client
 
 
-async def on_message(message: Message):
-    print('Message from {0.author}: {0.content}'.format(message))
+async def handle_message(client: Client, message: Message):
+    if message.author == client.user:
+        return
+
+    await message.reply(content="Bonjour jeune padawan")
