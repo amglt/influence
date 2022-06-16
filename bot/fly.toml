@@ -1,0 +1,13 @@
+# fly.toml file generated for influbot on 2022-06-16T09:59:55+02:00
+
+app = "influbot"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[experimental]
+allowed_public_ports = []
+auto_rollback = true
+
+[build]
+builder = "paketobuildpacks/builder:base"
