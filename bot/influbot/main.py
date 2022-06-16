@@ -6,7 +6,7 @@ load_dotenv()
 
 
 def start():
-    bot_token = os.getenv("BOT")
+    bot_token = os.getenv("BOT_TOKEN")
     if bot_token is not None:
         client = DiscordClient()
         client.run(bot_token)
