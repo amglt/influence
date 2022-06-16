@@ -1,4 +1,4 @@
-from bot import __version__
+from influbot import __version__
 
 
 def test_version():
