@@ -2,6 +2,7 @@ export const enum AppPermissions {
   IsCouncil = 'is:council',
   IsAdmin = 'is:admin',
   IsMember = 'is:member',
+  IsPVPManager = 'is:pvp:manager',
   IsRecruitment = 'is:recruitment',
   DeleteUser = 'delete:users',
   BanUser = 'ban:users',
