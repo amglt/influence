@@ -27,3 +27,20 @@ model Character {
   accountId               Int
   recruitmentDate         DateTime    @db.Date
 }
+
+model WalletRecord {
+  id                     Int          @id @default(autoincrement())
+  amount                 Int          
+  walletFrom             Wallet?      @relation("From", fields: [walletIdFrom], references: [id])
+  walletTo               Wallet?      @relation("To", fields: [walletIdTo], references: [id])
+  walletIdFrom           Int?         
+  walletIdTo             Int?         
+}
+
+model Wallet {
+  id                      Int         @id @default(autoincrement())
+  influcoinBalance        Int
+  userId                  String
+  walletFromRecords       WalletRecord[]    @relation("From")
+  walletToRecords         WalletRecord[]    @relation("To")
+}
