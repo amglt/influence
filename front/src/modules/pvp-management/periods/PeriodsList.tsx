@@ -1,20 +1,48 @@
 import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
-import { Space } from 'antd';
+import { Button, Modal, Space } from 'antd';
 import { Listing } from '@Components/Listing';
 import { DeleteOutlined } from '@ant-design/icons';
 import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
 import { Period } from '@Models/pvp-management.models';
 import { usePeriods } from '@Api/pvp-management/pvp-management.queries';
 import { format } from 'date-fns';
-import { useDeletePeriod } from '@Api/pvp-management/pvp-management.mutations';
+import {
+  useCreatePeriod,
+  useDeletePeriod,
+} from '@Api/pvp-management/pvp-management.mutations';
+import { useState } from 'react';
 
 export function PeriodsList() {
+  const [isAddPeriodModalOpen, setIsAddPeriodModalOpen] = useState(false);
+
   const { data: periodsData, isLoading: arePeriodsLoading } = usePeriods();
   const { mutate: deletePeriod } = useDeletePeriod();
+  const { mutate: createPeriod } = useCreatePeriod();
+
+  const onCloseAddPeriodModal = () => {
+    setIsAddPeriodModalOpen(false);
+  };
+
+  const onAddPeriodOk = () => {
+    createPeriod();
+    onCloseAddPeriodModal();
+  };
 
   return (
     <>
+      <Modal
+        title={'Créer une nouvelle période'}
+        visible={isAddPeriodModalOpen}
+        okText={'Valider'}
+        cancelText={'Annuler'}
+        onOk={onAddPeriodOk}
+        onCancel={onCloseAddPeriodModal}
+        width={'70vw'}
+      >
+        Êtes-vous sur de vouloir créer une nouvelle période ? Cela clotura tout
+        période actuellement ouverte.
+      </Modal>
       <Breadcrumb
         items={[
           { key: 'pvp-management-management', label: 'PVP Management' },
@@ -22,6 +50,9 @@ export function PeriodsList() {
         ]}
       />
       <Content>
+        <Button type={'primary'} onClick={() => setIsAddPeriodModalOpen(true)}>
+          Créer une période
+        </Button>
         <Listing<Period>
           columns={[
             {
@@ -32,6 +63,7 @@ export function PeriodsList() {
               sorter: (a, b) =>
                 new Date(b.startDate).getTime() -
                 new Date(a.startDate).getTime(),
+              render: (value) => format(new Date(value), 'dd/MM/yyyy hh:mm'),
             },
             {
               key: 'endDate',
@@ -43,6 +75,8 @@ export function PeriodsList() {
                   ? new Date(b.endDate).getTime() -
                     new Date(a.endDate).getTime()
                   : 0,
+              render: (value) =>
+                value ? format(new Date(value), 'dd/MM/yyyy hh:mm') : undefined,
             },
             {
               key: 'actions',
@@ -56,10 +90,11 @@ export function PeriodsList() {
                           title: (
                             <span>
                               Vous êtes sur le point de supprimer la periode
-                              allant du {format(record.startDate, 'dd/MM/yyyy')}{' '}
+                              allant du{' '}
+                              {format(new Date(record.startDate), 'dd/MM/yyyy')}{' '}
                               au{' '}
                               {record.endDate
-                                ? format(record.endDate, 'dd/MM/yyyy')
+                                ? format(new Date(record.endDate), 'dd/MM/yyyy')
                                 : '?'}
                               . Etes-vous certain de vouloir de le supprimer ?
                             </span>

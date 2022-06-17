@@ -10,7 +10,14 @@ periodRouter.get(
   async (req: Request, res: Response) => {
     try {
       const periods = await prisma.period.findMany();
-      return res.status(200).send(periods);
+      return res
+        .status(200)
+        .send(
+          periods.sort(
+            (a, b) =>
+              new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
+          ),
+        );
     } catch (e) {
       return res.status(500).send(e);
     }

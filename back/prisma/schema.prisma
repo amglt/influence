@@ -25,13 +25,13 @@ model Character {
   rank                    String
   account                 Account     @relation(fields: [accountId], references: [id])
   accountId               Int
-  recruitmentDate         DateTime    @db.Date
+  recruitmentDate         DateTime
 }
 
 model Period {
   id                      Int         @id @default(autoincrement())
-  startDate               DateTime    @db.Date
-  endDate                 DateTime?   @db.Date
+  startDate               DateTime
+  endDate                 DateTime?
   pvpGames                PVPGame[]
 }
 

@@ -12,3 +12,14 @@ export function useDeletePeriod() {
     },
   });
 }
+
+export function useCreatePeriod() {
+  const { post } = useApi();
+  const queryClient = useQueryClient();
+
+  return useMutation(() => post(`/periods`), {
+    onSuccess: async () => {
+      await queryClient.refetchQueries(PvpManagementQueriesKeys.Periods);
+    },
+  });
+}
