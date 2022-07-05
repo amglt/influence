@@ -11,6 +11,10 @@ export function useDeletePeriod() {
   return useMutation((periodId: number) => del(`/periods/${periodId}`), {
     onSuccess: async () => {
       await queryClient.refetchQueries(PvpManagementQueriesKeys.Periods);
+      notification.success({
+        placement: 'bottomRight',
+        message: 'Période correctement supprimée',
+      });
     },
   });
 }
@@ -22,6 +26,10 @@ export function useCreatePeriod() {
   return useMutation(() => post(`/periods`), {
     onSuccess: async () => {
       await queryClient.refetchQueries(PvpManagementQueriesKeys.Periods);
+      notification.success({
+        placement: 'bottomRight',
+        message: 'Période correctement créée',
+      });
     },
   });
 }

@@ -10,6 +10,7 @@ import { charactersRouter } from './controllers/characters.controller';
 import { prisma } from './db';
 import { periodRouter } from './controllers/periods.controller';
 import { scaleRouter } from './controllers/scale.controller';
+import { pvpGamesRouter } from './controllers/pvpGames.controller';
 
 export const app = async () => {
   const app = express();
@@ -36,6 +37,7 @@ export const app = async () => {
   app.use('/characters', charactersRouter);
   app.use('/periods', periodRouter);
   app.use('/scale', scaleRouter);
+  app.use('/pvp-games', pvpGamesRouter);
 
   return app;
 };

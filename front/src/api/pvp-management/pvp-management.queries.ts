@@ -1,10 +1,11 @@
 import { useQuery } from 'react-query';
 import { useApi } from '@Hooks/api';
-import { Period, Scale } from '@Models/pvp-management.models';
+import { Period, PvpGame, Scale } from '@Models/pvp-management.models';
 
 export enum PvpManagementQueriesKeys {
   Periods = 'Periods',
   Scale = 'Scale',
+  Games = 'Games',
 }
 
 export function usePeriods() {
@@ -24,5 +25,13 @@ export function useScale(onSuccess?: (data: Scale) => void) {
     {
       onSuccess,
     },
+  );
+}
+
+export function useGames() {
+  const { get } = useApi();
+
+  return useQuery([PvpManagementQueriesKeys.Games], () =>
+    get<PvpGame[]>('/pvp-games'),
   );
 }

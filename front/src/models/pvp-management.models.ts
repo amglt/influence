@@ -29,3 +29,33 @@ export interface Scale {
   avaLoose: number;
   rates: Rate[];
 }
+
+export enum PvpGameResult {
+  Loose,
+  Win,
+}
+
+export enum PvpGameType {
+  Perco,
+  Prism,
+  AvA,
+}
+
+export enum PvpGameStatus {
+  Pending,
+  Rejected,
+  Accepted,
+}
+
+export interface PvpGame {
+  id: number;
+  result: PvpGameResult;
+  type: PvpGameType;
+  status: PvpGameStatus;
+  player1: string;
+  player2?: string;
+  player3?: string;
+  player4?: string;
+  player5?: string;
+  period: Period;
+}

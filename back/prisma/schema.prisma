@@ -32,7 +32,7 @@ model Period {
   id                      Int         @id @default(autoincrement())
   startDate               DateTime
   endDate                 DateTime?
-  pvpGames                PVPGame[]
+  pvpGames                PvpGame[]
   usersOnPeriods          UsersOnPeriods[]
 }
 
@@ -68,10 +68,10 @@ model RegressiveRate {
   rate                    Decimal
 }
 
-model PVPGame {
+model PvpGame {
   id                      Int         @id @default(autoincrement())
-  result                  String
-  type                    String
+  result                  Int
+  type                    Int
   status                  Int
   player1                 String
   player2                 String?

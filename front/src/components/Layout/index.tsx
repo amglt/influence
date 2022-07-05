@@ -10,6 +10,8 @@ import {
   UsergroupAddOutlined,
   ScissorOutlined,
   CalendarOutlined,
+  NumberOutlined,
+  TableOutlined,
 } from '@ant-design/icons';
 import './layout.less';
 import logo from '../../../public/assets/logo.png';
@@ -75,8 +77,15 @@ export function Layout(props: LayoutProps) {
             {
               key: 'scale',
               label: 'Barème',
-              icon: <CalendarOutlined />,
+              icon: <NumberOutlined />,
               onClick: () => navigate('/pvp-management-management/scale'),
+            },
+
+            {
+              key: 'games',
+              label: 'Parties',
+              icon: <TableOutlined />,
+              onClick: () => navigate('/pvp-management-management/games'),
             },
           ],
         });
