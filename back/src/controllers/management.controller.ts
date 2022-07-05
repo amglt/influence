@@ -33,7 +33,7 @@ managementRouter.get(
           [...new Set(userPermissions)].map((perm) => perm.permission_name),
         );
     } catch (e) {
-      return res.status(500).send();
+      return res.status(500).send(e);
     }
   },
 );
@@ -47,7 +47,7 @@ managementRouter.get(
       const roles = await client.getRoles();
       return res.status(200).send(roles);
     } catch (e) {
-      return res.status(500).send();
+      return res.status(500).send(e);
     }
   },
 );
@@ -73,7 +73,7 @@ managementRouter.get(
         permissions: rolePermissions,
       });
     } catch (e) {
-      return res.status(500).send();
+      return res.status(500).send(e);
     }
   },
 );
@@ -120,8 +120,7 @@ managementRouter.patch(
       );
       return res.status(200).send();
     } catch (e) {
-      console.log(e);
-      return res.status(500).send();
+      return res.status(500).send(e);
     }
   },
 );
@@ -163,7 +162,7 @@ managementRouter.post(
       );
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -180,7 +179,7 @@ managementRouter.delete(
       await client.deleteRole({ id: roleId });
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -197,7 +196,7 @@ managementRouter.get(
       const permissions = await client.getPermissionsInRole({ id: roleId });
       return res.status(200).send(permissions);
     } catch (e) {
-      return res.status(500).send();
+      return res.status(500).send(e);
     }
   },
 );
@@ -223,7 +222,7 @@ managementRouter.get(
         })),
       );
     } catch (e) {
-      return res.status(500).send();
+      return res.status(500).send(e);
     }
   },
 );

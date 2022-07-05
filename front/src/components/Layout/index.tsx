@@ -72,6 +72,12 @@ export function Layout(props: LayoutProps) {
               icon: <CalendarOutlined />,
               onClick: () => navigate('/pvp-management-management/periods'),
             },
+            {
+              key: 'scale',
+              label: 'Barème',
+              icon: <CalendarOutlined />,
+              onClick: () => navigate('/pvp-management-management/scale'),
+            },
           ],
         });
       }

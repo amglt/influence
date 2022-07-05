@@ -13,7 +13,7 @@ usersRouter.get(
       const users = await client.getUsers();
       return res.status(200).send(users);
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -33,7 +33,7 @@ usersRouter.get(
         userRoles.length > 0 ? { ...user, role: userRoles[0] } : { ...user };
       return res.status(200).send(userWithRole);
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -56,7 +56,7 @@ usersRouter.post(
       await client.assignRolestoUser({ id: userId }, { roles: body.roleIds });
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -85,7 +85,7 @@ usersRouter.put(
       return res.status(200).send();
     } catch (err) {
       console.log(err);
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -109,7 +109,7 @@ usersRouter.patch(
       return res.status(200).send();
     } catch (err) {
       console.log(err);
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -126,7 +126,7 @@ usersRouter.delete(
       await client.deleteUser({ id: userId });
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );

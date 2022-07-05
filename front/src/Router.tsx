@@ -8,6 +8,7 @@ import { CharactersList } from '@Modules/recruitment/characters/CharactersList';
 import { UsersList } from '@Modules/council/users/UsersList';
 import { PeriodsList } from '@Modules/pvp-management/periods/PeriodsList';
 import { PvpManagement } from '@Modules/pvp-management';
+import { Scale } from '@Modules/pvp-management/Scale/Scale';
 
 export function Router() {
   return (
@@ -20,6 +21,7 @@ export function Router() {
           </Route>
           <Route path={'pvp-management-management'} element={<PvpManagement />}>
             <Route path={'periods'} element={<PeriodsList />} />
+            <Route path={'scale'} element={<Scale />} />
           </Route>
           <Route path={'council'} element={<Council />}>
             <Route path={'roles'} element={<RolesList />} />

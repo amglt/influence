@@ -12,8 +12,8 @@ datasource db {
 
 
 model Account {
-  id            Int         @id @default(autoincrement())
-  name          String      @unique
+  id            Int                   @id @default(autoincrement())
+  name          String                @unique
   userId        String
   characters    Character[]
 }
@@ -33,9 +33,18 @@ model Period {
   startDate               DateTime
   endDate                 DateTime?
   pvpGames                PVPGame[]
+  usersOnPeriods          UsersOnPeriods[]
 }
 
-model Opponent {
+model UsersOnPeriods {
+ id                      Int          @id @default(autoincrement())
+ userId                  String
+ periodId                Int
+ period                  Period       @relation(fields: [periodId], references: [id])
+ totalPoints             Decimal
+}
+
+model Scale {
   id                      Int         @id @default(autoincrement())
   percoWinPoints          Int
   percoNDPoints           Int
@@ -43,23 +52,32 @@ model Opponent {
   prismWinPoints          Int
   prismNDPoints           Int
   prismLoosePoints        Int
+  bigPercoWinPoints       Int
+  bigPercoNDPoints        Int
+  bigPercoLoosePoints     Int
+  bigPrismWinPoints       Int
+  bigPrismNDPoints        Int
+  bigPrismLoosePoints     Int
   avaWin                  Int
   avaLoose                Int
-  pvpGames                PVPGame[]
+}
+
+model RegressiveRate {
+  id                      Int         @id @default(autoincrement())
+  gamesAmount              Int
+  rate                    Decimal
 }
 
 model PVPGame {
   id                      Int         @id @default(autoincrement())
-  earnedPoints            Int
   result                  String
   type                    String
+  status                  Int
   player1                 String
   player2                 String?
   player3                 String?
   player4                 String?
   player5                 String?
-  opponent                Opponent    @relation(fields: [opponentId], references: [id])
-  opponentId              Int
   period                  Period      @relation(fields: [periodId], references: [id])
   periodId                Int
 }
