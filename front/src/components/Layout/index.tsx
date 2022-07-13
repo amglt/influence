@@ -88,10 +88,10 @@ export function Layout(props: LayoutProps) {
         label: 'Logistique',
         children: [
           {
-            key: 'influtons',
-            label: 'Influtons',
+            key: 'wallets',
+            label: 'Wallets',
             icon: <MoneyCollectOutlined />,
-            onClick: () => navigate('logistic/influtons'),
+            onClick: () => navigate('logistic/wallets'),
           },
           {
             key: 'records',

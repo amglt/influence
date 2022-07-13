@@ -24,7 +24,7 @@ export function Router() {
             <Route path={'users'} element={<UsersList />} />
           </Route>
           <Route path={'logistic'} element={<Logistic />}>
-            <Route path={'influtons'} element={<WalletsList />} />
+            <Route path={'wallets'} element={<WalletsList />} />
             <Route path={'records'} element={<RecordsList />} />
           </Route>
         </Route>

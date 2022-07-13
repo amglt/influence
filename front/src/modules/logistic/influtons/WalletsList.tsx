@@ -5,9 +5,10 @@ import { ColumnsType } from 'antd/lib/table';
 import { Space } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Wallet } from '@Models/wallet.models';
+import { useWallets } from '@Api/logistic/wallets/wallets.queries';
 
 export function WalletsList() {
-  // const { data: walletsData } = useWallets();
+  const { data: walletsData } = useWallets();
 
   const columns: ColumnsType<Wallet> = [
     {
@@ -40,12 +41,12 @@ export function WalletsList() {
       <Breadcrumb
         items={[
           { key: 'logistic', label: 'Logistique' },
-          { key: 'influtons', label: 'Influtons' },
+          { key: 'wallets', label: 'Wallets' },
         ]}
       />
       <Content>
         {/* TODO */}
-        <Listing<Wallet> columns={columns} data={[]} />
+        <Listing<Wallet> columns={columns} data={[] ?? walletsData} />
       </Content>
     </>
   );

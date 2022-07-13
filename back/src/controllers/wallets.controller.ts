@@ -19,7 +19,7 @@ walletsRouter.get(
 );
 
 walletsRouter.get(
-  '/:accountId',
+  '/:walletId',
   // checkPermissions('read:wallets'),
   async (req: Request, res: Response) => {
     try {
@@ -70,7 +70,7 @@ walletsRouter.post(
       const newWallet = await prisma.wallet.create({
         data: {
           userId: req.body.userId,
-          influcoinBalance: req.body.balance,
+          balance: req.body.balance,
         },
       });
       return res.status(200).send(newWallet);
@@ -80,6 +80,10 @@ walletsRouter.post(
   },
 );
 
+/* TODO - POST plutot que PUT
+ * créer le record
+ * post sur /transaction
+ */
 walletsRouter.put(
   '/:walletId',
   //checkPermissions('write:accounts'),
@@ -103,7 +107,7 @@ walletsRouter.put(
           id: walletIdFrom,
         },
         data: {
-          influcoinBalance: {
+          balance: {
             increment: -body.amount,
           },
         },
@@ -114,7 +118,7 @@ walletsRouter.put(
           id: walletIdTo,
         },
         data: {
-          influcoinBalance: {
+          balance: {
             increment: body.amount,
           },
         },
@@ -127,26 +131,26 @@ walletsRouter.put(
   },
 );
 
-walletsRouter.delete(
-  '/:walletId',
-  // checkPermissions('delete:wallets'),
-  async (req: Request, res: Response) => {
-    try {
-      const walletId = req.params.walletId;
-      if (!walletId) {
-        return res.status(400).send({ message: `Wallet ID manquant` });
-      }
+// walletsRouter.delete(
+//   '/:walletId',
+//   // checkPermissions('delete:wallets'),
+//   async (req: Request, res: Response) => {
+//     try {
+//       const walletId = req.params.walletId;
+//       if (!walletId) {
+//         return res.status(400).send({ message: `Wallet ID manquant` });
+//       }
 
-      await prisma.wallet.delete({
-        where: {
-          id: Number(walletId),
-        },
-      });
-      return res.status(200).send();
-    } catch (err) {
-      return res.status(500).send();
-    }
-  },
-);
+//       await prisma.wallet.delete({
+//         where: {
+//           id: Number(walletId),
+//         },
+//       });
+//       return res.status(200).send();
+//     } catch (err) {
+//       return res.status(500).send();
+//     }
+//   },
+// );
 
 export { walletsRouter };

@@ -39,7 +39,7 @@ model WalletRecord {
 
 model Wallet {
   id                      Int         @id @default(autoincrement())
-  influcoinBalance        Int
+  balance                 Int
   userId                  String
   walletFromRecords       WalletRecord[]    @relation("From")
   walletToRecords         WalletRecord[]    @relation("To")

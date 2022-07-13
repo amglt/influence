@@ -8,6 +8,7 @@ import { usersRouter } from './controllers/users.controller';
 import { accountsRouter } from './controllers/accounts.controller';
 import { charactersRouter } from './controllers/characters.controller';
 import { prisma } from './db';
+import { walletsRouter } from './controllers/wallets.controller';
 
 export const app = async () => {
   const app = express();
@@ -32,6 +33,7 @@ export const app = async () => {
   app.use('/users', usersRouter);
   app.use('/accounts', accountsRouter);
   app.use('/characters', charactersRouter);
+  app.use('/wallets', walletsRouter);
 
   return app;
 };
