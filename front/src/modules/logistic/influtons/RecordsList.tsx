@@ -5,9 +5,10 @@ import { ColumnsType } from 'antd/lib/table';
 import { Space } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { WalletRecord } from '@Models/walletRecord.models';
+import { useWalletRecords } from '@Api/logistic/records/records.queries';
 
 export function RecordsList() {
-  // const { data: walletRecordsData } = useWalletRecord();
+  const { data: walletRecordsData } = useWalletRecords();
 
   const columns: ColumnsType<WalletRecord> = [
     {
@@ -52,7 +53,10 @@ export function RecordsList() {
       />
       <Content>
         {/* TODO */}
-        <Listing<WalletRecord> columns={columns} data={[]} />
+        <Listing<WalletRecord>
+          columns={columns}
+          data={[] ?? walletRecordsData}
+        />
       </Content>
     </>
   );

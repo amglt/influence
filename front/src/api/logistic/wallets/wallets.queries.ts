@@ -1,5 +1,5 @@
 import { useApi } from '@Hooks/api';
-import { Wallet } from '@Models/wallet.models';
+import { WalletWithUser } from '@Models/walletWithUser.models';
 import { FormInstance } from 'antd';
 import { useQuery } from 'react-query';
 
@@ -11,7 +11,9 @@ export enum WalletsQueriesKey {
 export function useWallets() {
   const { get } = useApi();
 
-  return useQuery(WalletsQueriesKey.Wallets, () => get<Wallet[]>('/wallets'));
+  return useQuery(WalletsQueriesKey.Wallets, () =>
+    get<WalletWithUser[]>('/wallets'),
+  );
 }
 
 // TODO
@@ -20,7 +22,7 @@ export function useWallet(id?: number, form?: FormInstance) {
 
   return useQuery(
     [WalletsQueriesKey.Wallet, id],
-    () => get<Wallet>(`/wallets/${id}`),
+    () => get<WalletWithUser>(`/wallets/${id}`),
     {
       enabled: !!id,
       onSuccess: (wallet) => {

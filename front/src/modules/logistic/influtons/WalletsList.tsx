@@ -6,17 +6,19 @@ import { Space } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Wallet } from '@Models/wallet.models';
 import { useWallets } from '@Api/logistic/wallets/wallets.queries';
+import { WalletWithUser } from '@Models/walletWithUser.models';
 
 export function WalletsList() {
   const { data: walletsData } = useWallets();
+  console.log(walletsData);
 
-  const columns: ColumnsType<Wallet> = [
+  const columns: ColumnsType<WalletWithUser> = [
     {
       key: 'name',
-      dataIndex: 'name',
+      dataIndex: ['user', 'name'],
       title: `Nom d'utilisateur`,
       filtered: true,
-      sorter: (a, b) => a.userId.localeCompare(b.userId),
+      sorter: (a, b) => a.user.name.localeCompare(b.user.name),
     },
     {
       key: 'balance',
@@ -46,7 +48,7 @@ export function WalletsList() {
       />
       <Content>
         {/* TODO */}
-        <Listing<Wallet> columns={columns} data={[] ?? walletsData} />
+        <Listing<WalletWithUser> columns={columns} data={walletsData} />
       </Content>
     </>
   );
