@@ -105,8 +105,7 @@ recordsRouter.post(
   async (req: Request, res: Response) => {
     try {
       const body = req.body;
-      const walletIdFrom = Number(req.params.walletIdFrom);
-      const walletIdTo = Number(req.params.walletIdTo);
+
       if (!body.hasOwnProperty('amount'))
         return res.status(400).send({ message: 'Montant manquant.' });
 
@@ -116,6 +115,29 @@ recordsRouter.post(
       if (!body.hasOwnProperty('walletIdTo'))
         return res.status(400).send({ message: 'Destinataire manquant.' });
 
+      const amount = body.amount;
+      const walletIdFrom = Number(req.body.walletIdFrom);
+      const walletIdTo = Number(req.body.walletIdTo);
+
+      const walletFrom = await prisma.wallet.findUnique({
+        where: {
+          id: walletIdFrom,
+        },
+      });
+
+      if (amount <= 0)
+        return res.status(400).send({
+          message:
+            'Transaction impossible : Le montant de la transaction doit être positif.',
+        });
+
+      if (amount > walletFrom!.balance)
+        return res.status(400).send({
+          message: `Transaction impossible : L'émetteur n'a pas assez d'influtons (${
+            walletFrom!.balance
+          }).`,
+        });
+
       // update wallets
       await prisma.wallet.update({
         where: {
@@ -123,7 +145,7 @@ recordsRouter.post(
         },
         data: {
           balance: {
-            increment: -body.amount,
+            increment: -amount,
           },
         },
       });
@@ -134,7 +156,7 @@ recordsRouter.post(
         },
         data: {
           balance: {
-            increment: body.amount,
+            increment: amount,
           },
         },
       });
@@ -143,7 +165,7 @@ recordsRouter.post(
         data: {
           walletIdFrom: walletIdFrom,
           walletIdTo: walletIdTo,
-          amount: body.amount,
+          amount: amount,
         },
       });
 
@@ -162,7 +184,22 @@ recordsRouter.get(
   async (_: Request, res: Response) => {
     try {
       const walletRecords = await prisma.walletRecord.findMany();
-      return res.status(200).send(walletRecords);
+
+      const client = getManagementClient('read:users read:user_idp_tokens');
+      const users = await client.getUsers();
+      const wallets = await prisma.wallet.findMany();
+
+      const walletRecordsAndUsers = walletRecords.map((record) => {
+        const walletFrom = wallets.find((w) => w.id === record.walletIdFrom);
+        const userFrom = users.find((u) => u.user_id === walletFrom?.userId);
+
+        const walletTo = wallets.find((w) => w.id === record.walletIdTo);
+        const userTo = users.find((u) => u.user_id === walletTo?.userId);
+
+        return { ...record, userFrom, userTo };
+      });
+
+      return res.status(200).send(walletRecordsAndUsers);
     } catch (err) {
       return res.status(500).send();
     }
@@ -197,27 +234,5 @@ recordsRouter.get(
     }
   },
 );
-
-// walletsRouter.delete(
-//   '/:walletId',
-//   // checkPermissions('delete:wallets'),
-//   async (req: Request, res: Response) => {
-//     try {
-//       const walletId = req.params.walletId;
-//       if (!walletId) {
-//         return res.status(400).send({ message: `Wallet ID manquant` });
-//       }
-
-//       await prisma.wallet.delete({
-//         where: {
-//           id: Number(walletId),
-//         },
-//       });
-//       return res.status(200).send();
-//     } catch (err) {
-//       return res.status(500).send();
-//     }
-//   },
-// );
 
 export { walletsRouter, recordsRouter };

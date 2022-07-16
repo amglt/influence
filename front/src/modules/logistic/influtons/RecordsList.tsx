@@ -2,15 +2,13 @@ import { Listing } from '@Components/Listing';
 import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
 import { ColumnsType } from 'antd/lib/table';
-import { Space } from 'antd';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { WalletRecord } from '@Models/walletRecord.models';
 import { useWalletRecords } from '@Api/logistic/records/records.queries';
+import { WalletRecordWithUsers } from '@Models/walletRecordWithUsers.models';
 
 export function RecordsList() {
   const { data: walletRecordsData } = useWalletRecords();
 
-  const columns: ColumnsType<WalletRecord> = [
+  const columns: ColumnsType<WalletRecordWithUsers> = [
     {
       key: 'amount',
       dataIndex: 'amount',
@@ -19,27 +17,18 @@ export function RecordsList() {
       sorter: (a, b) => a.amount - b.amount,
     },
     {
-      key: 'walletIdFrom',
-      dataIndex: 'walletIdFrom',
-      title: `Wallet Id From`,
+      key: 'userFrom',
+      dataIndex: ['userFrom', 'name'],
+      title: `Emetteur`,
       filtered: true,
-      sorter: (a, b) => a.walletIdFrom - b.walletIdFrom,
+      sorter: (a, b) => a.userFrom.name.localeCompare(b.userFrom.name),
     },
     {
-      key: 'walletIdTo',
-      dataIndex: 'walletIdTo',
-      title: `Wallet Id To`,
+      key: 'userTo',
+      dataIndex: ['userTo', 'name'],
+      title: `Destinataire`,
       filtered: true,
-      sorter: (a, b) => a.walletIdTo - b.walletIdTo,
-    },
-    {
-      key: 'actions',
-      render: (_, record) => (
-        <Space>
-          <EditOutlined onClick={() => {}} />
-          <DeleteOutlined onClick={() => {}} />
-        </Space>
-      ),
+      sorter: (a, b) => a.userTo.name.localeCompare(b.userTo.name),
     },
   ];
 
@@ -53,9 +42,9 @@ export function RecordsList() {
       />
       <Content>
         {/* TODO */}
-        <Listing<WalletRecord>
+        <Listing<WalletRecordWithUsers>
           columns={columns}
-          data={[] ?? walletRecordsData}
+          data={walletRecordsData}
         />
       </Content>
     </>

@@ -2,9 +2,6 @@ import { Listing } from '@Components/Listing';
 import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
 import { ColumnsType } from 'antd/lib/table';
-import { Space } from 'antd';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Wallet } from '@Models/wallet.models';
 import { useWallets } from '@Api/logistic/wallets/wallets.queries';
 import { WalletWithUser } from '@Models/walletWithUser.models';
 
@@ -26,15 +23,6 @@ export function WalletsList() {
       title: 'Balance',
       filtered: true,
       sorter: (a, b) => a.influcoinBalance - b.influcoinBalance,
-    },
-    {
-      key: 'actions',
-      render: (_, record) => (
-        <Space>
-          <EditOutlined onClick={() => {}} />
-          <DeleteOutlined onClick={() => {}} />
-        </Space>
-      ),
     },
   ];
 
