@@ -3,11 +3,10 @@ import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
 import { ColumnsType } from 'antd/lib/table';
 import { useWallets } from '@Api/logistic/wallets/wallets.queries';
-import { WalletWithUser } from '@Models/walletWithUser.models';
+import { WalletWithUser } from '@Models/wallet.models';
 
 export function WalletsList() {
   const { data: walletsData } = useWallets();
-  console.log(walletsData);
 
   const columns: ColumnsType<WalletWithUser> = [
     {
@@ -35,7 +34,6 @@ export function WalletsList() {
         ]}
       />
       <Content>
-        {/* TODO */}
         <Listing<WalletWithUser> columns={columns} data={walletsData} />
       </Content>
     </>

@@ -2,16 +2,14 @@ import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
 import { getManagementClient } from '../shared/utils';
-import { Wallet } from '@prisma/client';
-import { User, AppMetadata, UserMetadata } from 'auth0';
 
-const walletsRouter = Router();
-const recordsRouter = Router();
+const influtonsRouter = Router();
 
 // Get all wallets
-walletsRouter.get(
-  '/',
-  // checkPermissions('read:wallets'),
+// Route : /influtons/wallets
+influtonsRouter.get(
+  '/wallets',
+  checkPermissions('read:wallets'),
   async (_: Request, res: Response) => {
     try {
       const wallets = await prisma.wallet.findMany();
@@ -32,10 +30,10 @@ walletsRouter.get(
 );
 
 // Get wallet by Id
-// Route : /wallets/:walletId
-walletsRouter.get(
-  '/:walletId',
-  // checkPermissions('read:wallets'),
+// Route : /influtons/wallets/:walletId
+influtonsRouter.get(
+  '/wallets/:walletId',
+  checkPermissions('read:wallets'),
   async (req: Request, res: Response) => {
     try {
       const walletId = req.params.walletId;
@@ -64,10 +62,10 @@ walletsRouter.get(
 );
 
 // Create new user wallet
-// Route : /wallets
-walletsRouter.post(
-  '/',
-  //checkPermissions('write:wallets'),
+// Route : /influtons/wallets
+influtonsRouter.post(
+  '/wallets',
+  checkPermissions('write:wallets'),
   async (req: Request, res: Response) => {
     try {
       const body = req.body;
@@ -98,10 +96,10 @@ walletsRouter.post(
 );
 
 // Create new transaction
-// Route : /records
-recordsRouter.post(
-  '/',
-  //checkPermissions('write:records'),
+// Route : /influtons/records
+influtonsRouter.post(
+  '/records',
+  checkPermissions('write:wallets'),
   async (req: Request, res: Response) => {
     try {
       const body = req.body;
@@ -109,13 +107,25 @@ recordsRouter.post(
       if (!body.hasOwnProperty('amount'))
         return res.status(400).send({ message: 'Montant manquant.' });
 
-      if (!body.hasOwnProperty('walletIdFrom'))
+      const amount = body.amount;
+      if (amount <= 0)
+        return res.status(400).send({
+          message:
+            'Transaction impossible : Le montant de la transaction doit être supérieur à 0.',
+        });
+
+      if (
+        body.hasOwnProperty('walletIdTo') &&
+        !body.hasOwnProperty('walletIdFrom')
+      )
         return res.status(400).send({ message: 'Emetteur manquant.' });
 
-      if (!body.hasOwnProperty('walletIdTo'))
+      if (
+        body.hasOwnProperty('walletIdFrom') &&
+        !body.hasOwnProperty('walletIdTo')
+      )
         return res.status(400).send({ message: 'Destinataire manquant.' });
 
-      const amount = body.amount;
       const walletIdFrom = Number(req.body.walletIdFrom);
       const walletIdTo = Number(req.body.walletIdTo);
 
@@ -124,12 +134,6 @@ recordsRouter.post(
           id: walletIdFrom,
         },
       });
-
-      if (amount <= 0)
-        return res.status(400).send({
-          message:
-            'Transaction impossible : Le montant de la transaction doit être positif.',
-        });
 
       if (amount > walletFrom!.balance)
         return res.status(400).send({
@@ -161,6 +165,7 @@ recordsRouter.post(
         },
       });
 
+      // create record
       const newRecord = await prisma.walletRecord.create({
         data: {
           walletIdFrom: walletIdFrom,
@@ -177,23 +182,32 @@ recordsRouter.post(
 );
 
 // Get all wallet records
-// Route : /records
-recordsRouter.get(
-  '/',
-  // checkPermissions('read:records')
+// Route : /influtons/records
+influtonsRouter.get(
+  '/records',
+  checkPermissions('read:wallets'),
   async (_: Request, res: Response) => {
     try {
       const walletRecords = await prisma.walletRecord.findMany();
 
       const client = getManagementClient('read:users read:user_idp_tokens');
       const users = await client.getUsers();
-      const wallets = await prisma.wallet.findMany();
 
-      const walletRecordsAndUsers = walletRecords.map((record) => {
-        const walletFrom = wallets.find((w) => w.id === record.walletIdFrom);
+      const walletRecordsAndUsers = walletRecords.map(async (record) => {
+        const walletFrom = await prisma.wallet.findUnique({
+          where: {
+            id: record.walletIdFrom!,
+          },
+        });
+
         const userFrom = users.find((u) => u.user_id === walletFrom?.userId);
 
-        const walletTo = wallets.find((w) => w.id === record.walletIdTo);
+        const walletTo = await prisma.wallet.findUnique({
+          where: {
+            id: record.walletIdTo!,
+          },
+        });
+
         const userTo = users.find((u) => u.user_id === walletTo?.userId);
 
         return { ...record, userFrom, userTo };
@@ -207,10 +221,10 @@ recordsRouter.get(
 );
 
 // Get a specific record, by its Id
-// Route : /records/:recordId
-recordsRouter.get(
-  '/:recordId',
-  // checkPermissions('read:records'),
+// Route : /influtons/records/:recordId
+influtonsRouter.get(
+  '/records/:recordId',
+  checkPermissions('read:wallets'),
   async (req: Request, res: Response) => {
     try {
       const recordId = req.params.recordId;
@@ -235,4 +249,4 @@ recordsRouter.get(
   },
 );
 
-export { walletsRouter, recordsRouter };
+export { influtonsRouter };
