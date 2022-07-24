@@ -3,11 +3,11 @@ import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
 import { getManagementClient } from '../shared/utils';
 
-const influtonsRouter = Router();
+const walletsRouter = Router();
 
 // Get all wallets
 // Route : /influtons/wallets
-influtonsRouter.get(
+walletsRouter.get(
   '/wallets',
   checkPermissions('read:wallets'),
   async (_: Request, res: Response) => {
@@ -31,7 +31,7 @@ influtonsRouter.get(
 
 // Get wallet by Id
 // Route : /influtons/wallets/:walletId
-influtonsRouter.get(
+walletsRouter.get(
   '/wallets/:walletId',
   checkPermissions('read:wallets'),
   async (req: Request, res: Response) => {
@@ -63,7 +63,7 @@ influtonsRouter.get(
 
 // Create new user wallet
 // Route : /influtons/wallets
-influtonsRouter.post(
+walletsRouter.post(
   '/wallets',
   checkPermissions('write:wallets'),
   async (req: Request, res: Response) => {
@@ -97,7 +97,7 @@ influtonsRouter.post(
 
 // Create new transaction
 // Route : /influtons/records
-influtonsRouter.post(
+walletsRouter.post(
   '/records',
   checkPermissions('write:wallets'),
   async (req: Request, res: Response) => {
@@ -183,7 +183,7 @@ influtonsRouter.post(
 
 // Get all wallet records
 // Route : /influtons/records
-influtonsRouter.get(
+walletsRouter.get(
   '/records',
   checkPermissions('read:wallets'),
   async (_: Request, res: Response) => {
@@ -222,7 +222,7 @@ influtonsRouter.get(
 
 // Get a specific record, by its Id
 // Route : /influtons/records/:recordId
-influtonsRouter.get(
+walletsRouter.get(
   '/records/:recordId',
   checkPermissions('read:wallets'),
   async (req: Request, res: Response) => {
@@ -249,4 +249,4 @@ influtonsRouter.get(
   },
 );
 
-export { influtonsRouter };
+export { walletsRouter };
