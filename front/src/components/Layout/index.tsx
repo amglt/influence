@@ -8,6 +8,9 @@ import {
   UserOutlined,
   DownOutlined,
   UsergroupAddOutlined,
+  ReconciliationOutlined,
+  MoneyCollectOutlined,
+  DeliveredProcedureOutlined,
 } from '@ant-design/icons';
 import './layout.less';
 import logo from '../../../public/assets/logo.png';
@@ -79,6 +82,25 @@ export function Layout(props: LayoutProps) {
           ],
         });
       }
+      updatedMenuItems.push({
+        key: 'logistic',
+        icon: <ReconciliationOutlined />,
+        label: 'Logistique',
+        children: [
+          {
+            key: 'wallets',
+            label: 'Wallets',
+            icon: <MoneyCollectOutlined />,
+            onClick: () => navigate('logistic/wallets'),
+          },
+          {
+            key: 'records',
+            label: 'Records',
+            icon: <DeliveredProcedureOutlined />,
+            onClick: () => navigate('logistic/records'),
+          },
+        ],
+      });
     }
     setMenuItems(updatedMenuItems);
   }, [navigate, user.permissions, user.user_id]);
