@@ -12,24 +12,24 @@ datasource db {
 
 
 model Account {
-  id            Int                   @id @default(autoincrement())
-  name          String                @unique
+  id            Int                      @id @default(autoincrement())
+  name          String                   @unique
   userId        String
   characters    Character[]
 }
 
 model Character {
-  id                      Int         @id @default(autoincrement())
-  name                    String      @unique
+  id                      Int            @id @default(autoincrement())
+  name                    String         @unique
   class                   String
   rank                    String
-  account                 Account     @relation(fields: [accountId], references: [id])
+  account                 Account        @relation(fields: [accountId], references: [id])
   accountId               Int
   recruitmentDate         DateTime
 }
 
 model Period {
-  id                      Int         @id @default(autoincrement())
+  id                      Int            @id @default(autoincrement())
   startDate               DateTime
   endDate                 DateTime?
   pvpGames                PvpGame[]
@@ -37,15 +37,16 @@ model Period {
 }
 
 model UsersOnPeriods {
- id                      Int          @id @default(autoincrement())
+ id                      Int             @id @default(autoincrement())
  userId                  String
  periodId                Int
- period                  Period       @relation(fields: [periodId], references: [id])
+ period                  Period          @relation(fields: [periodId], references: [id])
  totalPoints             Decimal
+ pvpGames                PvpGame[]
 }
 
 model Scale {
-  id                      Int         @id @default(autoincrement())
+  id                      Int            @id @default(autoincrement())
   percoWinPoints          Int
   percoNDPoints           Int
   percoLoosePoints        Int
@@ -63,13 +64,13 @@ model Scale {
 }
 
 model RegressiveRate {
-  id                      Int         @id @default(autoincrement())
-  gamesAmount              Int
+  id                      Int            @id @default(autoincrement())
+  gamesAmount             Int
   rate                    Decimal
 }
 
 model PvpGame {
-  id                      Int         @id @default(autoincrement())
+  id                      Int            @id @default(autoincrement())
   result                  Int
   type                    Int
   status                  Int
@@ -78,6 +79,10 @@ model PvpGame {
   player3                 String?
   player4                 String?
   player5                 String?
-  period                  Period      @relation(fields: [periodId], references: [id])
+  period                  Period         @relation(fields: [periodId], references: [id])
   periodId                Int
+  screenshotUrl           String
+  timestamp               DateTime
+  bigOpponent             Boolean        @default(false)
+  usersOnPeriod           UsersOnPeriods[]
 }

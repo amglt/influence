@@ -9,7 +9,7 @@
   "scripts": {
     "build": "npx prisma generate && tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon ./src/index.ts"
+    "dev": "nodemon --inspect ./src/index.ts"
   },
   "repository": {
     "type": "git",

@@ -33,6 +33,7 @@ export interface Scale {
 export enum PvpGameResult {
   Loose,
   Win,
+  ND,
 }
 
 export enum PvpGameType {

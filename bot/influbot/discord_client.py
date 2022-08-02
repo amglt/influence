@@ -1,6 +1,8 @@
 from discord import Client, Message
-from events.ready import handle_ready
-from events.message import handle_message
+from influbot.events.ready import handle_ready
+from influbot.events.message import handle_message
+from influbot.api.api import ApiError
+from influbot.shared.models import BotError
 
 client = Client()
 
@@ -12,4 +14,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message: Message):
-    await handle_message(client, message)
+    try:
+        await handle_message(client, message)
+    except (BotError, ApiError) as e:
+        await message.reply(e.message)
