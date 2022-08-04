@@ -2,20 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2bfdd0e-62b9-49d7-9770-5d2c9a171984" name="Changes" comment="update: bot discord client minor update">
-      <change beforePath="$PROJECT_DIR$/../back/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../back/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../back/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/../back/prisma/schema.prisma" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../back/src/controllers/pvpGames.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../back/src/controllers/pvpGames.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/bot.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/influbot/discord_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/influbot/discord_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/influbot/api/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/influbot/api/api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/influbot/events/message.py" beforeDir="false" afterPath="$PROJECT_DIR$/influbot/events/message.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/influbot/handlers/pvp.py" beforeDir="false" afterPath="$PROJECT_DIR$/influbot/handlers/pvp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/influbot/shared/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/influbot/shared/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/influbot/shared/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/influbot/shared/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../front/src/models/pvp-management.models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../front/src/models/pvp-management.models.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,9 +23,6 @@
         <option value="Python Script" />
       </list>
     </option>
-  </component>
-  <component name="FormatOnSaveOptions">
-    <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -65,7 +56,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.standard": "",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+    "settings.editor.selected.configurable": "actions.on.save"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -115,7 +106,7 @@
       <workItem from="1657094829767" duration="7345000" />
       <workItem from="1658171527618" duration="2233000" />
       <workItem from="1659450605335" duration="126000" />
-      <workItem from="1659450737533" duration="9676000" />
+      <workItem from="1659450737533" duration="19602000" />
     </task>
     <task id="LOCAL-00001" summary="feat: bot CI init">
       <created>1655374906769</created>
@@ -170,6 +161,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/bot$Run.coverage" NAME="Run Coverage Results" MODIFIED="1659480197142" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/influbot" />
+    <SUITE FILE_PATH="coverage/bot$Run.coverage" NAME="Run Coverage Results" MODIFIED="1659615103236" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/influbot" />
   </component>
 </project>

@@ -33,6 +33,42 @@ async def get_token():
             return TokenInfo(decoded_data["access_token"], decoded_data["token_type"])
 
 
+async def get(endpoint: str):
+    token_info = await get_token()
+    headers = {
+        "content-type": "application/json",
+        "authorization": f"Bearer {token_info.access_token}"
+    }
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(f"{os.getenv('API_URL')}{endpoint}") as res:
+            if res.status < 500:
+                json = await res.json()
+                if res.ok:
+                    return json
+                else:
+                    raise ApiError(json.get('message'), json.get('description', None))
+            else:
+                raise ApiError(res.status.__str__())
+
+
+async def delete(endpoint: str):
+    token_info = await get_token()
+    headers = {
+        "content-type": "application/json",
+        "authorization": f"Bearer {token_info.access_token}"
+    }
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.delete(f"{os.getenv('API_URL')}{endpoint}") as res:
+            if res.status < 500:
+                json = await res.json()
+                if res.ok:
+                    return json
+                else:
+                    raise ApiError(json.get('message'), json.get('description', None))
+            else:
+                raise ApiError(res.status.__str__())
+
+
 async def post(endpoint: str, data: Mapping[str, any] = None):
     token_info = await get_token()
     headers = {

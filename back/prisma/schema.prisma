@@ -33,40 +33,32 @@ model Period {
   startDate               DateTime
   endDate                 DateTime?
   pvpGames                PvpGame[]
-  usersOnPeriods          UsersOnPeriods[]
-}
-
-model UsersOnPeriods {
- id                      Int             @id @default(autoincrement())
- userId                  String
- periodId                Int
- period                  Period          @relation(fields: [periodId], references: [id])
- totalPoints             Decimal
- pvpGames                PvpGame[]
 }
 
 model Scale {
-  id                      Int            @id @default(autoincrement())
-  percoWinPoints          Int
-  percoNDPoints           Int
-  percoLoosePoints        Int
-  prismWinPoints          Int
-  prismNDPoints           Int
-  prismLoosePoints        Int
-  bigPercoWinPoints       Int
-  bigPercoNDPoints        Int
-  bigPercoLoosePoints     Int
-  bigPrismWinPoints       Int
-  bigPrismNDPoints        Int
-  bigPrismLoosePoints     Int
-  avaWin                  Int
-  avaLoose                Int
-}
-
-model RegressiveRate {
-  id                      Int            @id @default(autoincrement())
-  gamesAmount             Int
-  rate                    Decimal
+  id                        Int            @id @default(autoincrement())
+  percoAttackWinPoints      Float
+  percoAttackLoosePoints    Float
+  percoDefWinPoints         Float
+  percoDefLoosePoints       Float
+  percoNDPoints             Float
+  prismAttackWinPoints      Float
+  prismAttackLoosePoints    Float
+  prismDefWinPoints         Float
+  prismDefLoosePoints       Float
+  prismNDPoints             Float
+  bigPercoAttackWinPoints   Float
+  bigPercoAttackLoosePoints Float
+  bigPercoDefWinPoints      Float
+  bigPercoDefLoosePoints    Float
+  bigPercoNDPoints          Float
+  bigPrismAttackWinPoints   Float
+  bigPrismAttackLoosePoints Float
+  bigPrismNDPoints          Float
+  bigPrismDefWinPoints      Float
+  bigPrismDefLoosePoints    Float
+  avaWin                    Float
+  avaLoose                  Float
 }
 
 model PvpGame {
@@ -84,5 +76,6 @@ model PvpGame {
   screenshotUrl           String
   timestamp               DateTime
   bigOpponent             Boolean        @default(false)
-  usersOnPeriod           UsersOnPeriods[]
+  gamePoints              Float
+  requester               String
 }

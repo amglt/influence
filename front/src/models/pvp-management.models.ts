@@ -1,38 +1,41 @@
-import { Key } from 'react';
-
 export interface Period {
   id: number;
   startDate: Date;
   endDate?: Date;
 }
 
-export interface Rate {
-  id: Key;
-  gamesAmount: number;
-  rate: number;
-}
-
 export interface Scale {
-  percoWinPoints: number;
+  percoAttackWinPoints: number;
+  percoAttackLoosePoints: number;
+  percoDefWinPoints: number;
+  percoDefLoosePoints: number;
   percoNDPoints: number;
-  percoLoosePoints: number;
-  prismWinPoints: number;
+  prismAttackWinPoints: number;
+  prismAttackLoosePoints: number;
+  prismDefWinPoints: number;
+  prismDefLoosePoints: number;
   prismNDPoints: number;
-  prismLoosePoints: number;
-  bigPercoWinPoints: number;
+  bigPercoAttackWinPoints: number;
+  bigPercoAttackLoosePoints: number;
+  bigPercoDefWinPoints: number;
+  bigPercoDefLoosePoints: number;
   bigPercoNDPoints: number;
-  bigPercoLoosePoints: number;
-  bigPrismWinPoints: number;
+  bigPrismAttackWinPoints: number;
+  bigPrismAttackLoosePoints: number;
   bigPrismNDPoints: number;
-  bigPrismLoosePoints: number;
+  bigPrismDefWinPoints: number;
+  bigPrismDefLoosePoints: number;
   avaWin: number;
   avaLoose: number;
-  rates: Rate[];
 }
 
 export enum PvpGameResult {
-  Loose,
-  Win,
+  AttackWin,
+  AttackLoose,
+  DefWin,
+  DefLoose,
+  AvaWin,
+  AvaLoose,
   ND,
 }
 

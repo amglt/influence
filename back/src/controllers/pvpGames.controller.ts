@@ -1,11 +1,15 @@
 import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
-import { RegressiveRate, Scale } from '@prisma/client';
+import { Scale } from '@prisma/client';
 
 export enum PvpGameResult {
-  Loose,
-  Win,
+  AttackWin,
+  AttackLoose,
+  DefWin,
+  DefLoose,
+  AvaWin,
+  AvaLoose,
   ND,
 }
 
@@ -32,31 +36,47 @@ function getGameInitialPoints(
   switch (type) {
     case PvpGameType.Perco: {
       switch (result) {
-        case PvpGameResult.Win: {
-          if (isBigOpponent) return scale.bigPercoWinPoints;
-          else return scale.percoWinPoints;
+        case PvpGameResult.AttackWin: {
+          if (isBigOpponent) return scale.bigPercoAttackWinPoints;
+          else return scale.percoAttackWinPoints;
         }
-        case PvpGameResult.Loose: {
-          if (isBigOpponent) return scale.bigPercoLoosePoints;
-          else return scale.percoLoosePoints;
+        case PvpGameResult.AttackLoose: {
+          if (isBigOpponent) return scale.bigPercoAttackLoosePoints;
+          else return scale.percoAttackLoosePoints;
+        }
+        case PvpGameResult.DefWin: {
+          if (isBigOpponent) return scale.bigPercoDefWinPoints;
+          else return scale.percoDefWinPoints;
+        }
+        case PvpGameResult.DefLoose: {
+          if (isBigOpponent) return scale.bigPercoDefLoosePoints;
+          else return scale.percoDefLoosePoints;
         }
         case PvpGameResult.ND: {
           if (isBigOpponent) return scale.bigPercoNDPoints;
           else return scale.percoNDPoints;
         }
         default:
-          return scale.prismNDPoints;
+          return scale.percoNDPoints;
       }
     }
     case PvpGameType.Prism: {
       switch (result) {
-        case PvpGameResult.Win: {
-          if (isBigOpponent) return scale.bigPrismWinPoints;
-          else return scale.prismWinPoints;
+        case PvpGameResult.AttackWin: {
+          if (isBigOpponent) return scale.bigPrismAttackWinPoints;
+          else return scale.prismAttackWinPoints;
         }
-        case PvpGameResult.Loose: {
-          if (isBigOpponent) return scale.prismLoosePoints;
-          else return scale.prismLoosePoints;
+        case PvpGameResult.AttackLoose: {
+          if (isBigOpponent) return scale.bigPrismAttackLoosePoints;
+          else return scale.prismAttackLoosePoints;
+        }
+        case PvpGameResult.DefWin: {
+          if (isBigOpponent) return scale.bigPrismDefWinPoints;
+          else return scale.prismDefWinPoints;
+        }
+        case PvpGameResult.DefLoose: {
+          if (isBigOpponent) return scale.bigPrismDefLoosePoints;
+          else return scale.prismDefLoosePoints;
         }
         case PvpGameResult.ND: {
           if (isBigOpponent) return scale.prismNDPoints;
@@ -67,94 +87,10 @@ function getGameInitialPoints(
       }
     }
     case PvpGameType.AvA: {
-      if (result === PvpGameResult.Win) return scale.avaWin;
+      if (result === PvpGameResult.AvaWin) return scale.avaWin;
       return scale.avaLoose;
     }
   }
-}
-
-async function handleUserGame(
-  gameId: number,
-  user: string,
-  periodId: number,
-  gameInitialPoints: number,
-  rates: RegressiveRate[],
-) {
-  let pointsToAdd = gameInitialPoints;
-  if (rates.length > 0) {
-    const userPeriodGames = await prisma.pvpGame.findMany({
-      where: {
-        AND: [
-          { periodId },
-          { status: PvpGameStatus.Accepted },
-          {
-            OR: [
-              {
-                player1: user,
-              },
-              {
-                player2: user,
-              },
-              {
-                player3: user,
-              },
-              {
-                player4: user,
-              },
-              {
-                player5: user,
-              },
-            ],
-          },
-        ],
-      },
-    });
-    const smallerGames = userPeriodGames.filter((game) => !game.bigOpponent);
-    const sortedRates = rates.sort((a, b) => a.gamesAmount - b.gamesAmount);
-    let rate = undefined;
-    for (const sortedRate of sortedRates) {
-      if (smallerGames.length < sortedRate.gamesAmount) {
-        rate = sortedRate;
-        break;
-      }
-    }
-    if (rate) pointsToAdd *= Number(rate.rate);
-  }
-
-  const existingUserOnPeriodRecord = await prisma.usersOnPeriods.findFirst({
-    where: {
-      AND: [{ periodId }, { userId: user }],
-    },
-  });
-  if (existingUserOnPeriodRecord)
-    await prisma.usersOnPeriods.update({
-      where: {
-        id: existingUserOnPeriodRecord.id,
-      },
-      data: {
-        totalPoints: {
-          increment: pointsToAdd,
-        },
-        pvpGames: {
-          connect: {
-            id: gameId,
-          },
-        },
-      },
-    });
-  else
-    await prisma.usersOnPeriods.create({
-      data: {
-        userId: user,
-        periodId,
-        totalPoints: pointsToAdd,
-        pvpGames: {
-          connect: {
-            id: gameId,
-          },
-        },
-      },
-    });
 }
 
 pvpGamesRouter.get(
@@ -164,6 +100,27 @@ pvpGamesRouter.get(
     try {
       const games = await prisma.pvpGame.findMany();
       return res.status(200).send(games);
+    } catch (e) {
+      return res.status(500).send(e);
+    }
+  },
+);
+
+pvpGamesRouter.get(
+  '/:gameId',
+  checkPermissions('read:pvp-games'),
+  async (req: Request, res: Response) => {
+    try {
+      const gameId = req.params.gameId;
+      if (!gameId)
+        return res.status(400).send({ message: 'GameId nécessaire' });
+
+      const game = await prisma.pvpGame.findUnique({
+        where: {
+          id: Number(gameId),
+        },
+      });
+      return res.status(200).send(game);
     } catch (e) {
       return res.status(500).send(e);
     }
@@ -210,6 +167,7 @@ pvpGamesRouter.post(
 
       const game = await prisma.pvpGame.create({
         data: {
+          requester: body.requester,
           status: PvpGameStatus.Pending,
           periodId: currentPeriod.id,
           player1: body.player1,
@@ -221,6 +179,7 @@ pvpGamesRouter.post(
           type: body.type,
           screenshotUrl: body.screenshotUrl,
           timestamp: new Date().toISOString(),
+          gamePoints: 0,
         },
       });
 
@@ -236,98 +195,44 @@ pvpGamesRouter.put(
   checkPermissions('write:pvp-games'),
   async (req: Request, res: Response) => {
     try {
-      console.log(req.body, req.params);
       const gameId = req.params.gameId;
       if (!gameId)
         return res.status(400).send({ message: 'GameId nécessaire' });
 
       const { status } = req.body;
-      if (status && status == PvpGameStatus.Rejected) {
-        await prisma.pvpGame.update({
-          where: {
-            id: Number(gameId),
-          },
-          data: {
-            status: PvpGameStatus.Rejected,
-          },
-        });
-        return res.status(200).send({});
-      }
+      if (status === null || status === undefined)
+        return res.status(400).send({ message: 'Status manquant' });
 
-      const currentPeriod = await prisma.period.findFirst({
+      const scale = await prisma.scale.findFirst({
         where: {
-          endDate: null,
+          id: 1,
         },
       });
-      if (!currentPeriod)
-        return res.status(400).send({
-          message: 'Aucune période active',
-        });
-
       const game = await prisma.pvpGame.findFirst({
-        where: { id: Number(gameId) },
+        where: {
+          id: Number(gameId),
+        },
       });
+      if (!scale || !game)
+        return res.status(400).send({ message: 'Scale ou game introuvable' });
 
-      if (game) {
-        const scale = await prisma.scale.findFirst({
-          where: {
-            id: 1,
-          },
-        });
-        const rates = await prisma.regressiveRate.findMany();
-        if (scale && rates) {
-          const initialPoints = await getGameInitialPoints(
-            scale,
-            game.type,
-            game.result,
-            req.body?.isBigAlliance,
-          );
-          await handleUserGame(
-            game.id,
-            game.player1,
-            currentPeriod.id,
-            initialPoints,
-            rates,
-          );
-          if (game.player2)
-            await handleUserGame(
-              game.id,
-              game.player2,
-              currentPeriod.id,
-              initialPoints,
-              rates,
-            );
-          if (game.player3)
-            await handleUserGame(
-              game.id,
-              game.player3,
-              currentPeriod.id,
-              initialPoints,
-              rates,
-            );
-          if (game.player4)
-            await handleUserGame(
-              game.id,
-              game.player4,
-              currentPeriod.id,
-              initialPoints,
-              rates,
-            );
-          if (game.player5)
-            await handleUserGame(
-              game.id,
-              game.player5,
-              currentPeriod.id,
-              initialPoints,
-              rates,
-            );
-          await prisma.pvpGame.update({
-            where: { id: Number(gameId) },
-            data: { status: PvpGameStatus.Accepted },
-          });
-          return res.status(200).send({});
-        }
-      }
+      const gamePoints = getGameInitialPoints(
+        scale,
+        game.type,
+        game.result,
+        req.body.isBigOpponent,
+      );
+      await prisma.pvpGame.update({
+        where: {
+          id: Number(gameId),
+        },
+        data: {
+          status,
+          gamePoints,
+          bigOpponent: req.body.isBigOpponent,
+        },
+      });
+      return res.status(200).send({});
     } catch (e) {
       return res.status(500).send(e);
     }
@@ -343,12 +248,20 @@ pvpGamesRouter.delete(
       if (!gameId)
         return res.status(400).send({ message: 'GameId nécessaire' });
 
+      const game = await prisma.pvpGame.findUnique({
+        where: {
+          id: Number(gameId),
+        },
+      });
+      if (!game)
+        return res.status(400).send({ message: 'Partie PVP non trouvée' });
+
       await prisma.pvpGame.delete({
         where: {
           id: Number(gameId),
         },
       });
-      return res.status(200).send();
+      return res.status(200).send({});
     } catch (e) {
       return res.status(500).send(e);
     }

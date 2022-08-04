@@ -9,9 +9,13 @@ class BotError(Exception):
 
 
 class PvpResult(Enum):
-    Loose = 0
-    Win = 1
-    NoDef = 2
+    AttackWin = 0
+    AttackLoose = 1
+    DefWin = 2
+    DefLoose = 3
+    AvaWin = 4
+    AvaLoose = 5
+    ND = 6
 
 
 class PvpType(Enum):
