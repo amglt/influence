@@ -10,7 +10,7 @@ processes = []
   builder = "heroku/buildpacks:20"
 
 [deploy]
-  release_command = "npx prisma migrate deploy && npx prisma db seed"
+  release_command = "npm run setup:db"
 
 [experimental]
   allowed_public_ports = []
