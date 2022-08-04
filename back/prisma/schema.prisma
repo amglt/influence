@@ -12,18 +12,70 @@ datasource db {
 
 
 model Account {
-  id            Int         @id @default(autoincrement())
-  name          String      @unique
+  id            Int                      @id @default(autoincrement())
+  name          String                   @unique
   userId        String
   characters    Character[]
 }
 
 model Character {
-  id                      Int         @id @default(autoincrement())
-  name                    String      @unique
+  id                      Int            @id @default(autoincrement())
+  name                    String         @unique
   class                   String
   rank                    String
-  account                 Account     @relation(fields: [accountId], references: [id])
+  account                 Account        @relation(fields: [accountId], references: [id])
   accountId               Int
-  recruitmentDate         DateTime    @db.Date
+  recruitmentDate         DateTime
+}
+
+model Period {
+  id                      Int            @id @default(autoincrement())
+  startDate               DateTime
+  endDate                 DateTime?
+  pvpGames                PvpGame[]
+}
+
+model Scale {
+  id                        Int            @id @default(autoincrement())
+  percoAttackWinPoints      Float
+  percoAttackLoosePoints    Float
+  percoDefWinPoints         Float
+  percoDefLoosePoints       Float
+  percoNDPoints             Float
+  prismAttackWinPoints      Float
+  prismAttackLoosePoints    Float
+  prismDefWinPoints         Float
+  prismDefLoosePoints       Float
+  prismNDPoints             Float
+  bigPercoAttackWinPoints   Float
+  bigPercoAttackLoosePoints Float
+  bigPercoDefWinPoints      Float
+  bigPercoDefLoosePoints    Float
+  bigPercoNDPoints          Float
+  bigPrismAttackWinPoints   Float
+  bigPrismAttackLoosePoints Float
+  bigPrismNDPoints          Float
+  bigPrismDefWinPoints      Float
+  bigPrismDefLoosePoints    Float
+  avaWin                    Float
+  avaLoose                  Float
+}
+
+model PvpGame {
+  id                      Int            @id @default(autoincrement())
+  result                  Int
+  type                    Int
+  status                  Int
+  player1                 String
+  player2                 String?
+  player3                 String?
+  player4                 String?
+  player5                 String?
+  period                  Period         @relation(fields: [periodId], references: [id])
+  periodId                Int
+  screenshotUrl           String
+  timestamp               DateTime
+  bigOpponent             Boolean        @default(false)
+  gamePoints              Float
+  requester               String
 }

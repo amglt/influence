@@ -8,6 +8,10 @@ import {
   UserOutlined,
   DownOutlined,
   UsergroupAddOutlined,
+  ScissorOutlined,
+  CalendarOutlined,
+  NumberOutlined,
+  TableOutlined,
 } from '@ant-design/icons';
 import './layout.less';
 import logo from '../../../public/assets/logo.png';
@@ -54,6 +58,34 @@ export function Layout(props: LayoutProps) {
               label: 'Characters',
               icon: <UserOutlined />,
               onClick: () => navigate('/recruitment/characters'),
+            },
+          ],
+        });
+      }
+      if (user.permissions.includes(AppPermissions.IsPVPManager)) {
+        updatedMenuItems.push({
+          key: 'pvp-management-management',
+          icon: <ScissorOutlined />,
+          label: 'PVP management',
+          children: [
+            {
+              key: 'periods',
+              label: 'Périodes',
+              icon: <CalendarOutlined />,
+              onClick: () => navigate('/pvp-management-management/periods'),
+            },
+            {
+              key: 'scale',
+              label: 'Barème',
+              icon: <NumberOutlined />,
+              onClick: () => navigate('/pvp-management-management/scale'),
+            },
+
+            {
+              key: 'games',
+              label: 'Parties',
+              icon: <TableOutlined />,
+              onClick: () => navigate('/pvp-management-management/games'),
             },
           ],
         });

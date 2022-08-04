@@ -13,7 +13,7 @@ accountsRouter.get(
       const accounts = await prisma.account.findMany();
       return res.status(200).send(accounts);
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -43,7 +43,7 @@ accountsRouter.get(
 
       return res.status(200).send({ ...account, user: { ...user } });
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -66,7 +66,7 @@ accountsRouter.get(
 
       return res.status(200).send(accounts);
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -100,7 +100,7 @@ accountsRouter.post(
       });
       return res.status(200).send(newAccount);
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -144,7 +144,7 @@ accountsRouter.put(
 
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );
@@ -166,7 +166,7 @@ accountsRouter.delete(
       });
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send();
+      return res.status(500).send(err);
     }
   },
 );

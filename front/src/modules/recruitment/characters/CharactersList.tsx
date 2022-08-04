@@ -18,6 +18,7 @@ import { useForm } from 'antd/lib/form/Form';
 import { AddEditCharacterModal } from './AddEditCharacterModal';
 import { useAccounts } from '@Api/recruitment/accounts/accounts.queries';
 import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
+import { format } from 'date-fns';
 
 export function CharactersList() {
   const [isAddEditCharacterModalOpen, setIsAddEditCharacterModalOpen] =
@@ -138,15 +139,11 @@ export function CharactersList() {
               key: 'recruitmentDate',
               dataIndex: 'recruitmentDate',
               title: 'Date de recrutement',
-              // filtered: true,
-              // sorter: (a, b) =>
-              //   moment(a.recruitmentDate).unix() -
-              //   moment(b.recruitmentDate).unix(),
-              render: (value) => {
-                let date = value.split('T')[0].split('-');
-                date = `${date[1]}/${date[2]}/${date[0]}`;
-                return date;
-              },
+              filtered: true,
+              sorter: (a, b) =>
+                new Date(a.recruitmentDate).getTime() -
+                new Date(b.recruitmentDate).getTime(),
+              render: (value) => format(new Date(value), 'dd/MM/yyyy'),
             },
             {
               key: 'actions',
