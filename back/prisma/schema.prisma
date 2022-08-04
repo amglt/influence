@@ -33,6 +33,7 @@ model Period {
   startDate               DateTime
   endDate                 DateTime?
   pvpGames                PvpGame[]
+  playersPeriods          PlayerPeriod[]
 }
 
 model Scale {
@@ -78,4 +79,12 @@ model PvpGame {
   bigOpponent             Boolean        @default(false)
   gamePoints              Float
   requester               String
+}
+
+model PlayerPeriod {
+  playerId                String
+  periodId                Int
+  period                  Period         @relation(fields: [periodId], references: [id])
+  totalPoints             Float
+  @@id([playerId, periodId])
 }

@@ -63,3 +63,9 @@ export interface PvpGame {
   player5?: string;
   period: Period;
 }
+
+export interface PeriodPlayerPoints {
+  playerId: string;
+  periodId: number;
+  totalPoints: number;
+}

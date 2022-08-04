@@ -2,28 +2,11 @@ import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
 import { Scale } from '@prisma/client';
-
-export enum PvpGameResult {
-  AttackWin,
-  AttackLoose,
-  DefWin,
-  DefLoose,
-  AvaWin,
-  AvaLoose,
-  ND,
-}
-
-export enum PvpGameType {
-  Perco,
-  Prism,
-  AvA,
-}
-
-export enum PvpGameStatus {
-  Pending,
-  Rejected,
-  Accepted,
-}
+import {
+  PvpGameResult,
+  PvpGameStatus,
+  PvpGameType,
+} from '../models/pvpGames.models';
 
 const pvpGamesRouter = Router();
 
@@ -232,6 +215,35 @@ pvpGamesRouter.put(
           bigOpponent: req.body.isBigOpponent,
         },
       });
+
+      const gamePlayers = [game.player1];
+      if (game.player2) gamePlayers.push(game.player2);
+      if (game.player3) gamePlayers.push(game.player3);
+      if (game.player4) gamePlayers.push(game.player4);
+      if (game.player5) gamePlayers.push(game.player5);
+      for (const player of gamePlayers) {
+        await prisma.playerPeriod.upsert({
+          where: {
+            playerId_periodId: {
+              periodId: game.periodId,
+              playerId: player,
+            },
+          },
+          create: {
+            periodId: game.periodId,
+            playerId: player,
+            totalPoints: gamePoints,
+          },
+          update: {
+            periodId: game.periodId,
+            playerId: player,
+            totalPoints: {
+              increment: gamePoints,
+            },
+          },
+        });
+      }
+
       return res.status(200).send({});
     } catch (e) {
       return res.status(500).send(e);
