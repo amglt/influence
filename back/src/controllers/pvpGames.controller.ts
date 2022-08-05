@@ -120,27 +120,6 @@ pvpGamesRouter.get(
   },
 );
 
-pvpGamesRouter.get(
-  '/period/:periodId',
-  checkPermissions('read:pvp-games'),
-  async (req: Request, res: Response) => {
-    try {
-      const periodId = req.params.periodId;
-      if (!periodId)
-        return res.status(400).send({ message: 'PeriodId nécessaire' });
-
-      const games = await prisma.pvpGame.findMany({
-        where: {
-          id: Number(periodId),
-        },
-      });
-      return res.status(200).send(games);
-    } catch (e) {
-      return res.status(500).send(e);
-    }
-  },
-);
-
 pvpGamesRouter.post(
   '/',
   checkPermissions('write:pvp-games'),

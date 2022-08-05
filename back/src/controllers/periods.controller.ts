@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
-import { PvpGameStatus } from '../models/pvpGames.models';
 
 const periodRouter = Router();
 
@@ -37,7 +36,6 @@ periodRouter.get(
       const games = await prisma.pvpGame.findMany({
         where: {
           periodId: Number(periodId),
-          status: PvpGameStatus.Accepted,
         },
       });
       return res.status(200).send({ games });
