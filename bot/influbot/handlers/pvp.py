@@ -77,7 +77,8 @@ def has_pvp_validation_role(roles):
 
 
 def check_pvp_reaction_validity(reaction: Reaction, user: Member, message_id):
-    return reaction.message.id == message_id and has_pvp_validation_role(user.roles)
+    valid_emote = reaction.emoji == '✅' or reaction.emoji == '☑️' or reaction.emoji == '❌'
+    return valid_emote and reaction.message.id == message_id and has_pvp_validation_role(user.roles)
 
 
 async def generate_game(client, message, game_type, game):
