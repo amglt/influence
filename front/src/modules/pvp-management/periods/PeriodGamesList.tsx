@@ -48,6 +48,12 @@ export function PeriodGamesList() {
               render: (value) => PvpGameType[value],
             },
             {
+              key: 'status',
+              dataIndex: 'status',
+              title: 'Status',
+              render: (value) => PvpGameStatus[value],
+            },
+            {
               key: 'players',
               title: 'Joueurs',
               render: (_, record) => getPlayersStringFromPvpGame(record),
