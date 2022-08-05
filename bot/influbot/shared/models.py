@@ -22,3 +22,16 @@ class PvpType(Enum):
     Perco = 0
     Prism = 1
     AvA = 2
+
+
+class RuntimeEnv(Enum):
+    Influ = 0
+    Alliance = 1
+
+
+class AllianceGuild(Enum):
+    Influ = 0
+    Pure = 1
+    Vegas = 2
+    Priapes = 3
+    Reformed = 4

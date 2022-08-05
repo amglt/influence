@@ -10,6 +10,9 @@ import { PeriodsList } from '@Modules/pvp-management/periods/PeriodsList';
 import { PvpManagement } from '@Modules/pvp-management';
 import { Scale } from '@Modules/pvp-management/scale/Scale';
 import { GamesList } from '@Modules/pvp-management/games/GamesList';
+import { PeriodGamesList } from '@Modules/pvp-management/periods/PeriodGamesList';
+import { PeriodPlayersPointsList } from '@Modules/pvp-management/periods/PeriodPlayerPointsList';
+import { PeriodPlayerGamesList } from '@Modules/pvp-management/periods/PeriodPlayerGamesList';
 
 export function Router() {
   return (
@@ -22,6 +25,18 @@ export function Router() {
           </Route>
           <Route path={'pvp-management-management'} element={<PvpManagement />}>
             <Route path={'periods'} element={<PeriodsList />} />
+            <Route
+              path={'periods/:periodId/games'}
+              element={<PeriodGamesList />}
+            />
+            <Route
+              path={'periods/:periodId/players'}
+              element={<PeriodPlayersPointsList />}
+            />
+            <Route
+              path={'periods/:periodId/games/:playerId'}
+              element={<PeriodPlayerGamesList />}
+            />
             <Route path={'scale'} element={<Scale />} />
             <Route path={'games'} element={<GamesList />} />
           </Route>

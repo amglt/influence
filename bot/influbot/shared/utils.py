@@ -1,4 +1,6 @@
-from influbot.shared.models import PvpResult, PvpType
+import os
+
+from influbot.shared.models import PvpResult, PvpType, RuntimeEnv, AllianceGuild
 
 
 def is_valid_pvp_type(pvp_type: str):
@@ -44,3 +46,29 @@ def map_names_from_mentions(mentions: list):
         if mentions.index(mention) != len(mentions) - 1:
             names = names + ", "
     return names
+
+
+def get_runtime_env():
+    runtime_env = os.getenv("RUNTIME_ENV")
+    match runtime_env:
+        case "influ":
+            return RuntimeEnv.Influ
+        case "alliance":
+            return RuntimeEnv.Alliance
+        case _:
+            return RuntimeEnv.Influ
+
+
+def get_guild_from_roles(roles):
+    if 992948334396440600 in roles:
+        return AllianceGuild.Influ
+    elif 992948334396440599 in roles:
+        return AllianceGuild.Vegas
+    elif 992948334375489634 in roles:
+        return AllianceGuild.Priapes
+    elif 1003429686744993869 in roles:
+        return AllianceGuild.Pure
+    elif 1003429760573120533 in roles:
+        return AllianceGuild.Reformed
+    else:
+        return AllianceGuild.Influ

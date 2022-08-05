@@ -80,13 +80,6 @@ export function Layout(props: LayoutProps) {
               icon: <NumberOutlined />,
               onClick: () => navigate('/pvp-management-management/scale'),
             },
-
-            {
-              key: 'games',
-              label: 'Parties',
-              icon: <TableOutlined />,
-              onClick: () => navigate('/pvp-management-management/games'),
-            },
           ],
         });
       }

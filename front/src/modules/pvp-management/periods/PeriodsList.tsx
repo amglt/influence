@@ -2,7 +2,7 @@ import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
 import { Button, Modal, Space } from 'antd';
 import { Listing } from '@Components/Listing';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined, UserOutlined } from '@ant-design/icons';
 import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
 import { Period } from '@Models/pvp-management.models';
 import { usePeriods } from '@Api/pvp-management/pvp-management.queries';
@@ -12,9 +12,11 @@ import {
   useDeletePeriod,
 } from '@Api/pvp-management/pvp-management.mutations';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function PeriodsList() {
   const [isAddPeriodModalOpen, setIsAddPeriodModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { data: periodsData, isLoading: arePeriodsLoading } = usePeriods();
   const { mutate: deletePeriod } = useDeletePeriod();
@@ -80,10 +82,19 @@ export function PeriodsList() {
             },
             {
               key: 'actions',
-              dataIndex: 'actions',
               render: (_, record) => {
                 return (
                   <Space>
+                    <EyeOutlined
+                      onClick={() => {
+                        navigate(`${record.id}/games`);
+                      }}
+                    />
+                    <UserOutlined
+                      onClick={() => {
+                        navigate(`${record.id}/players`);
+                      }}
+                    />
                     <DeleteOutlined
                       onClick={() =>
                         ModalConfirmDelete({

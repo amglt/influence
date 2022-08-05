@@ -1,28 +1,29 @@
 import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
-import { Space } from 'antd';
 import { Listing } from '@Components/Listing';
-import { DeleteOutlined } from '@ant-design/icons';
-import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
 import {
   PvpGame,
   PvpGameResult,
   PvpGameStatus,
   PvpGameType,
 } from '@Models/pvp-management.models';
-import { useGames } from '@Api/pvp-management/pvp-management.queries';
-import { format } from 'date-fns';
+import { usePeriodGames } from '@Api/pvp-management/pvp-management.queries';
+import { useParams } from 'react-router-dom';
 import { getPlayersStringFromPvpGame } from '@Utils';
 
-export function GamesList() {
-  const { data: gamesData, isLoading: areGamesLoading } = useGames();
+export function PeriodGamesList() {
+  const params = useParams();
+
+  const { data: gamesData, isLoading: areGamesLoading } = usePeriodGames(
+    params.periodId,
+  );
 
   return (
     <>
       <Breadcrumb
         items={[
           { key: 'pvp-management-management', label: 'PVP Management' },
-          { key: 'periods', label: 'Parties' },
+          { key: 'periodGames', label: 'Parties pendant période' },
         ]}
       />
       <Content>
@@ -47,12 +48,6 @@ export function GamesList() {
               render: (value) => PvpGameType[value],
             },
             {
-              key: 'status',
-              dataIndex: 'status',
-              title: 'Status',
-              render: (value) => PvpGameStatus[value],
-            },
-            {
               key: 'players',
               title: 'Joueurs',
               render: (_, record) => getPlayersStringFromPvpGame(record),
@@ -72,19 +67,8 @@ export function GamesList() {
                 </a>
               ),
             },
-            {
-              key: 'actions',
-              dataIndex: 'actions',
-              render: (_, record) => {
-                return (
-                  <Space>
-                    <DeleteOutlined />
-                  </Space>
-                );
-              },
-            },
           ]}
-          data={gamesData}
+          data={gamesData?.games ?? []}
           loading={areGamesLoading}
         />
       </Content>
