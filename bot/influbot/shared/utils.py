@@ -21,7 +21,7 @@ def get_pvp_result_from_type(pvp_type: str):
             return PvpResult.DefLoose
         case "win":
             return PvpResult.AvaWin
-        case "loose":
+        case "loose" | "lose":
             return PvpResult.AvaLoose
         case _:
             return PvpResult.ND
