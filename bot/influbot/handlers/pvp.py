@@ -56,7 +56,7 @@ def is_ava_content_valid(message: Message):
         return False
     if len(args) != 2:
         raise BotError("Trop ou trop peu d'arguments à la demande, veuillez vérifier le manuel d'utilisation")
-    if args[1].lower() != 'win' and args[1].lower() != 'loose':
+    if args[1].lower() != 'win' and args[1].lower() != 'loose' and args[1] != 'lose':
         raise BotError("Les résultats ava valable sont win ou loose")
     if len(message.attachments) == 0 or len(message.attachments) > 1 \
             or (message.attachments[0].content_type != 'image/jpeg'
