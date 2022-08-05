@@ -1,12 +1,17 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
-import { Scale } from '@prisma/client';
+import { Scale, PvpGame } from '@prisma/client';
 import {
   PvpGameResult,
   PvpGameStatus,
   PvpGameType,
 } from '../models/pvpGames.models';
+import {
+  getManagementClient,
+  getRuntimeEnv,
+  RuntimeEnv,
+} from '../shared/utils';
 
 const pvpGamesRouter = Router();
 
@@ -148,25 +153,75 @@ pvpGamesRouter.post(
           message: 'Aucune période active',
         });
 
-      const game = await prisma.pvpGame.create({
-        data: {
-          requester: body.requester,
-          status: PvpGameStatus.Pending,
-          periodId: currentPeriod.id,
-          player1: body.player1,
-          player2: body.player2,
-          player3: body.player3,
-          player4: body.player4,
-          player5: body.player5,
-          result: body.result,
-          type: body.type,
-          screenshotUrl: body.screenshotUrl,
-          timestamp: new Date().toISOString(),
-          gamePoints: 0,
-        },
-      });
+      let game: PvpGame;
+      if (getRuntimeEnv() === RuntimeEnv.Influ) {
+        const client = getManagementClient('read:users read:user_idp_tokens');
+        const t = await client.getUser({ id: body.player1 });
+        console.log(t);
+        game = await prisma.pvpGame.create({
+          data: {
+            requester: body.requester,
+            status: PvpGameStatus.Pending,
+            periodId: currentPeriod.id,
+            player1: body.player1,
+            player1Name: (await client.getUser({ id: body.player1 })).name,
+            player2: body.player2,
+            player2Name: body.player2
+              ? (
+                  await client.getUser({ id: body.player2 })
+                ).name
+              : null,
+            player3: body.player3,
+            player3Name: body.player3
+              ? (
+                  await client.getUser({ id: body.player3 })
+                ).name
+              : null,
+            player4: body.player4,
+            player4Name: body.player4
+              ? (
+                  await client.getUser({ id: body.player4 })
+                ).name
+              : null,
+            player5: body.player5,
+            player5Name: body.player5
+              ? (
+                  await client.getUser({ id: body.player5 })
+                ).name
+              : null,
+            result: body.result,
+            type: body.type,
+            screenshotUrl: body.screenshotUrl,
+            timestamp: new Date().toISOString(),
+            gamePoints: 0,
+          },
+        });
+      } else {
+        game = await prisma.pvpGame.create({
+          data: {
+            requester: body.requester,
+            status: PvpGameStatus.Pending,
+            periodId: currentPeriod.id,
+            player1: body.player1,
+            player1Name: body.player1Name,
+            player2: body.player2,
+            player2Name: body.player2Name,
+            player3: body.player3,
+            player3Name: body.player3Name,
+            player4: body.player4,
+            player4Name: body.player4Name,
+            player5: body.player5,
+            player5Name: body.player5Name,
+            result: body.result,
+            type: body.type,
+            screenshotUrl: body.screenshotUrl,
+            timestamp: new Date().toISOString(),
+            gamePoints: 0,
+          },
+        });
+      }
 
-      return res.status(200).send(game);
+      return res.status(201).send(game);
     } catch (e) {
       return res.status(500).send(e);
     }
@@ -267,6 +322,27 @@ pvpGamesRouter.delete(
       });
       if (!game)
         return res.status(400).send({ message: 'Partie PVP non trouvée' });
+
+      const gamePlayers = [game.player1];
+      if (game.player2) gamePlayers.push(game.player2);
+      if (game.player3) gamePlayers.push(game.player3);
+      if (game.player4) gamePlayers.push(game.player4);
+      if (game.player5) gamePlayers.push(game.player5);
+      for (const player of gamePlayers) {
+        await prisma.playerPeriod.update({
+          where: {
+            playerId_periodId: {
+              periodId: game.periodId,
+              playerId: player,
+            },
+          },
+          data: {
+            totalPoints: {
+              decrement: game.gamePoints,
+            },
+          },
+        });
+      }
 
       await prisma.pvpGame.delete({
         where: {

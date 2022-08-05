@@ -68,10 +68,15 @@ model PvpGame {
   type                    Int
   status                  Int
   player1                 String
+  player1Name             String         @default("")
   player2                 String?
+  player2Name             String?
   player3                 String?
+  player3Name             String?
   player4                 String?
+  player4Name             String?
   player5                 String?
+  player5Name             String?
   period                  Period         @relation(fields: [periodId], references: [id])
   periodId                Int
   screenshotUrl           String
