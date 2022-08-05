@@ -108,7 +108,12 @@ pvpGamesRouter.get(
           id: Number(gameId),
         },
       });
-      return res.status(200).send(game);
+
+      return game
+        ? res.status(200).send(game)
+        : res
+            .status(400)
+            .send({ message: 'Aucune partie trouvée avec cet ID' });
     } catch (e) {
       return res.status(500).send(e);
     }
@@ -156,7 +161,6 @@ pvpGamesRouter.post(
       let game: PvpGame;
       if (getRuntimeEnv() === RuntimeEnv.Influ) {
         const client = getManagementClient('read:users read:user_idp_tokens');
-        const t = await client.getUser({ id: body.player1 });
         game = await prisma.pvpGame.create({
           data: {
             requester: body.requester,

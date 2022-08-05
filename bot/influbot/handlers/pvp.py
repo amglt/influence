@@ -36,6 +36,18 @@ def is_perco_prism_content_valid(message: Message):
     return True
 
 
+def is_rt_valid(message: Message):
+    content = message.content
+    args = content.split()
+
+    if args[0].lower() != '.rt':
+        return False
+    if len(args) != 2:
+        raise BotError("Trop ou trop peu d'arguments à la demande, veuillez vérifier le manuel d'utilisation")
+
+    return True
+
+
 def is_ava_content_valid(message: Message):
     content = message.content
     args = content.split()
@@ -100,17 +112,18 @@ async def generate_game(client, message, game_type, game):
 
 
 async def handle_remove_transaction(message: Message):
-    args = message.content.split()
-    game_id = args[1]
-    game = await get(f"/pvp-games/{game_id}")
-    if has_pvp_validation_role(message.author.roles) or str(message.author.id) in game.get('requester'):
-        await delete(f"/pvp-games/{game_id}")
-        embed = Embed(title=f"Retrait de partie pvp", description="Le contenu a bien été supprimé")
-        await message.reply(embed=embed)
-    else:
-        embed = Embed(title=f"Retrait de partie pvp",
-                      description="Vous n'avez pas la permission d'effectuer cette action")
-        await message.reply(embed=embed)
+    if is_rt_valid(message):
+        args = message.content.split()
+        game_id = args[1]
+        game = await get(f"/pvp-games/{game_id}")
+        if has_pvp_validation_role(message.author.roles) or str(message.author.id) in game.get('requester'):
+            await delete(f"/pvp-games/{game_id}")
+            embed = Embed(title=f"Retrait de partie pvp", description="Le contenu a bien été supprimé")
+            await message.reply(embed=embed)
+        else:
+            embed = Embed(title=f"Retrait de partie pvp",
+                          description="Vous n'avez pas la permission d'effectuer cette action")
+            await message.reply(embed=embed)
 
 
 async def handle_ava(client: Client, message: Message):
