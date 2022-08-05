@@ -4,8 +4,8 @@ from discord import Message, Embed, Client, Reaction, Member
 
 from influbot.api.api import post, put, get, delete
 from influbot.shared.models import BotError, PvpType, RuntimeEnv
-from influbot.shared.utils import is_valid_pvp_type, get_pvp_result_from_type, get_pvp_type_from_command, index_exists, \
-    map_names_from_mentions, get_runtime_env, get_guild_from_roles
+from influbot.shared.utils import is_valid_pvp_type, get_pvp_result_from_type, \
+    get_pvp_type_from_command, index_exists, map_names_from_mentions, get_runtime_env, get_guild_from_roles
 from enum import Enum
 import arrow
 

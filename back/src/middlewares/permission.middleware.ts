@@ -18,6 +18,7 @@ export const checkPermissions =
     const token = req.headers.authorization?.split(' ')[1];
     if (token) {
       const decodedToken = jwt_decode(token) as DecodedToken;
+      console.log(decodedToken);
       if (decodedToken.permissions && decodedToken.permissions.length > 0) {
         let isValid = false;
         if (Array.isArray(permissions)) {
@@ -32,6 +33,10 @@ export const checkPermissions =
         return res.status(403).send({
           message: `Vous n'avez pas la permission d'obtenir ce contenu`,
         });
+      } else {
+        return res
+          .status(403)
+          .send({ message: "Vous n'avez pas d'accès à cette app" });
       }
     }
   };
