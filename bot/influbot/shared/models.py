@@ -22,3 +22,8 @@ class PvpType(Enum):
     Perco = 0
     Prism = 1
     AvA = 2
+
+
+class RuntimeEnv(Enum):
+    Influ = 0
+    Alliance = 1

@@ -1,4 +1,6 @@
-from influbot.shared.models import PvpResult, PvpType
+import os
+
+from influbot.shared.models import PvpResult, PvpType, RuntimeEnv
 
 
 def is_valid_pvp_type(pvp_type: str):
@@ -44,3 +46,14 @@ def map_names_from_mentions(mentions: list):
         if mentions.index(mention) != len(mentions) - 1:
             names = names + ", "
     return names
+
+
+def get_runtime_env():
+    runtime_env = os.getenv("RUNTIME_ENV")
+    match runtime_env:
+        case "influ":
+            return RuntimeEnv.Influ
+        case "alliance":
+            return RuntimeEnv.Alliance
+        case _:
+            return RuntimeEnv.Influ
