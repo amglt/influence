@@ -27,8 +27,8 @@ export function PeriodPlayersPointsList() {
         <Listing<PeriodPlayerPoints>
           columns={[
             {
-              key: 'playerId',
-              dataIndex: 'playerId',
+              key: 'playerName',
+              dataIndex: 'playerName',
               title: 'Joueur',
             },
             {

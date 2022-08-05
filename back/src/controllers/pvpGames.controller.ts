@@ -157,7 +157,6 @@ pvpGamesRouter.post(
       if (getRuntimeEnv() === RuntimeEnv.Influ) {
         const client = getManagementClient('read:users read:user_idp_tokens');
         const t = await client.getUser({ id: body.player1 });
-        console.log(t);
         game = await prisma.pvpGame.create({
           data: {
             requester: body.requester,
@@ -165,30 +164,35 @@ pvpGamesRouter.post(
             periodId: currentPeriod.id,
             player1: body.player1,
             player1Name: (await client.getUser({ id: body.player1 })).name,
+            player1Guild: body.player1Guild,
             player2: body.player2,
             player2Name: body.player2
               ? (
                   await client.getUser({ id: body.player2 })
                 ).name
               : null,
+            player2Guild: body.player2Guild,
             player3: body.player3,
             player3Name: body.player3
               ? (
                   await client.getUser({ id: body.player3 })
                 ).name
               : null,
+            player3Guild: body.player3Guild,
             player4: body.player4,
             player4Name: body.player4
               ? (
                   await client.getUser({ id: body.player4 })
                 ).name
               : null,
+            player4Guild: body.player4Guild,
             player5: body.player5,
             player5Name: body.player5
               ? (
                   await client.getUser({ id: body.player5 })
                 ).name
               : null,
+            player5Guild: body.player5Guild,
             result: body.result,
             type: body.type,
             screenshotUrl: body.screenshotUrl,
@@ -204,14 +208,19 @@ pvpGamesRouter.post(
             periodId: currentPeriod.id,
             player1: body.player1,
             player1Name: body.player1Name,
+            player1Guild: body.player1Guild,
             player2: body.player2,
             player2Name: body.player2Name,
+            player2Guild: body.player2Guild,
             player3: body.player3,
             player3Name: body.player3Name,
+            player3Guild: body.player3Guild,
             player4: body.player4,
             player4Name: body.player4Name,
+            player4Guild: body.player4Guild,
             player5: body.player5,
             player5Name: body.player5Name,
+            player5Guild: body.player5Guild,
             result: body.result,
             type: body.type,
             screenshotUrl: body.screenshotUrl,
@@ -271,27 +280,49 @@ pvpGamesRouter.put(
         },
       });
 
-      const gamePlayers = [game.player1];
-      if (game.player2) gamePlayers.push(game.player2);
-      if (game.player3) gamePlayers.push(game.player3);
-      if (game.player4) gamePlayers.push(game.player4);
-      if (game.player5) gamePlayers.push(game.player5);
+      const gamePlayers = [
+        { id: game.player1, name: game.player1Name, guild: game.player1Guild },
+      ];
+      if (game.player2 && game.player2Name && game.player2Guild)
+        gamePlayers.push({
+          id: game.player2,
+          name: game.player2Name,
+          guild: game.player2Guild,
+        });
+      if (game.player3 && game.player3Name && game.player3Guild)
+        gamePlayers.push({
+          id: game.player3,
+          name: game.player3Name,
+          guild: game.player3Guild,
+        });
+      if (game.player4 && game.player4Name && game.player4Guild)
+        gamePlayers.push({
+          id: game.player4,
+          name: game.player4Name,
+          guild: game.player4Guild,
+        });
+      if (game.player5 && game.player5Name && game.player5Guild)
+        gamePlayers.push({
+          id: game.player5,
+          name: game.player5Name,
+          guild: game.player5Guild,
+        });
       for (const player of gamePlayers) {
         await prisma.playerPeriod.upsert({
           where: {
             playerId_periodId: {
               periodId: game.periodId,
-              playerId: player,
+              playerId: player.id,
             },
           },
           create: {
             periodId: game.periodId,
-            playerId: player,
+            playerId: player.id,
+            playerName: player.name,
+            playerGuild: player.guild,
             totalPoints: gamePoints,
           },
           update: {
-            periodId: game.periodId,
-            playerId: player,
             totalPoints: {
               increment: gamePoints,
             },

@@ -6,10 +6,10 @@ export function isApiError(err: ApiError | unknown): err is ApiError {
 }
 
 export function getPlayersStringFromPvpGame(game: PvpGame) {
-  let players = game.player1;
-  if (game.player2) players += `, ${game.player2}`;
-  if (game.player3) players += `, ${game.player3}`;
-  if (game.player4) players += `, ${game.player4}`;
-  if (game.player5) players += `, ${game.player5}`;
+  let players = game.player1Name;
+  if (game.player2Name) players += `, ${game.player2Name}`;
+  if (game.player3Name) players += `, ${game.player3Name}`;
+  if (game.player4Name) players += `, ${game.player4Name}`;
+  if (game.player5Name) players += `, ${game.player5Name}`;
   return players;
 }

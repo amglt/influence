@@ -5,7 +5,7 @@ from discord import Message, Embed, Client, Reaction, Member
 from influbot.api.api import post, put, get, delete
 from influbot.shared.models import BotError, PvpType, RuntimeEnv
 from influbot.shared.utils import is_valid_pvp_type, get_pvp_result_from_type, get_pvp_type_from_command, index_exists, \
-    map_names_from_mentions, get_runtime_env
+    map_names_from_mentions, get_runtime_env, get_guild_from_roles
 from enum import Enum
 import arrow
 
@@ -126,6 +126,7 @@ async def handle_ava(client: Client, message: Message):
             "player1": f"oauth2|discord|{message.author.id}" if get_runtime_env() == RuntimeEnv.Influ
             else str(message.author.id),
             "player1Name": None if get_runtime_env() == RuntimeEnv.Influ else message.author.name,
+            "player1Guild": get_guild_from_roles(message.author.roles).name,
             "player2": None,
             "player3": None,
             "player4": None,
@@ -145,9 +146,10 @@ async def handle_perco_prism(client: Client, message: Message):
             "type": game_type.value,
             "result": game_result.value,
             "screenshotUrl": message.attachments[0].url,
-            "player1": f"oauth2|discord|{message.author.id}" if get_runtime_env() == RuntimeEnv.Influ
-            else str(message.author.id),
-            "player1Name": None if get_runtime_env() == RuntimeEnv.Influ else message.author.name,
+            "player1": f"oauth2|discord|{message.mentions[0].id}" if get_runtime_env() == RuntimeEnv.Influ
+            else str(message.mentions[0].id),
+            "player1Name": None if get_runtime_env() == RuntimeEnv.Influ else message.mentions[0].name,
+            "player1Guild": get_guild_from_roles(message.mentions[0].roles).name,
             "player2": None,
             "player3": None,
             "player4": None,
@@ -158,24 +160,32 @@ async def handle_perco_prism(client: Client, message: Message):
         if get_runtime_env() == RuntimeEnv.Influ:
             if index_exists(message.mentions, 1):
                 game["player2"] = f"oauth2|discord|{message.mentions[1].id}"
+                game["player2Guild"] = get_guild_from_roles(message.mentions[1].roles).name
             if index_exists(message.mentions, 2):
                 game["player3"] = f"oauth2|discord|{message.mentions[2].id}"
+                game["player3Guild"] = get_guild_from_roles(message.mentions[2].roles).name
             if index_exists(message.mentions, 3):
                 game["player4"] = f"oauth2|discord|{message.mentions[3].id}"
+                game["player4Guild"] = get_guild_from_roles(message.mentions[3].roles).name
             if index_exists(message.mentions, 4):
                 game["player5"] = f"oauth2|discord|{message.mentions[4].id}"
+                game["player5Guild"] = get_guild_from_roles(message.mentions[4].roles).name
         else:
             if index_exists(message.mentions, 1):
                 game["player2"] = str(message.mentions[1].id)
                 game["player2Name"] = message.mentions[1].name
+                game["player2Guild"] = get_guild_from_roles(message.mentions[1].roles).name
             if index_exists(message.mentions, 2):
                 game["player3"] = str(message.mentions[2].id)
                 game["player3Name"] = message.mentions[2].name
+                game["player3Guild"] = get_guild_from_roles(message.mentions[2].roles).name
             if index_exists(message.mentions, 3):
                 game["player4"] = str(message.mentions[3].id)
                 game["player4Name"] = message.mentions[3].name
+                game["player4Guild"] = get_guild_from_roles(message.mentions[3].roles).name
             if index_exists(message.mentions, 4):
                 game["player5"] = str(message.mentions[4].id)
                 game["player5Name"] = message.mentions[4].name
+                game["player5Guild"] = get_guild_from_roles(message.mentions[4].roles).name
 
         await generate_game(client, message, game_type, game)
