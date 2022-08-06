@@ -16,7 +16,7 @@ charactersRouter.get(
       });
       return res.status(200).send(characters);
     } catch (err) {
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );
@@ -45,7 +45,7 @@ charactersRouter.get(
 
       return res.status(200).send(character);
     } catch (err) {
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );
@@ -84,7 +84,7 @@ charactersRouter.post(
       });
       return res.status(200).send(newCharacter);
     } catch (err) {
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );
@@ -106,7 +106,7 @@ charactersRouter.delete(
       });
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );
@@ -150,7 +150,7 @@ charactersRouter.put(
       });
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );

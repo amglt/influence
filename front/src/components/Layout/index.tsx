@@ -11,7 +11,6 @@ import {
   ScissorOutlined,
   CalendarOutlined,
   NumberOutlined,
-  TableOutlined,
 } from '@ant-design/icons';
 import './layout.less';
 import logo from '../../../public/assets/logo.png';

@@ -13,7 +13,7 @@ scaleRouter.get(
 
       return res.status(200).send(scale);
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -57,7 +57,7 @@ scaleRouter.put(
 
       return res.status(200).send();
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );

@@ -89,7 +89,7 @@ pvpGamesRouter.get(
       const games = await prisma.pvpGame.findMany();
       return res.status(200).send(games);
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -115,7 +115,7 @@ pvpGamesRouter.get(
             .status(400)
             .send({ message: 'Aucune partie trouvée avec cet ID' });
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -215,7 +215,7 @@ pvpGamesRouter.post(
 
       return res.status(201).send(game);
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -315,7 +315,7 @@ pvpGamesRouter.put(
 
       return res.status(200).send({});
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -365,7 +365,7 @@ pvpGamesRouter.delete(
       });
       return res.status(200).send({});
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );

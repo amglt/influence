@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { getManagementClient } from '../shared/utils';
+import jwt_decode from 'jwt-decode';
+import { DecodedToken } from '../models/root.models';
 
 const usersRouter = Router();
 
@@ -13,10 +15,28 @@ usersRouter.get(
       const users = await client.getUsers();
       return res.status(200).send(users);
     } catch (err) {
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );
+
+usersRouter.get('/me', async (req: Request, res: Response) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (token) {
+      const decodedToken = jwt_decode(token) as DecodedToken;
+      const client = getManagementClient('read:users read:user_idp_tokens');
+      const user = await client.getUser({ id: decodedToken.sub });
+      const userRoles = await client.getUserRoles({ id: decodedToken.sub });
+      const userWithRole =
+        userRoles.length > 0 ? { ...user, role: userRoles[0] } : { ...user };
+      return res.status(200).send(userWithRole);
+    }
+    return res.status(400).send({ message: 'Token manquant' });
+  } catch (err) {
+    return res.status(500).send({ message: err });
+  }
+});
 
 usersRouter.get(
   '/:userId',
@@ -33,7 +53,7 @@ usersRouter.get(
         userRoles.length > 0 ? { ...user, role: userRoles[0] } : { ...user };
       return res.status(200).send(userWithRole);
     } catch (err) {
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );
@@ -56,7 +76,7 @@ usersRouter.post(
       await client.assignRolestoUser({ id: userId }, { roles: body.roleIds });
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );
@@ -85,7 +105,7 @@ usersRouter.put(
       return res.status(200).send();
     } catch (err) {
       console.log(err);
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );
@@ -109,7 +129,7 @@ usersRouter.patch(
       return res.status(200).send();
     } catch (err) {
       console.log(err);
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );
@@ -126,7 +146,7 @@ usersRouter.delete(
       await client.deleteUser({ id: userId });
       return res.status(200).send();
     } catch (err) {
-      return res.status(500).send(err);
+      return res.status(500).send({ message: err });
     }
   },
 );

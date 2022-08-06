@@ -19,7 +19,7 @@ periodRouter.get(
           ),
         );
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -40,7 +40,7 @@ periodRouter.get(
       });
       return res.status(200).send({ games });
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -62,7 +62,7 @@ periodRouter.get(
 
       return res.status(200).send(players);
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -99,7 +99,7 @@ periodRouter.get(
 
       return res.status(200).send(games);
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -116,7 +116,7 @@ periodRouter.get(
       });
       return res.status(200).send(period);
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -150,7 +150,7 @@ periodRouter.post(
 
       return res.status(200).send(newPeriod);
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -185,7 +185,7 @@ periodRouter.put(
 
       return res.status(200).send();
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );
@@ -207,7 +207,7 @@ periodRouter.delete(
 
       return res.status(200).send();
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send({ message: e });
     }
   },
 );

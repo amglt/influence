@@ -10,16 +10,12 @@ export function useCurrentUser() {
   const { user } = useAuth0();
   const dispatch = useDispatch();
 
-  return useQuery(
-    ['user', user?.sub],
-    () => get<AppUser>(`/users/${user?.sub}`),
-    {
-      enabled: !!user?.sub,
-      onSuccess: (data: AppUser) => {
-        dispatch(setUser({ ...data, permissions: [] }));
-      },
+  return useQuery(['user'], () => get<AppUser>(`/users/me`), {
+    enabled: !!user?.sub,
+    onSuccess: (data: AppUser) => {
+      dispatch(setUser({ ...data, permissions: [] }));
     },
-  );
+  });
 }
 
 export function useUserPermissions() {
