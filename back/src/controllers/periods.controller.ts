@@ -37,6 +37,9 @@ periodRouter.get(
         where: {
           periodId: Number(periodId),
         },
+        orderBy: {
+          id: 'asc',
+        },
       });
       return res.status(200).send({ games });
     } catch (e) {
@@ -94,6 +97,9 @@ periodRouter.get(
               ],
             },
           ],
+        },
+        orderBy: {
+          id: 'asc',
         },
       });
 

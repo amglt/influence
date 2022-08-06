@@ -10,6 +10,7 @@ import {
 import { usePeriodGames } from '@Api/pvp-management/pvp-management.queries';
 import { useParams } from 'react-router-dom';
 import { getPlayersStringFromPvpGame } from '@Utils';
+import { format } from 'date-fns';
 
 export function PeriodGamesList() {
   const params = useParams();
@@ -34,6 +35,12 @@ export function PeriodGamesList() {
               dataIndex: 'id',
               title: 'ID',
               width: 50,
+            },
+            {
+              key: 'timestamp',
+              dataIndex: 'timestamp',
+              title: 'Date',
+              render: (value) => format(new Date(value), 'dd/MM/yyyy hh:mm:ss'),
             },
             {
               key: 'result',

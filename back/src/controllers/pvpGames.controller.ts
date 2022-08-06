@@ -263,54 +263,60 @@ pvpGamesRouter.put(
         },
       });
 
-      const gamePlayers = [
-        { id: game.player1, name: game.player1Name, guild: game.player1Guild },
-      ];
-      if (game.player2 && game.player2Name && game.player2Guild)
-        gamePlayers.push({
-          id: game.player2,
-          name: game.player2Name,
-          guild: game.player2Guild,
-        });
-      if (game.player3 && game.player3Name && game.player3Guild)
-        gamePlayers.push({
-          id: game.player3,
-          name: game.player3Name,
-          guild: game.player3Guild,
-        });
-      if (game.player4 && game.player4Name && game.player4Guild)
-        gamePlayers.push({
-          id: game.player4,
-          name: game.player4Name,
-          guild: game.player4Guild,
-        });
-      if (game.player5 && game.player5Name && game.player5Guild)
-        gamePlayers.push({
-          id: game.player5,
-          name: game.player5Name,
-          guild: game.player5Guild,
-        });
-      for (const player of gamePlayers) {
-        await prisma.playerPeriod.upsert({
-          where: {
-            playerId_periodId: {
+      if (status === PvpGameStatus.Accepted) {
+        const gamePlayers = [
+          {
+            id: game.player1,
+            name: game.player1Name,
+            guild: game.player1Guild,
+          },
+        ];
+        if (game.player2 && game.player2Name && game.player2Guild)
+          gamePlayers.push({
+            id: game.player2,
+            name: game.player2Name,
+            guild: game.player2Guild,
+          });
+        if (game.player3 && game.player3Name && game.player3Guild)
+          gamePlayers.push({
+            id: game.player3,
+            name: game.player3Name,
+            guild: game.player3Guild,
+          });
+        if (game.player4 && game.player4Name && game.player4Guild)
+          gamePlayers.push({
+            id: game.player4,
+            name: game.player4Name,
+            guild: game.player4Guild,
+          });
+        if (game.player5 && game.player5Name && game.player5Guild)
+          gamePlayers.push({
+            id: game.player5,
+            name: game.player5Name,
+            guild: game.player5Guild,
+          });
+        for (const player of gamePlayers) {
+          await prisma.playerPeriod.upsert({
+            where: {
+              playerId_periodId: {
+                periodId: game.periodId,
+                playerId: player.id,
+              },
+            },
+            create: {
               periodId: game.periodId,
               playerId: player.id,
+              playerName: player.name,
+              playerGuild: player.guild,
+              totalPoints: gamePoints,
             },
-          },
-          create: {
-            periodId: game.periodId,
-            playerId: player.id,
-            playerName: player.name,
-            playerGuild: player.guild,
-            totalPoints: gamePoints,
-          },
-          update: {
-            totalPoints: {
-              increment: gamePoints,
+            update: {
+              totalPoints: {
+                increment: gamePoints,
+              },
             },
-          },
-        });
+          });
+        }
       }
 
       return res.status(200).send({});
