@@ -486,19 +486,29 @@ pvpGamesRouter.delete(
       if (game.player4) gamePlayers.push(game.player4);
       if (game.player5) gamePlayers.push(game.player5);
       for (const player of gamePlayers) {
-        await prisma.playerPeriod.update({
+        const playerPeriod = await prisma.playerPeriod.findUnique({
           where: {
             playerId_periodId: {
               periodId: game.periodId,
               playerId: player,
             },
           },
-          data: {
-            totalPoints: {
-              decrement: game.gamePoints,
-            },
-          },
         });
+        if (playerPeriod) {
+          await prisma.playerPeriod.update({
+            where: {
+              playerId_periodId: {
+                periodId: game.periodId,
+                playerId: player,
+              },
+            },
+            data: {
+              totalPoints: {
+                decrement: game.gamePoints,
+              },
+            },
+          });
+        }
       }
 
       await prisma.pvpGame.delete({
