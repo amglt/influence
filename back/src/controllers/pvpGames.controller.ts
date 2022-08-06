@@ -67,7 +67,7 @@ function getGameInitialPoints(
           else return scale.prismDefLoosePoints;
         }
         case PvpGameResult.ND: {
-          if (isBigOpponent) return scale.prismNDPoints;
+          if (isBigOpponent) return scale.bigPrismNDPoints;
           else return scale.prismNDPoints;
         }
         default:
