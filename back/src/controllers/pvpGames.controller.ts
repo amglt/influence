@@ -12,6 +12,8 @@ import {
   getRuntimeEnv,
   RuntimeEnv,
 } from '../shared/utils';
+import jwt_decode from 'jwt-decode';
+import { DecodedToken } from '../models/root.models';
 
 const pvpGamesRouter = Router();
 
@@ -322,6 +324,145 @@ pvpGamesRouter.put(
       return res.status(200).send({});
     } catch (e) {
       return res.status(500).send({ message: e });
+    }
+  },
+);
+
+pvpGamesRouter.get(
+  '/:userId/stats',
+  checkPermissions('read:pvp-games'),
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.userId;
+      if (!userId) return res.status(400).send({ message: 'userId manquant' });
+
+      const currentPeriod = await prisma.period.findFirst({
+        where: {
+          endDate: null,
+        },
+      });
+      if (!currentPeriod)
+        return res.status(400).send({ message: 'Pas de période active' });
+
+      const games = await prisma.pvpGame.findMany({
+        where: {
+          AND: [
+            {
+              OR: [
+                { player1: userId },
+                { player2: userId },
+                { player3: userId },
+                { player4: userId },
+                { player5: userId },
+              ],
+            },
+            {
+              periodId: currentPeriod.id,
+              status: PvpGameStatus.Accepted,
+            },
+          ],
+        },
+      });
+
+      console.log(games);
+
+      const stats =
+        games.length > 0
+          ? {
+              totalGames: games.length,
+              gamesStats: {
+                wonGames: games.filter(
+                  (game) =>
+                    game.result === PvpGameResult.AvaWin ||
+                    game.result === PvpGameResult.DefWin ||
+                    game.result === PvpGameResult.AttackWin,
+                ).length,
+                lostGames: games.filter(
+                  (game) =>
+                    game.result === PvpGameResult.AvaLoose ||
+                    game.result === PvpGameResult.DefLoose ||
+                    game.result === PvpGameResult.AttackLoose,
+                ).length,
+                noDefGames: games.filter(
+                  (game) => game.result === PvpGameResult.ND,
+                ).length,
+                percoGames: games.filter(
+                  (game) => game.type === PvpGameType.Perco,
+                ).length,
+                prismGames: games.filter(
+                  (game) => game.type === PvpGameType.Prism,
+                ).length,
+                avaGames: games.filter((game) => game.type === PvpGameType.AvA)
+                  .length,
+                percoAttackWon: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Perco &&
+                    game.result === PvpGameResult.AttackWin,
+                ).length,
+                percoAttackLost: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Perco &&
+                    game.result === PvpGameResult.AttackLoose,
+                ).length,
+                percoDefWon: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Perco &&
+                    game.result === PvpGameResult.DefWin,
+                ).length,
+                percoDefLost: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Perco &&
+                    game.result === PvpGameResult.DefLoose,
+                ).length,
+                percoNoDef: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Perco &&
+                    game.result === PvpGameResult.ND,
+                ).length,
+                prismAttackWon: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Prism &&
+                    game.result === PvpGameResult.AttackWin,
+                ).length,
+                prismAttackLost: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Prism &&
+                    game.result === PvpGameResult.AttackLoose,
+                ).length,
+                prismDefWon: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Prism &&
+                    game.result === PvpGameResult.DefWin,
+                ).length,
+                prismDefLost: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Prism &&
+                    game.result === PvpGameResult.DefLoose,
+                ).length,
+                prismNoDef: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.Prism &&
+                    game.result === PvpGameResult.ND,
+                ).length,
+                avaWon: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.AvA &&
+                    game.result === PvpGameResult.AvaWin,
+                ).length,
+                avaLost: games.filter(
+                  (game) =>
+                    game.type === PvpGameType.AvA &&
+                    game.result === PvpGameResult.AvaWin,
+                ).length,
+              },
+            }
+          : {
+              totalGames: 0,
+              gamesStats: {},
+            };
+      return res.status(200).send(stats);
+    } catch (err) {
+      return res.status(500).send({ message: err });
     }
   },
 );
