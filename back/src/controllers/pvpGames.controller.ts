@@ -12,8 +12,6 @@ import {
   getRuntimeEnv,
   RuntimeEnv,
 } from '../shared/utils';
-import jwt_decode from 'jwt-decode';
-import { DecodedToken } from '../models/root.models';
 
 const pvpGamesRouter = Router();
 
@@ -364,8 +362,6 @@ pvpGamesRouter.get(
         },
       });
 
-      console.log(games);
-
       const stats =
         games.length > 0
           ? {
@@ -452,7 +448,7 @@ pvpGamesRouter.get(
                 avaLost: games.filter(
                   (game) =>
                     game.type === PvpGameType.AvA &&
-                    game.result === PvpGameResult.AvaWin,
+                    game.result === PvpGameResult.AvaLoose,
                 ).length,
               },
             }
