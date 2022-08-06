@@ -57,7 +57,7 @@ export function PeriodGamesList() {
             {
               key: 'status',
               dataIndex: 'status',
-              title: 'Status',
+              title: 'Statut',
               render: (value) => PvpGameStatus[value],
             },
             {

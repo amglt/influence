@@ -4,6 +4,7 @@ import { Listing } from '@Components/Listing';
 import {
   PvpGame,
   PvpGameResult,
+  PvpGameStatus,
   PvpGameType,
 } from '@Models/pvp-management.models';
 import { usePeriodPlayerGames } from '@Api/pvp-management/pvp-management.queries';
@@ -41,6 +42,12 @@ export function PeriodPlayerGamesList() {
               dataIndex: 'timestamp',
               title: 'Date',
               render: (value) => format(new Date(value), 'dd/MM/yyyy hh:mm:ss'),
+            },
+            {
+              key: 'status',
+              dataIndex: 'status',
+              title: 'Statut',
+              render: (value) => PvpGameStatus[value],
             },
             {
               key: 'result',
