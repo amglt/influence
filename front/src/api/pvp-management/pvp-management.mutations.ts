@@ -1,7 +1,7 @@
 import { useApi } from '@Hooks/api';
 import { useMutation, useQueryClient } from 'react-query';
 import { PvpManagementQueriesKeys } from '@Api/pvp-management/pvp-management.queries';
-import { Scale } from '@Models/pvp-management.models';
+import { PvpGameStatus, Scale } from '@Models/pvp-management.models';
 import { notification } from 'antd';
 
 export function useDeletePeriod() {
@@ -29,6 +29,45 @@ export function useCreatePeriod() {
       notification.success({
         placement: 'bottomRight',
         message: 'Période correctement créée',
+      });
+    },
+  });
+}
+
+export function useEditGame(onSuccess?: () => void) {
+  const { put } = useApi();
+
+  return useMutation(
+    (request: {
+      gameId: number;
+      status: PvpGameStatus;
+      isBigOpponent: boolean;
+    }) =>
+      put(`/pvp-games/${request.gameId}`, {
+        status: request.status,
+        isBigOpponent: request.isBigOpponent,
+      }),
+    {
+      onSuccess: async () => {
+        if (onSuccess) await onSuccess();
+        notification.success({
+          placement: 'bottomRight',
+          message: 'Partie correctement mise à jour',
+        });
+      },
+    },
+  );
+}
+
+export function useDeleteGame(onSuccess?: () => void) {
+  const { del } = useApi();
+
+  return useMutation((gameId: number) => del(`/pvp-games/${gameId}`), {
+    onSuccess: async () => {
+      if (onSuccess) await onSuccess();
+      notification.success({
+        placement: 'bottomRight',
+        message: 'Partie correctement supprimée',
       });
     },
   });
