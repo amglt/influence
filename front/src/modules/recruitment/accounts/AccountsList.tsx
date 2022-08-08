@@ -94,7 +94,6 @@ export function AccountsList() {
             },
             {
               key: 'actions',
-              dataIndex: 'actions',
               render: (_, record) => {
                 return (
                   <Space>
