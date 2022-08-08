@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export type RootState = {
   user: AppUser;
   token: string;
+  discordToken: string;
 };
 
 const initialState: RootState = {
@@ -18,6 +19,7 @@ const initialState: RootState = {
     permissions: [],
   },
   token: '',
+  discordToken: '',
 };
 
 export const rootSlice = createSlice({
@@ -30,7 +32,14 @@ export const rootSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
+    setDiscordToken: (state, action: PayloadAction<string>) => {
+      state.discordToken = action.payload;
+    },
+    resetRoot: (state) => {
+      Object.assign(state, initialState);
+    },
   },
 });
 
-export const { setUser, setToken } = rootSlice.actions;
+export const { setUser, setToken, setDiscordToken, resetRoot } =
+  rootSlice.actions;

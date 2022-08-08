@@ -16,9 +16,11 @@ import './layout.less';
 import logo from '../../../public/assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { Text } from '@Components/Typography';
-import { useSelector } from '@Store/';
+import { useDispatch, useSelector } from '@Store/';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { AppPermissions } from '@Models/root.models';
+import { resetRoot } from '@Store/root.slice';
+import axios from 'axios';
 
 const { Header, Sider } = AntLayout;
 
@@ -30,7 +32,8 @@ export function Layout(props: LayoutProps) {
   const { children } = props;
 
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.root);
+  const { user, discordToken } = useSelector((state) => state.root);
+  const dispatch = useDispatch();
 
   const [collapsed, setCollapsed] = useState(true);
   const [menuItems, setMenuItems] = useState<ItemType[]>([]);
@@ -114,7 +117,24 @@ export function Layout(props: LayoutProps) {
         {
           key: '1',
           label: 'Déconnexion',
-          /*onClick: () => logout(),*/
+          onClick: () => {
+            dispatch(resetRoot());
+            const clientId = process.env.DISCORD_CLIENT_ID;
+            const clientSecret = process.env.DISCORD_CLIENT_SECRET;
+            if (clientId && clientSecret)
+              axios
+                .post(
+                  `https://discord.com/api/oauth2/token/revoke`,
+                  new URLSearchParams({
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    token: discordToken,
+                  }),
+                )
+                .then(() => {
+                  navigate('/');
+                });
+          },
         },
       ]}
     />

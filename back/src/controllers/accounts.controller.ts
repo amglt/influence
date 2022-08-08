@@ -10,7 +10,9 @@ accountsRouter.get(
   async (_: Request, res: Response) => {
     try {
       const accounts = await prisma.account.findMany();
-      return res.status(200).send(accounts);
+      return res
+        .status(200)
+        .send(accounts.map((acc) => ({ ...acc, userId: Number(acc.userId) })));
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -31,15 +33,16 @@ accountsRouter.get(
         where: {
           id: Number(accountId),
         },
+        include: {
+          user: true,
+        },
       });
 
       if (!account) {
         return res.status(400).send({ message: `Compte non trouvé` });
       }
 
-      const user = await prisma.user.findFirst({ where: { id: account.id } });
-
-      return res.status(200).send({ ...account, user: { ...user } });
+      return res.status(200).send(account);
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -62,7 +65,9 @@ accountsRouter.get(
         },
       });
 
-      return res.status(200).send(accounts);
+      return res
+        .status(200)
+        .send(accounts.map((acc) => ({ ...acc, userId: acc.userId })));
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -92,11 +97,13 @@ accountsRouter.post(
 
       const newAccount = await prisma.account.create({
         data: {
-          userId: req.body.userId,
+          userId: Number(req.body.userId),
           name: req.body.name,
         },
       });
-      return res.status(200).send(newAccount);
+      return res
+        .status(200)
+        .send({ ...newAccount, userId: Number(newAccount.userId) });
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -111,7 +118,7 @@ accountsRouter.put(
       const body = req.body;
       const accountId = Number(req.params.accountId);
       if (!body.hasOwnProperty('userId'))
-        return res.status(400).send({ message: 'Username manquant.' });
+        return res.status(400).send({ message: 'UserId manquant.' });
 
       if (!body.hasOwnProperty('name'))
         return res
@@ -129,7 +136,6 @@ accountsRouter.put(
           .status(400)
           .send({ message: 'Ce nom de compte Dofus existe déjà.' });
 
-      // update account
       await prisma.account.update({
         where: {
           id: accountId,

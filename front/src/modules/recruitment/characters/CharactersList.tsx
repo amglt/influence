@@ -128,14 +128,6 @@ export function CharactersList() {
               sorter: (a, b) => a.account.name.localeCompare(b.account.name),
             },
             {
-              key: 'discordId',
-              dataIndex: ['account', 'userId'],
-              title: 'Discord',
-              render: (value) => {
-                return value.split('|').pop();
-              },
-            },
-            {
               key: 'recruitmentDate',
               dataIndex: 'recruitmentDate',
               title: 'Date de recrutement',

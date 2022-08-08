@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from '@Store/';
-import { setToken, setUser } from '@Store/root.slice';
+import { setDiscordToken, setToken, setUser } from '@Store/root.slice';
 
 export function Login() {
   const [searchParams] = useSearchParams();
@@ -29,6 +29,7 @@ export function Login() {
         )
         .then((res) => {
           const { access_token } = res.data;
+          dispatch(setDiscordToken(access_token));
           axios
             .get('https://discord.com/api/v10/oauth2/@me', {
               headers: {
