@@ -28,8 +28,7 @@ export function useRole(id?: string, form?: FormInstance) {
       onSuccess: (data) => {
         form?.setFieldsValue({
           name: data.name,
-          description: data.description,
-          permissions: data.permissions.map((perm) => perm.permission_name),
+          permissions: data.permissions.map((p) => p.id),
         });
       },
     },

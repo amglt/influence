@@ -10,11 +10,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id                    BigInt                   @id
+  username              String
+  guild                 String?
+  nickname              String
+  created_at            DateTime
+  updated_at            DateTime
+  picture               String
+  roleId                Int?
+  role                  Role?                    @relation(fields: [roleId], references: [id])
+  blocked               Boolean                  @default(false)
+  player1pvpGames       PvpGame[]                @relation("Player1")
+  player2pvpGames       PvpGame[]                @relation("Player2")
+  player3pvpGames       PvpGame[]                @relation("Player3")
+  player4pvpGames       PvpGame[]                @relation("Player4")
+  player5pvpGames       PvpGame[]                @relation("Player5")
+  accounts              Account[]
+  playerPeriods         PlayerPeriod[]
+}
+
+model Permission {
+  id             Int                     @id @default(autoincrement())
+  name           String
+  roles          Role[]
+}
+
+model Role {
+  id             Int                     @id @default(autoincrement())
+  name           String
+  permissions    Permission[]
+  users          User[]
+}
 
 model Account {
   id            Int                      @id @default(autoincrement())
   name          String                   @unique
-  userId        String
+  userId        BigInt
+  user          User                     @relation(fields: [userId], references: [id])
   characters    Character[]
 }
 
@@ -67,21 +100,16 @@ model PvpGame {
   result                  Int
   type                    Int
   status                  Int
-  player1                 String
-  player1Name             String         @default("")
-  player1Guild            String         @default("")
-  player2                 String?
-  player2Name             String?
-  player2Guild            String?
-  player3                 String?
-  player3Name             String?
-  player3Guild            String?
-  player4                 String?
-  player4Name             String?
-  player4Guild            String?
-  player5                 String?
-  player5Name             String?
-  player5Guild            String?
+  player1Id               BigInt
+  player1                 User           @relation("Player1", fields: [player1Id], references: [id])
+  player2Id               BigInt?
+  player2                 User?          @relation("Player2", fields: [player2Id], references: [id])
+  player3Id               BigInt?
+  player3                 User?          @relation("Player3", fields: [player3Id], references: [id])
+  player4Id               BigInt?
+  player4                 User?          @relation("Player4", fields: [player4Id], references: [id])
+  player5Id               BigInt?
+  player5                 User?          @relation("Player5", fields: [player5Id], references: [id])
   period                  Period         @relation(fields: [periodId], references: [id])
   periodId                Int
   screenshotUrl           String
@@ -92,7 +120,8 @@ model PvpGame {
 }
 
 model PlayerPeriod {
-  playerId                String
+  playerId                BigInt
+  player                  User           @relation(fields: [playerId], references: [id])
   periodId                Int
   playerName              String         @default("")
   playerGuild             String         @default("")

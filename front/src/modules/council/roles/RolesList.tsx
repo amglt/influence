@@ -45,28 +45,16 @@ export function RolesList() {
     try {
       await addEditRoleForm.validateFields();
       const name = addEditRoleForm.getFieldValue('name');
-      const description = addEditRoleForm.getFieldValue('description');
-      const permissions: Permission[] = [];
-      const permissionsNames = addEditRoleForm.getFieldValue(
-        'permissions',
-      ) as string[];
-      if (permissionsNames) {
-        for (const perm of permissionsNames) {
-          if (permissionsData) {
-            const relatedPerm = permissionsData.find(
-              (p) => p.permission_name === perm,
-            );
-            if (relatedPerm) permissions.push(relatedPerm);
-          }
-        }
-      }
+      const permissions: Permission[] =
+        addEditRoleForm.getFieldValue('permissions');
+
       if (selectedRole) {
         editRole({
           id: selectedRole.id,
-          body: { name, description, permissions },
+          body: { name, permissions },
         });
       } else {
-        createRole({ name, description, permissions });
+        createRole({ name, permissions });
       }
       closeAddEditRoleModal();
     } catch {}
@@ -104,13 +92,6 @@ export function RolesList() {
               title: 'Nom',
               filtered: true,
               sorter: (a, b) => a.name.localeCompare(b.name),
-            },
-            {
-              key: 'description',
-              dataIndex: 'description',
-              title: 'Description',
-              filtered: true,
-              sorter: (a, b) => a.description.localeCompare(b.description),
             },
             {
               key: 'actions',

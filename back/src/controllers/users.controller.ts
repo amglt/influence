@@ -1,9 +1,9 @@
 import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
-import { getManagementClient } from '../shared/utils';
 import jwt_decode from 'jwt-decode';
 import { DecodedToken } from '../models/root.models';
 import { User } from '../models/users.models';
+import { prisma } from '../db';
 
 const usersRouter = Router();
 
@@ -12,10 +12,12 @@ usersRouter.get(
   checkPermissions('read:users'),
   async (_: Request, res: Response) => {
     try {
-      const client = getManagementClient('read:users read:user_idp_tokens');
-      const users = await client.getUsers();
-      return res.status(200).send(users);
+      const users = await prisma.user.findMany();
+      return res
+        .status(200)
+        .send(users.map((u) => ({ ...u, id: Number(u.id) })));
     } catch (err) {
+      console.log(err);
       return res.status(500).send({ message: err });
     }
   },
@@ -26,12 +28,15 @@ usersRouter.get('/me', async (req: Request, res: Response) => {
     const token = req.headers.authorization?.split(' ')[1];
     if (token) {
       const decodedToken = jwt_decode(token) as DecodedToken;
-      const client = getManagementClient('read:users read:user_idp_tokens');
-      const user = await client.getUser({ id: decodedToken.sub });
-      const userRoles = await client.getUserRoles({ id: decodedToken.sub });
-      const userWithRole =
-        userRoles.length > 0 ? { ...user, role: userRoles[0] } : { ...user };
-      return res.status(200).send(userWithRole);
+      const user = await prisma.user.findFirst({
+        where: {
+          id: Number(decodedToken.id),
+        },
+        include: {
+          role: true,
+        },
+      });
+      return res.status(200).send(user);
     }
     return res.status(400).send({ message: 'Token manquant' });
   } catch (err) {
@@ -47,12 +52,20 @@ usersRouter.get(
       const userId = req.params.userId;
       if (!userId) return res.status(400).send({ message: 'User ID manquant' });
 
-      const client = getManagementClient('read:users read:user_idp_tokens');
-      const user = await client.getUser({ id: userId });
-      const userRoles = await client.getUserRoles({ id: userId });
-      const userWithRole =
-        userRoles.length > 0 ? { ...user, role: userRoles[0] } : { ...user };
-      return res.status(200).send(userWithRole);
+      const userWithRole = await prisma.user.findFirst({
+        where: {
+          id: Number(userId),
+        },
+        include: {
+          role: true,
+        },
+      });
+      if (!userWithRole)
+        return res.status(400).send({ message: 'User introuvable' });
+
+      return res
+        .status(200)
+        .send({ ...userWithRole, id: Number(userWithRole.id) });
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -65,17 +78,21 @@ usersRouter.post(
   async (req: Request, res: Response) => {
     try {
       const body = req.body;
-      if (!body.hasOwnProperty('roleIds'))
-        return res.status(400).send({ message: 'Liste des roles manquante' });
+      if (!body.hasOwnProperty('roleId'))
+        return res.status(400).send({ message: 'Role manquant' });
 
       const userId = req.params.userId;
       if (!userId) return res.status(400).send({ message: 'User ID manquant' });
 
-      const client = getManagementClient(
-        'read:roles update:user create:role_members',
-      );
-      await client.assignRolestoUser({ id: userId }, { roles: body.roleIds });
-      return res.status(200).send();
+      await prisma.user.update({
+        where: {
+          id: Number(userId),
+        },
+        data: {
+          roleId: Number(body.roleId),
+        },
+      });
+      return res.status(200).send({});
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -90,22 +107,16 @@ usersRouter.put(
       const userId = req.params.userId;
       if (!userId) return res.status(400).send({ message: 'User ID manquant' });
 
-      const client = getManagementClient('update:users');
-      const actualRoles = await client.getUserRoles({ id: userId });
-      if (actualRoles.length > 0)
-        await client.removeRolesFromUser(
-          { id: userId },
-          { roles: actualRoles.filter((r) => r.id).map((r) => r.id!) },
-        );
-
       const role = req.body.role;
       if (role?.id) {
-        await client.assignRolestoUser({ id: userId }, { roles: [role.id] });
+        await prisma.user.update({
+          where: { id: Number(userId) },
+          data: { roleId: role.id },
+        });
       }
 
-      return res.status(200).send();
+      return res.status(200).send({});
     } catch (err) {
-      console.log(err);
       return res.status(500).send({ message: err });
     }
   },
@@ -123,70 +134,39 @@ usersRouter.patch(
       const userId = req.params.userId;
       if (!userId) return res.status(400).send({ message: 'User ID manquant' });
 
-      const client = getManagementClient(
-        'update:users update:users_app_metadata',
-      );
-      await client.updateUser({ id: userId }, { blocked: body.blocked });
+      await prisma.user.update({
+        where: { id: Number(userId) },
+        data: { blocked: body.blocked },
+      });
       return res.status(200).send({});
     } catch (err) {
-      console.log(err);
       return res.status(500).send({ message: err });
     }
   },
 );
 
 usersRouter.put(
-  '/:userId/nickname',
+  '/nickname',
   checkPermissions('write:users'),
   async (req: Request, res: Response) => {
     try {
       const body = req.body;
-      if (!body.hasOwnProperty('nickname'))
-        return res.status(400).send({ message: 'Nickname manquant' });
+      if (!body.hasOwnProperty('members'))
+        return res.status(400).send({ message: 'Members manquant' });
 
-      const userId = req.params.userId;
-      if (!userId) return res.status(400).send({ message: 'User ID manquant' });
+      const users = await prisma.user.findMany();
 
-      const client = getManagementClient(
-        'read:users update:users update:users_app_metadata',
-      );
-      const members = await client.getUsers();
-
-      if (members.find((m) => m.user_id === userId)) {
-        await client.updateUser({ id: userId }, { nickname: body.nickname });
-      }
-
-      return res.status(200).send({});
-    } catch (err) {
-      return res.status(500).send({ message: err });
-    }
-  },
-);
-
-usersRouter.put(
-  '/:userId/info',
-  checkPermissions('write:users'),
-  async (req: Request<any, any, User>, res: Response) => {
-    try {
-      const body = req.body;
-
-      const userId = req.params.userId;
-      if (!userId) return res.status(400).send({ message: 'User ID manquant' });
-
-      const client = getManagementClient(
-        'read:users update:users update:users_app_metadata',
-      );
-      const members = await client.getUsers();
-
-      if (members.find((m) => m.user_id === userId)) {
-        await client.updateUser(
-          { id: userId },
-          {
-            nickname: body.nickname,
-            picture: body.picture,
-            name: body.name,
-          },
-        );
+      for (const member of body.members) {
+        if (users.find((u) => u.id === member.id)) {
+          await prisma.user.update({
+            where: {
+              id: member.id,
+            },
+            data: {
+              nickname: member.nickname,
+            },
+          });
+        }
       }
 
       return res.status(200).send({});
@@ -204,8 +184,7 @@ usersRouter.delete(
       const userId = req.params.userId;
       if (!userId) return res.status(400).send({ message: 'User ID manquant' });
 
-      const client = getManagementClient('delete:users');
-      await client.deleteUser({ id: userId });
+      await prisma.user.delete({ where: { id: Number(userId) } });
       return res.status(200).send();
     } catch (err) {
       return res.status(500).send({ message: err });

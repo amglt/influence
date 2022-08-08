@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useApi } from '@Hooks/api';
 import { RolesQueriesKey } from '@Api/council/roles/roles.queries';
 import { Permission } from '@Models/root.models';
+import { notification } from 'antd';
 
 export function useDeleteRole() {
   const { del } = useApi();
@@ -10,6 +11,11 @@ export function useDeleteRole() {
   return useMutation((roleId: string) => del(`/management/roles/${roleId}`), {
     onSuccess: async () => {
       await queryClient.refetchQueries(RolesQueriesKey.Roles);
+      notification.open({
+        type: 'success',
+        message: `Le role a bien été supprimé`,
+        placement: 'bottomRight',
+      });
     },
   });
 }
@@ -19,11 +25,16 @@ export function useAddRole() {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (body: { name: string; description: string; permissions: Permission[] }) =>
+    (body: { name: string; permissions: Permission[] }) =>
       post(`/management/roles`, body),
     {
       onSuccess: async () => {
         await queryClient.refetchQueries(RolesQueriesKey.Roles);
+        notification.open({
+          type: 'success',
+          message: `Le role a bien été créé`,
+          placement: 'bottomRight',
+        });
       },
     },
   );
@@ -36,11 +47,16 @@ export function useEditRole() {
   return useMutation(
     (request: {
       id: string;
-      body: { name: string; description: string; permissions: Permission[] };
+      body: { name: string; permissions: Permission[] };
     }) => patch(`/management/roles/${request.id}`, { ...request.body }),
     {
       onSuccess: async () => {
         await queryClient.refetchQueries(RolesQueriesKey.Roles);
+        notification.open({
+          type: 'success',
+          message: `Le role a bien été mise à jour`,
+          placement: 'bottomRight',
+        });
       },
     },
   );

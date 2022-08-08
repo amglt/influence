@@ -51,28 +51,13 @@ export function AddEditRoleModal(props: AddEditRoleModalProps) {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Description"
-            name="description"
-            rules={[
-              {
-                required: true,
-                message: 'La description de role est obligatoire',
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
           <Form.Item name="permissions" label="Permissions">
             <Checkbox.Group>
               <Row>
                 {permissions.map((perm) => (
-                  <Col span={8} key={perm.permission_name}>
-                    <Checkbox
-                      value={perm.permission_name}
-                      style={{ lineHeight: '32px' }}
-                    >
-                      {perm.permission_name}
+                  <Col span={8} key={perm.id}>
+                    <Checkbox value={perm.id} style={{ lineHeight: '32px' }}>
+                      {perm.name}
                     </Checkbox>
                   </Col>
                 ))}

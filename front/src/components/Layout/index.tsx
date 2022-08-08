@@ -16,11 +16,9 @@ import './layout.less';
 import logo from '../../../public/assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { Text } from '@Components/Typography';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useSelector } from '@Store/';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { AppPermissions } from '@Models/root.models';
-import { useUpdateUserInfo } from '@Api/root.mutations';
 
 const { Header, Sider } = AntLayout;
 
@@ -32,22 +30,14 @@ export function Layout(props: LayoutProps) {
   const { children } = props;
 
   const navigate = useNavigate();
-  const { loginWithRedirect, logout } = useAuth0();
   const { user } = useSelector((state) => state.root);
-  const { mutate: updateUserInfo } = useUpdateUserInfo();
 
   const [collapsed, setCollapsed] = useState(true);
   const [menuItems, setMenuItems] = useState<ItemType[]>([]);
 
   useEffect(() => {
-    if (user.user_id) {
-      updateUserInfo(user);
-    }
-  }, [updateUserInfo, user.user_id]);
-
-  useEffect(() => {
     const updatedMenuItems = [];
-    if (user.user_id) {
+    if (user.id) {
       if (user.permissions.includes(AppPermissions.IsRecruitment)) {
         updatedMenuItems.push({
           key: 'recruitment',
@@ -116,7 +106,7 @@ export function Layout(props: LayoutProps) {
       }
     }
     setMenuItems(updatedMenuItems);
-  }, [navigate, user.permissions, user.user_id]);
+  }, [navigate, user.permissions, user.id]);
 
   const userMenu = (
     <Menu
@@ -124,14 +114,14 @@ export function Layout(props: LayoutProps) {
         {
           key: '1',
           label: 'Déconnexion',
-          onClick: () => logout(),
+          /*onClick: () => logout(),*/
         },
       ]}
     />
   );
 
   const renderUser = () => {
-    if (user.user_id) {
+    if (user.id) {
       return (
         <Dropdown
           overlay={userMenu}
@@ -140,7 +130,7 @@ export function Layout(props: LayoutProps) {
           className={'user-menu'}
         >
           <Space style={{ color: 'white' }}>
-            {user.name}
+            {user.username}
             <DownOutlined />
           </Space>
         </Dropdown>
@@ -154,7 +144,9 @@ export function Layout(props: LayoutProps) {
               'influstack-returnTo',
               window.location.pathname,
             );
-            await loginWithRedirect();
+            window.location.href = `https://discord.com/api/oauth2/authorize?response_type=code&client_id=1005121591958581448&scope=identify&state=15773059ghq9183habn&redirect_uri=${encodeURI(
+              window.location.origin + '/login',
+            )}&prompt=consent`;
           }}
         >
           <UserOutlined className={'user-icon'} style={{ color: 'white' }} />

@@ -3,23 +3,21 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type RootState = {
   user: AppUser;
+  token: string;
 };
 
 const initialState: RootState = {
   user: {
-    name: '',
+    username: '',
     picture: '',
     nickname: '',
     updated_at: new Date(),
-    user_id: '',
+    id: 0,
     blocked: true,
     created_at: new Date(),
-    last_ip: '',
-    identities: [],
-    last_login: new Date(),
-    logins_count: 0,
     permissions: [],
   },
+  token: '',
 };
 
 export const rootSlice = createSlice({
@@ -29,7 +27,10 @@ export const rootSlice = createSlice({
     setUser: (state, action: PayloadAction<AppUser>) => {
       state.user = action.payload;
     },
+    setToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
+    },
   },
 });
 
-export const { setUser } = rootSlice.actions;
+export const { setUser, setToken } = rootSlice.actions;

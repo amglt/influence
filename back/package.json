@@ -38,6 +38,7 @@
     "express-jwt": "^7.7.1",
     "express-oauth2-jwt-bearer": "^1.1.0",
     "helmet": "^5.0.2",
+    "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.1.2",
     "jwt-decode": "^3.1.2",
     "morgan": "^1.10.0",

@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
-import { getManagementClient } from '../shared/utils';
 
 const accountsRouter = Router();
 
@@ -38,8 +37,7 @@ accountsRouter.get(
         return res.status(400).send({ message: `Compte non trouvé` });
       }
 
-      const client = getManagementClient('read:users read:user_idp_tokens');
-      const user = await client.getUser({ id: account.userId });
+      const user = await prisma.user.findFirst({ where: { id: account.id } });
 
       return res.status(200).send({ ...account, user: { ...user } });
     } catch (err) {
@@ -60,7 +58,7 @@ accountsRouter.get(
 
       const accounts = await prisma.account.findMany({
         where: {
-          userId,
+          userId: Number(userId),
         },
       });
 

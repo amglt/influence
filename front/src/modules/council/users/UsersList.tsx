@@ -37,7 +37,7 @@ export function UsersList() {
       );
       if (selectedRole)
         editUser({
-          userId: selectedUser.user_id,
+          userId: selectedUser.id,
           body: { role: selectedRole },
         });
       onCloseEditUserModal();
@@ -50,32 +50,23 @@ export function UsersList() {
       dataIndex: 'picture',
       width: 50,
       render: (value, record) => {
-        return (
+        return value ? (
           <img
             style={{ borderRadius: '50%' }}
             src={value}
-            alt={`${record.user_id}-picture`}
+            alt={`${record.id}-picture`}
             height={30}
             width={30}
           />
-        );
+        ) : undefined;
       },
     },
     {
-      key: 'name',
-      dataIndex: 'name',
+      key: 'username',
+      dataIndex: 'username',
       title: `Nom d'utilisateur`,
       filtered: true,
-      sorter: (a, b) => a.name.localeCompare(b.name),
-    },
-    {
-      key: 'last_login',
-      dataIndex: 'last_login',
-      title: 'Dernière connexion',
-      render: (value) => format(new Date(value)),
-      filtered: true,
-      sorter: (a, b) =>
-        new Date(b.last_login).getTime() - new Date(a.last_login).getTime(),
+      sorter: (a, b) => a.username.localeCompare(b.username),
     },
     {
       key: 'created_at',
@@ -102,11 +93,11 @@ export function UsersList() {
                 title: (
                   <span>
                     Êtes-vous certain de vouloir supprimer l'utilisateur
-                    <strong>{record.name}</strong> ?
+                    <strong>{record.username}</strong> ?
                   </span>
                 ),
                 content: `Cette action est irréversible`,
-                onOk: () => deleteUser(record.user_id),
+                onOk: () => deleteUser(record.id),
               })
             }
           />

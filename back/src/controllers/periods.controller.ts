@@ -89,11 +89,11 @@ periodRouter.get(
             { periodId: Number(periodId) },
             {
               OR: [
-                { player1: playerId },
-                { player2: playerId },
-                { player3: playerId },
-                { player4: playerId },
-                { player5: playerId },
+                { player1Id: Number(playerId) },
+                { player2Id: Number(playerId) },
+                { player3Id: Number(playerId) },
+                { player4Id: Number(playerId) },
+                { player5Id: Number(playerId) },
               ],
             },
           ],

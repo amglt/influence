@@ -12,11 +12,13 @@ import { Scale } from '@Modules/pvp-management/scale/Scale';
 import { PeriodGamesList } from '@Modules/pvp-management/periods/PeriodGamesList';
 import { PeriodPlayersPointsList } from '@Modules/pvp-management/periods/PeriodPlayerPointsList';
 import { PeriodPlayerGamesList } from '@Modules/pvp-management/periods/PeriodPlayerGamesList';
+import { Login } from '@Modules/login';
 
 export function Router() {
   return (
     <Routes>
       <Route path={'/'} element={<App />}>
+        <Route path={'login'} element={<Login />} />
         <Route path={'recruitment'} element={<Recruitment />}>
           <Route path={'accounts'} element={<AccountsList />} />
           <Route path={'characters'} element={<CharactersList />} />
