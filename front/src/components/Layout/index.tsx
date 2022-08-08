@@ -146,7 +146,7 @@ export function Layout(props: LayoutProps) {
             );
             window.location.href = `https://discord.com/api/oauth2/authorize?response_type=code&client_id=1005121591958581448&scope=identify&state=15773059ghq9183habn&redirect_uri=${encodeURI(
               window.location.origin + '/login',
-            )}&prompt=consent`;
+            )}&prompt=none`;
           }}
         >
           <UserOutlined className={'user-icon'} style={{ color: 'white' }} />
