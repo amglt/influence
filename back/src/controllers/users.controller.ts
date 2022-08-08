@@ -126,7 +126,36 @@ usersRouter.patch(
         'update:users update:users_app_metadata',
       );
       await client.updateUser({ id: userId }, { blocked: body.blocked });
-      return res.status(200).send();
+      return res.status(200).send({});
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send({ message: err });
+    }
+  },
+);
+
+usersRouter.put(
+  '/:userId/nickname',
+  checkPermissions('write:users'),
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      if (!body.hasOwnProperty('nickname'))
+        return res.status(400).send({ message: 'Nickname manquant' });
+
+      const userId = req.params.userId;
+      if (!userId) return res.status(400).send({ message: 'User ID manquant' });
+
+      const client = getManagementClient(
+        'read:users update:users update:users_app_metadata',
+      );
+      const members = await client.getUsers();
+
+      if (members.find((m) => m.user_id === userId)) {
+        await client.updateUser({ id: userId }, { nickname: body.nickname });
+      }
+
+      return res.status(200).send({});
     } catch (err) {
       console.log(err);
       return res.status(500).send({ message: err });

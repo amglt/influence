@@ -1,10 +1,12 @@
-from discord import Client, Message
+from discord import Client, Message, Intents
 from influbot.events.ready import handle_ready
 from influbot.events.message import handle_message
 from influbot.api.api import ApiError
 from influbot.shared.models import BotError
 
-client = Client()
+intents = Intents.default()
+intents.members = True
+client = Client(intents=intents)
 
 
 @client.event
