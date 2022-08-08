@@ -31,7 +31,7 @@ export interface Scale {
 
 export enum PvpGameResult {
   AttackWin,
-  AttackLoose,
+  AttackLose,
   DefWin,
   DefLoose,
   AvaWin,
