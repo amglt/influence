@@ -20,6 +20,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useSelector } from '@Store/';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { AppPermissions } from '@Models/root.models';
+import { useUpdateUserInfo } from '@Api/root.mutations';
 
 const { Header, Sider } = AntLayout;
 
@@ -33,9 +34,16 @@ export function Layout(props: LayoutProps) {
   const navigate = useNavigate();
   const { loginWithRedirect, logout } = useAuth0();
   const { user } = useSelector((state) => state.root);
+  const { mutate: updateUserInfo } = useUpdateUserInfo();
 
   const [collapsed, setCollapsed] = useState(true);
   const [menuItems, setMenuItems] = useState<ItemType[]>([]);
+
+  useEffect(() => {
+    if (user.user_id) {
+      updateUserInfo(user);
+    }
+  }, [updateUserInfo, user.user_id]);
 
   useEffect(() => {
     const updatedMenuItems = [];
@@ -139,6 +147,10 @@ export function Layout(props: LayoutProps) {
         <span
           className={'login'}
           onClick={async () => {
+            localStorage.setItem(
+              'influstack-returnTo',
+              window.location.pathname,
+            );
             await loginWithRedirect();
           }}
         >

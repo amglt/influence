@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "npx prisma generate && tsc",
-    "start": "node dist/src/index.js",
+    "start": "TZ=Europe/Paris node dist/src/index.js",
     "dev": "nodemon --inspect ./src/index.ts",
     "setup:db": "npx prisma migrate deploy && npx prisma db seed"
   },

@@ -18,7 +18,7 @@ import { useForm } from 'antd/lib/form/Form';
 import { AddEditCharacterModal } from './AddEditCharacterModal';
 import { useAccounts } from '@Api/recruitment/accounts/accounts.queries';
 import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
-import { format } from 'date-fns';
+import { format } from '@Utils';
 
 export function CharactersList() {
   const [isAddEditCharacterModalOpen, setIsAddEditCharacterModalOpen] =
@@ -143,7 +143,7 @@ export function CharactersList() {
               sorter: (a, b) =>
                 new Date(a.recruitmentDate).getTime() -
                 new Date(b.recruitmentDate).getTime(),
-              render: (value) => format(new Date(value), 'dd/MM/yyyy'),
+              render: (value) => format(new Date(value)),
             },
             {
               key: 'actions',

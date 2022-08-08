@@ -252,50 +252,53 @@ pvpGamesRouter.put(
         game.result,
         req.body.isBigOpponent,
       );
-      await prisma.pvpGame.update({
-        where: {
-          id: Number(gameId),
-        },
-        data: {
-          status,
-          gamePoints,
-          bigOpponent: req.body.isBigOpponent,
-        },
-      });
 
-      if (status === PvpGameStatus.Accepted) {
-        const gamePlayers = [
-          {
-            id: game.player1,
-            name: game.player1Name,
-            guild: game.player1Guild,
-          },
-        ];
-        if (game.player2 && game.player2Name && game.player2Guild)
-          gamePlayers.push({
-            id: game.player2,
-            name: game.player2Name,
-            guild: game.player2Guild,
+      const gamePlayers = [
+        {
+          id: game.player1,
+          name: game.player1Name,
+          guild: game.player1Guild,
+        },
+      ];
+      if (game.player2 && game.player2Name && game.player2Guild)
+        gamePlayers.push({
+          id: game.player2,
+          name: game.player2Name,
+          guild: game.player2Guild,
+        });
+      if (game.player3 && game.player3Name && game.player3Guild)
+        gamePlayers.push({
+          id: game.player3,
+          name: game.player3Name,
+          guild: game.player3Guild,
+        });
+      if (game.player4 && game.player4Name && game.player4Guild)
+        gamePlayers.push({
+          id: game.player4,
+          name: game.player4Name,
+          guild: game.player4Guild,
+        });
+      if (game.player5 && game.player5Name && game.player5Guild)
+        gamePlayers.push({
+          id: game.player5,
+          name: game.player5Name,
+          guild: game.player5Guild,
+        });
+      for (const player of gamePlayers) {
+        if (
+          game.status !== PvpGameStatus.Accepted &&
+          status === PvpGameStatus.Accepted
+        ) {
+          await prisma.pvpGame.update({
+            where: {
+              id: Number(gameId),
+            },
+            data: {
+              status,
+              gamePoints,
+              bigOpponent: req.body.isBigOpponent,
+            },
           });
-        if (game.player3 && game.player3Name && game.player3Guild)
-          gamePlayers.push({
-            id: game.player3,
-            name: game.player3Name,
-            guild: game.player3Guild,
-          });
-        if (game.player4 && game.player4Name && game.player4Guild)
-          gamePlayers.push({
-            id: game.player4,
-            name: game.player4Name,
-            guild: game.player4Guild,
-          });
-        if (game.player5 && game.player5Name && game.player5Guild)
-          gamePlayers.push({
-            id: game.player5,
-            name: game.player5Name,
-            guild: game.player5Guild,
-          });
-        for (const player of gamePlayers) {
           await prisma.playerPeriod.upsert({
             where: {
               playerId_periodId: {
@@ -313,6 +316,40 @@ pvpGamesRouter.put(
             update: {
               totalPoints: {
                 increment: gamePoints,
+              },
+            },
+          });
+        } else if (
+          game.status === PvpGameStatus.Accepted &&
+          status !== PvpGameStatus.Accepted
+        ) {
+          await prisma.pvpGame.update({
+            where: {
+              id: Number(gameId),
+            },
+            data: {
+              status,
+              gamePoints: 0,
+              bigOpponent: req.body.isBigOpponent,
+            },
+          });
+          await prisma.playerPeriod.upsert({
+            where: {
+              playerId_periodId: {
+                periodId: game.periodId,
+                playerId: player.id,
+              },
+            },
+            create: {
+              periodId: game.periodId,
+              playerId: player.id,
+              playerName: player.name,
+              playerGuild: player.guild,
+              totalPoints: 0,
+            },
+            update: {
+              totalPoints: {
+                decrement: gamePoints,
               },
             },
           });
