@@ -1,10 +1,9 @@
 export type DecodedToken = {
-  iss: string;
-  sub: string;
-  aud: string[];
+  nickname: string;
+  id: string;
+  username: string;
+  scope: string;
   iat: number;
   exp: number;
-  azp: string;
-  scope: string;
   permissions: string[];
 };

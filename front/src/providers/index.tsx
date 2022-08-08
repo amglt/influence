@@ -1,12 +1,10 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { notification } from 'antd';
-import { Text } from '@Components/Typography';
 import { store } from '@Store/';
 import { ApiError } from '@Models/root.models';
 import { isApiError } from '@Utils';
 import { ReactNode } from 'react';
-import { Auth0Provider } from './auth0Provider';
 import { BrowserRouter } from 'react-router-dom';
 
 export interface ProvidersProps {
@@ -43,19 +41,11 @@ const queryClient = new QueryClient({
 });
 
 export function Providers(props: ProvidersProps) {
-  const domain = process.env.DOMAIN;
-  const clientId = process.env.FRONT_CLIENT_ID;
-  const audience = process.env.AUDIENCE;
-
-  return !!(domain && clientId && audience) ? (
+  return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Auth0Provider>{props.children}</Auth0Provider>
-        </BrowserRouter>
+        <BrowserRouter>{props.children}</BrowserRouter>
       </QueryClientProvider>
     </Provider>
-  ) : (
-    <Text>Le domain, clientId ou l'audience est mal configuré</Text>
   );
 }

@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { useApi } from '@Hooks/api';
 import { AppUser } from '@Models/root.models';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useDispatch, useSelector } from '@Store/';
+import { useDispatch } from '@Store/';
 import { setUser } from '@Store/root.slice';
 
 export function useCurrentUser() {
@@ -13,24 +13,7 @@ export function useCurrentUser() {
   return useQuery(['user'], () => get<AppUser>(`/users/me`), {
     enabled: !!user?.sub,
     onSuccess: (data: AppUser) => {
-      dispatch(setUser({ ...data, permissions: [] }));
+      dispatch(setUser({ ...data, id: Number(data.id) }));
     },
   });
-}
-
-export function useUserPermissions() {
-  const { get } = useApi();
-  const { user } = useSelector((state) => state.root);
-  const dispatch = useDispatch();
-
-  return useQuery(
-    ['user-permissions', user.user_id],
-    () => get<string[]>(`/management/users/${user.user_id}/permissions`),
-    {
-      enabled: !!user?.user_id,
-      onSuccess: (data: string[]) => {
-        dispatch(setUser({ ...user, permissions: data }));
-      },
-    },
-  );
 }

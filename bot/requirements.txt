@@ -17,3 +17,8 @@ six==1.16.0; python_version >= "3.6" and python_full_version < "3.0.0" or python
 tomli==2.0.1; python_version < "3.11" and python_version >= "3.7"
 typing-extensions==4.3.0; python_version >= "3.7" and python_full_version >= "3.5.3"
 yarl==1.7.2; python_version >= "3.6" and python_full_version >= "3.5.3"
+
+aiohttp~=3.7.4.post0
+python-dotenv~=0.20.0
+arrow~=1.2.2
+setuptools~=60.2.0

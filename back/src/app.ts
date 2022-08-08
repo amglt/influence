@@ -11,6 +11,8 @@ import { prisma } from './db';
 import { periodRouter } from './controllers/periods.controller';
 import { scaleRouter } from './controllers/scale.controller';
 import { pvpGamesRouter } from './controllers/pvpGames.controller';
+import { loginRouter } from './controllers/login.controller';
+import { machinesRouter } from './controllers/machines.controller';
 
 export const app = async () => {
   const app = express();
@@ -30,7 +32,9 @@ export const app = async () => {
     return res.send('Service is running well');
   });
 
-  app.use(authenticationMiddleware());
+  app.use('/login', loginRouter);
+  app.use('/machine', machinesRouter);
+  app.use(authenticationMiddleware);
   app.use('/management', managementRouter);
   app.use('/users', usersRouter);
   app.use('/accounts', accountsRouter);

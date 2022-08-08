@@ -1,3 +1,5 @@
+import { User } from '@Models/root.models';
+
 export interface Period {
   id: number;
   startDate: Date;
@@ -51,25 +53,16 @@ export enum PvpGameStatus {
   Accepted,
 }
 
-export interface PvpGame {
+export interface PvpGameWithPlayers {
   id: number;
   result: PvpGameResult;
   type: PvpGameType;
   status: PvpGameStatus;
-  player1: string;
-  player1Name: string;
-  player2?: string;
-  player2Name?: string;
-  player2Guild?: string;
-  player3?: string;
-  player3Name?: string;
-  player3Guild?: string;
-  player4?: string;
-  player4Name?: string;
-  player4Guild?: string;
-  player5?: string;
-  player5Name?: string;
-  player5Guild?: string;
+  player1: User;
+  player2?: User;
+  player3?: User;
+  player4?: User;
+  player5?: User;
   period: Period;
 }
 

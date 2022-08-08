@@ -9,8 +9,8 @@ export function useEditUser() {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (request: { userId: string; body: { role: Role } }) =>
-      put(`/users/${request.userId}`, { ...request.body }),
+    (request: { userId: number; body: { role: Role } }) =>
+      put(`/users/${request.userId}/role`, { ...request.body }),
     {
       onSuccess: async () => {
         await queryClient.refetchQueries([UsersQueriesKey.Users]);
@@ -28,7 +28,7 @@ export function useDeleteUser() {
   const { del } = useApi();
   const queryClient = useQueryClient();
 
-  return useMutation((id: string) => del(`/users/${id}`), {
+  return useMutation((id: number) => del(`/users/${id}`), {
     onSuccess: () => queryClient.refetchQueries([UsersQueriesKey.Users]),
   });
 }

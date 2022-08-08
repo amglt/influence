@@ -1,5 +1,5 @@
-import { useAuth0 } from '@auth0/auth0-react';
 import axios, { AxiosRequestHeaders } from 'axios';
+import { useSelector } from '@Store/';
 
 const reqInstance = axios.create();
 
@@ -18,13 +18,12 @@ const handleApiError = (err: unknown) => {
 };
 
 export function useApi() {
-  const { getAccessTokenSilently } = useAuth0();
+  const { token } = useSelector((state) => state.root);
 
   const apiUrl = process.env.API_URL;
 
   async function get<ResType>(endpoint: string) {
     try {
-      const token = await getAccessTokenSilently();
       const res = await reqInstance.get<ResType>(`${apiUrl}${endpoint}`, {
         headers: {
           ...headers,
@@ -39,7 +38,6 @@ export function useApi() {
 
   async function post<ResType, ReqType>(endpoint: string, body?: ReqType) {
     try {
-      const token = await getAccessTokenSilently();
       const res = await reqInstance.post<ResType>(
         `${apiUrl}${endpoint}`,
         body,
@@ -58,7 +56,6 @@ export function useApi() {
 
   async function put<ResType, ReqType>(endpoint: string, body?: ReqType) {
     try {
-      const token = await getAccessTokenSilently();
       const res = await reqInstance.put<ResType>(`${apiUrl}${endpoint}`, body, {
         headers: {
           ...headers,
@@ -73,7 +70,6 @@ export function useApi() {
 
   async function patch<ResType, ReqType>(endpoint: string, body?: ReqType) {
     try {
-      const token = await getAccessTokenSilently();
       const res = await reqInstance.patch<ResType>(
         `${apiUrl}${endpoint}`,
         body,
@@ -92,7 +88,6 @@ export function useApi() {
 
   async function del<ResType>(endpoint: string) {
     try {
-      const token = await getAccessTokenSilently();
       const res = await reqInstance.delete<ResType>(`${apiUrl}${endpoint}`, {
         headers: {
           ...headers,

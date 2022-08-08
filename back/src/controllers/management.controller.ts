@@ -1,50 +1,17 @@
 import { Router, Request, Response } from 'express';
-import { getManagementClient } from '../shared/utils';
-import { Permission } from 'auth0';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { checkPermissions } from '../middlewares/permission.middleware';
+import { prisma } from '../db';
 
 const managementRouter = Router();
-
-managementRouter.get(
-  '/users/:userId/permissions',
-  async (req: Request, res: Response) => {
-    try {
-      const userId = req.params.userId;
-      if (!userId) return res.status(400).send({ message: 'User ID manquant' });
-
-      const client = getManagementClient(
-        'read:roles read:users read:role_members',
-      );
-      const roles = await client.getUserRoles({ id: userId });
-
-      const userPermissions: Permission[] = [];
-      for (const role of roles) {
-        if (role.id) {
-          const permissions = await client.getPermissionsInRole({
-            id: role.id,
-          });
-          userPermissions.push(...permissions);
-        }
-      }
-
-      return res
-        .status(200)
-        .send(
-          [...new Set(userPermissions)].map((perm) => perm.permission_name),
-        );
-    } catch (e) {
-      return res.status(500).send({ message: e });
-    }
-  },
-);
 
 managementRouter.get(
   '/roles',
   checkPermissions('read:roles'),
   async (_: Request, res: Response) => {
     try {
-      const client = getManagementClient('read:roles');
-      const roles = await client.getRoles();
+      const roles = await prisma.role.findMany();
       return res.status(200).send(roles);
     } catch (e) {
       return res.status(500).send({ message: e });
@@ -60,17 +27,17 @@ managementRouter.get(
       const roleId = req.params.roleId;
       if (!roleId) return res.status(400).send({ message: 'Role ID manquant' });
 
-      const client = getManagementClient('read:roles');
-      const role = await client.getRole({ id: roleId });
-      const rolePermissions = await client.getPermissionsInRole({
-        id: role.id!,
+      const role = await prisma.role.findFirst({
+        where: { id: Number(roleId) },
+        include: { permissions: true },
       });
+
+      if (!role) return res.status(400).send({ message: 'Role introuvable' });
 
       return res.status(200).send({
         id: role.id,
         name: role.name,
-        description: role.description,
-        permissions: rolePermissions,
+        permissions: role.permissions,
       });
     } catch (e) {
       return res.status(500).send({ message: e });
@@ -87,38 +54,32 @@ managementRouter.patch(
       const body = req.body;
 
       if (!roleId) return res.status(400).send({ message: `Role ID manquant` });
-      if (
-        !body.hasOwnProperty('name') ||
-        !body.hasOwnProperty('description') ||
-        !body.hasOwnProperty('permissions')
-      )
-        return res
-          .status(400)
-          .send({ message: `Nom ou description manquante` });
+      if (!body.hasOwnProperty('name') || !body.hasOwnProperty('permissions'))
+        return res.status(400).send({ message: `Nom manquant` });
 
-      const client = getManagementClient('update:roles read:roles');
-      const roles = await client.getRoles();
-      if (roles.find((role) => role.name === body.name && role.id !== roleId))
+      const roles = await prisma.role.findMany();
+      if (
+        roles.find(
+          (role) => role.name === body.name && role.id !== Number(roleId),
+        )
+      )
         return res
           .status(400)
           .send({ message: 'Un role avec ce nom existe deja' });
 
-      await client.updateRole(
-        { id: roleId },
-        {
+      await prisma.role.update({
+        where: { id: Number(roleId) },
+        data: {
           name: body.name,
-          description: body.description,
+          permissions: {
+            connect: body.permissions.map((p: number) => ({
+              id: p,
+            })),
+          },
         },
-      );
-      await client.removePermissionsFromRole(
-        { id: roleId },
-        { permissions: body.permissions },
-      );
-      await client.addPermissionsInRole(
-        { id: roleId },
-        { permissions: body.permissions },
-      );
-      return res.status(200).send();
+      });
+
+      return res.status(200).send({});
     } catch (e) {
       return res.status(500).send({ message: e });
     }
@@ -131,14 +92,11 @@ managementRouter.post(
   async (req: Request, res: Response) => {
     try {
       const body = req.body;
-      if (!body.hasOwnProperty('name') || !body.hasOwnProperty('description')) {
-        return res.status(400).send({ message: 'Nom ou description manquant' });
+      if (!body.hasOwnProperty('name')) {
+        return res.status(400).send({ message: 'Nom manquant' });
       }
 
-      const client = getManagementClient(
-        'create:roles update:roles read:roles',
-      );
-      const existingRoles = await client.getRoles();
+      const existingRoles = await prisma.role.findMany();
       const existingRole = existingRoles.find(
         (role) => role.name?.toLowerCase() === body.name.toLowerCase(),
       );
@@ -148,19 +106,18 @@ managementRouter.post(
           .send({ message: 'Un role avec ce nom existe déjà' });
       }
 
-      const newRole = await client.createRole({
-        name: body.name,
-        description: body.description,
+      const newRole = await prisma.role.create({
+        data: {
+          name: body.name,
+          permissions: {
+            connect: body.permissions.map((p: number) => ({
+              id: p,
+            })),
+          },
+        },
       });
-      await client.addPermissionsInRole(
-        {
-          id: newRole.id!,
-        },
-        {
-          permissions: body.permissions,
-        },
-      );
-      return res.status(200).send();
+
+      return res.status(201).send(newRole);
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -175,9 +132,8 @@ managementRouter.delete(
       const roleId = req.params.roleId;
       if (!roleId) return res.status(400).send({ message: `Role ID manquant` });
 
-      const client = getManagementClient('delete:roles');
-      await client.deleteRole({ id: roleId });
-      return res.status(200).send();
+      await prisma.role.delete({ where: { id: Number(roleId) } });
+      return res.status(200).send({});
     } catch (err) {
       return res.status(500).send({ message: err });
     }
@@ -192,9 +148,16 @@ managementRouter.get(
       const roleId = req.params.roleId;
       if (!roleId) return res.status(400).send({ message: 'Role ID manquant' });
 
-      const client = getManagementClient('read:roles');
-      const permissions = await client.getPermissionsInRole({ id: roleId });
-      return res.status(200).send(permissions);
+      const role = await prisma.role.findFirst({
+        include: { permissions: true },
+        where: {
+          id: Number(roleId),
+        },
+      });
+
+      if (!role) return res.status(400).send({ message: 'Role introuvable' });
+
+      return res.status(200).send(role.permissions);
     } catch (e) {
       return res.status(500).send({ message: e });
     }
@@ -206,21 +169,9 @@ managementRouter.get(
   checkPermissions('read:roles'),
   async (req: Request, res: Response) => {
     try {
-      if (!process.env.COUNCIL_ROLE_ID)
-        return res
-          .status(500)
-          .send({ message: 'Env variable COUNCIL_ROLE_ID is not configured' });
+      const permissions = await prisma.permission.findMany();
 
-      const client = getManagementClient('read:roles');
-      const permissions = await client.getPermissionsInRole({
-        id: process.env.COUNCIL_ROLE_ID,
-      });
-      return res.status(200).send(
-        permissions.map((perm) => ({
-          permission_name: perm.permission_name,
-          resource_server_identifier: perm.resource_server_identifier,
-        })),
-      );
+      return res.status(200).send(permissions);
     } catch (e) {
       return res.status(500).send({ message: e });
     }

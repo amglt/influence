@@ -14,7 +14,7 @@ export function useUsers() {
   return useQuery(UsersQueriesKey.Users, () => get<User[]>('/users'));
 }
 
-export function useUser(id?: string, form?: FormInstance) {
+export function useUser(id?: number, form?: FormInstance) {
   const { get } = useApi();
 
   return useQuery(
@@ -25,7 +25,7 @@ export function useUser(id?: string, form?: FormInstance) {
       onSuccess: (data) => {
         if (form) {
           form.setFieldsValue({
-            name: data.name,
+            name: data.username,
             role: data.role?.id,
           });
         }

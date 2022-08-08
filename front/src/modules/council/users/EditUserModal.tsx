@@ -24,7 +24,7 @@ export function EditUserModal(props: EditUserModalProps) {
     onOk,
   } = props;
 
-  const { isLoading: isLoadingUser } = useUser(selectedUser?.user_id, form);
+  const { isLoading: isLoadingUser } = useUser(selectedUser?.id, form);
 
   return (
     <Modal

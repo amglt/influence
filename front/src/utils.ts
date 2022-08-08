@@ -1,5 +1,5 @@
 import { ApiError } from '@Models/root.models';
-import { PvpGame } from '@Models/pvp-management.models';
+import { PvpGameWithPlayers } from '@Models/pvp-management.models';
 import { format as fnsFormat, utcToZonedTime } from 'date-fns-tz';
 import fr from 'date-fns/locale/fr';
 
@@ -7,12 +7,12 @@ export function isApiError(err: ApiError | unknown): err is ApiError {
   return (err as ApiError).message !== undefined;
 }
 
-export function getPlayersStringFromPvpGame(game: PvpGame) {
-  let players = game.player1Name;
-  if (game.player2Name) players += `, ${game.player2Name}`;
-  if (game.player3Name) players += `, ${game.player3Name}`;
-  if (game.player4Name) players += `, ${game.player4Name}`;
-  if (game.player5Name) players += `, ${game.player5Name}`;
+export function getPlayersStringFromPvpGame(game: PvpGameWithPlayers) {
+  let players = game.player1.nickname;
+  if (game.player2) players += `, ${game.player2.nickname}`;
+  if (game.player3) players += `, ${game.player3.nickname}`;
+  if (game.player4) players += `, ${game.player4.nickname}`;
+  if (game.player5) players += `, ${game.player5.nickname}`;
   return players;
 }
 

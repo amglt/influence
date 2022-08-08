@@ -2,7 +2,7 @@ import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
 import { Listing } from '@Components/Listing';
 import {
-  PvpGame,
+  PvpGameWithPlayers,
   PvpGameResult,
   PvpGameStatus,
   PvpGameType,
@@ -32,9 +32,9 @@ export function PeriodGamesList() {
 
   const { user } = useSelector((state) => state.root);
   const [isEditGameModalOpen, setIsEditGameModalOpen] = useState(false);
-  const [selectedGame, setSelectedGame] = useState<PvpGame | undefined>(
-    undefined,
-  );
+  const [selectedGame, setSelectedGame] = useState<
+    PvpGameWithPlayers | undefined
+  >(undefined);
   const queryClient = useQueryClient();
   const [editGameForm] = useForm();
 
@@ -78,7 +78,7 @@ export function PeriodGamesList() {
           }}
           form={editGameForm}
         />
-        <Listing<PvpGame>
+        <Listing<PvpGameWithPlayers>
           columns={[
             {
               key: 'id',

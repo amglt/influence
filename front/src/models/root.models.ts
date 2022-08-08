@@ -22,44 +22,31 @@ export type ApiError = {
 };
 
 export type Permission = {
-  permission_name: string;
-  resource_server_identifier: string;
+  id: number;
+  name: string;
 };
 
 export type Role = {
   id: string;
   name: string;
-  description: string;
 };
 
 export type RoleWithPermissions = {
   id: string;
   name: string;
-  description: string;
   permissions: Permission[];
-};
-
-export type Identity = {
-  provider: string;
-  access_token: string;
-  refresh_token: string;
-  user_id: string;
-  connection: string;
-  isSocial: boolean;
 };
 
 export interface User {
   created_at: Date;
-  identities: Identity[];
-  name: string;
+  username: string;
   nickname: string;
   picture: string;
+  guild: string;
   updated_at: Date;
-  user_id: string;
-  last_login: Date;
-  last_ip: string;
-  logins_count: number;
+  id: number;
   blocked: boolean;
+  roleId?: number;
 }
 
 export interface UserWithRole extends User {

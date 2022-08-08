@@ -69,7 +69,7 @@ export function AddEditAccountModal(props: AddEditAccountModalProps) {
           >
             <Select placeholder="Selectionnez l'utilisateur auquel le compte Dofus doit être associé">
               {users.map((user) => (
-                <Option value={user.user_id}>{user.name}</Option>
+                <Option value={user.id}>{user.username}</Option>
               ))}
             </Select>
           </Form.Item>

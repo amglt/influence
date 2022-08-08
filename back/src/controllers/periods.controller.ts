@@ -37,6 +37,13 @@ periodRouter.get(
         where: {
           periodId: Number(periodId),
         },
+        include: {
+          player1: true,
+          player2: true,
+          player3: true,
+          player4: true,
+          player5: true,
+        },
         orderBy: {
           id: 'asc',
         },
@@ -60,6 +67,9 @@ periodRouter.get(
       const players = await prisma.playerPeriod.findMany({
         where: {
           periodId: Number(periodId),
+        },
+        include: {
+          player: true,
         },
       });
 
@@ -89,14 +99,21 @@ periodRouter.get(
             { periodId: Number(periodId) },
             {
               OR: [
-                { player1: playerId },
-                { player2: playerId },
-                { player3: playerId },
-                { player4: playerId },
-                { player5: playerId },
+                { player1Id: Number(playerId) },
+                { player2Id: Number(playerId) },
+                { player3Id: Number(playerId) },
+                { player4Id: Number(playerId) },
+                { player5Id: Number(playerId) },
               ],
             },
           ],
+        },
+        include: {
+          player1: true,
+          player2: true,
+          player3: true,
+          player4: true,
+          player5: true,
         },
         orderBy: {
           id: 'asc',

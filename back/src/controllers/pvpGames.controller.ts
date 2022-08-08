@@ -7,7 +7,6 @@ import {
   PvpGameStatus,
   PvpGameType,
 } from '../models/pvpGames.models';
-import { getManagementClient } from '../shared/utils';
 
 const pvpGamesRouter = Router();
 
@@ -134,37 +133,16 @@ pvpGamesRouter.post(
         });
 
       let game: PvpGame;
-      const client = getManagementClient('read:users read:user_idp_tokens');
-      const users = await client.getUsers();
       game = await prisma.pvpGame.create({
         data: {
           requester: body.requester,
           status: PvpGameStatus.Pending,
           periodId: currentPeriod.id,
-          player1: body.player1,
-          player1Name: users.find((user) => user.user_id === body.player1)
-            ?.nickname,
-          player1Guild: body.player1Guild,
-          player2: body.player2,
-          player2Name: body.player2
-            ? users.find((user) => user.user_id === body.player2)?.nickname
-            : null,
-          player2Guild: body.player2Guild,
-          player3: body.player3,
-          player3Name: body.player3
-            ? users.find((user) => user.user_id === body.player3)?.nickname
-            : null,
-          player3Guild: body.player3Guild,
-          player4: body.player4,
-          player4Name: body.player4
-            ? users.find((user) => user.user_id === body.player4)?.nickname
-            : null,
-          player4Guild: body.player4Guild,
-          player5: body.player5,
-          player5Name: body.player5
-            ? users.find((user) => user.user_id === body.player5)?.nickname
-            : null,
-          player5Guild: body.player5Guild,
+          player1Id: body.player1,
+          player2Id: body.player2,
+          player3Id: body.player3,
+          player4Id: body.player4,
+          player5Id: body.player5,
           result: body.result,
           type: body.type,
           screenshotUrl: body.screenshotUrl,
@@ -203,6 +181,7 @@ pvpGamesRouter.put(
           id: Number(gameId),
         },
       });
+      console.log(game);
       if (!scale || !game)
         return res.status(400).send({ message: 'Scale ou game introuvable' });
 
@@ -213,37 +192,11 @@ pvpGamesRouter.put(
         req.body.isBigOpponent,
       );
 
-      const gamePlayers = [
-        {
-          id: game.player1,
-          name: game.player1Name,
-          guild: game.player1Guild,
-        },
-      ];
-      if (game.player2 && game.player2Name && game.player2Guild)
-        gamePlayers.push({
-          id: game.player2,
-          name: game.player2Name,
-          guild: game.player2Guild,
-        });
-      if (game.player3 && game.player3Name && game.player3Guild)
-        gamePlayers.push({
-          id: game.player3,
-          name: game.player3Name,
-          guild: game.player3Guild,
-        });
-      if (game.player4 && game.player4Name && game.player4Guild)
-        gamePlayers.push({
-          id: game.player4,
-          name: game.player4Name,
-          guild: game.player4Guild,
-        });
-      if (game.player5 && game.player5Name && game.player5Guild)
-        gamePlayers.push({
-          id: game.player5,
-          name: game.player5Name,
-          guild: game.player5Guild,
-        });
+      const gamePlayers = [game.player1Id];
+      if (game.player2Id) gamePlayers.push(game.player2Id);
+      if (game.player3Id) gamePlayers.push(game.player3Id);
+      if (game.player4Id) gamePlayers.push(game.player4Id);
+      if (game.player5Id) gamePlayers.push(game.player5Id);
       for (const player of gamePlayers) {
         if (
           game.status !== PvpGameStatus.Accepted &&
@@ -263,14 +216,12 @@ pvpGamesRouter.put(
             where: {
               playerId_periodId: {
                 periodId: game.periodId,
-                playerId: player.id,
+                playerId: player,
               },
             },
             create: {
               periodId: game.periodId,
-              playerId: player.id,
-              playerName: player.name,
-              playerGuild: player.guild,
+              playerId: player,
               totalPoints: gamePoints,
             },
             update: {
@@ -297,20 +248,69 @@ pvpGamesRouter.put(
             where: {
               playerId_periodId: {
                 periodId: game.periodId,
-                playerId: player.id,
+                playerId: player,
               },
             },
             create: {
               periodId: game.periodId,
-              playerId: player.id,
-              playerName: player.name,
-              playerGuild: player.guild,
+              playerId: player,
               totalPoints: 0,
             },
             update: {
               totalPoints: {
                 decrement: gamePoints,
               },
+            },
+          });
+        } else if (
+          game.status === PvpGameStatus.Accepted &&
+          status === PvpGameStatus.Accepted
+        ) {
+          await prisma.pvpGame.update({
+            where: {
+              id: Number(gameId),
+            },
+            data: {
+              status,
+              gamePoints,
+              bigOpponent: req.body.isBigOpponent,
+            },
+          });
+          await prisma.playerPeriod.update({
+            where: {
+              playerId_periodId: {
+                periodId: game.periodId,
+                playerId: player,
+              },
+            },
+            data: {
+              totalPoints: {
+                decrement: game.gamePoints,
+              },
+            },
+          });
+          await prisma.playerPeriod.update({
+            where: {
+              playerId_periodId: {
+                periodId: game.periodId,
+                playerId: player,
+              },
+            },
+            data: {
+              totalPoints: {
+                increment: gamePoints,
+              },
+            },
+          });
+        } else {
+          await prisma.pvpGame.update({
+            where: {
+              id: Number(gameId),
+            },
+            data: {
+              status,
+              gamePoints: 0,
+              bigOpponent: req.body.isBigOpponent,
             },
           });
         }
@@ -344,11 +344,11 @@ pvpGamesRouter.get(
           AND: [
             {
               OR: [
-                { player1: userId },
-                { player2: userId },
-                { player3: userId },
-                { player4: userId },
-                { player5: userId },
+                { player1Id: Number(userId) },
+                { player2Id: Number(userId) },
+                { player3Id: Number(userId) },
+                { player4Id: Number(userId) },
+                { player5Id: Number(userId) },
               ],
             },
             {
@@ -477,11 +477,11 @@ pvpGamesRouter.delete(
       if (!game)
         return res.status(400).send({ message: 'Partie PVP non trouvée' });
 
-      const gamePlayers = [game.player1];
-      if (game.player2) gamePlayers.push(game.player2);
-      if (game.player3) gamePlayers.push(game.player3);
-      if (game.player4) gamePlayers.push(game.player4);
-      if (game.player5) gamePlayers.push(game.player5);
+      const gamePlayers = [game.player1Id];
+      if (game.player2Id) gamePlayers.push(game.player2Id);
+      if (game.player3Id) gamePlayers.push(game.player3Id);
+      if (game.player4Id) gamePlayers.push(game.player4Id);
+      if (game.player5Id) gamePlayers.push(game.player5Id);
       for (const player of gamePlayers) {
         const playerPeriod = await prisma.playerPeriod.findUnique({
           where: {
@@ -491,7 +491,7 @@ pvpGamesRouter.delete(
             },
           },
         });
-        if (playerPeriod) {
+        if (playerPeriod && game.status === PvpGameStatus.Accepted) {
           await prisma.playerPeriod.update({
             where: {
               playerId_periodId: {

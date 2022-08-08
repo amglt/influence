@@ -4,6 +4,11 @@ import { prisma } from './db';
 
 dotenv.config();
 
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+  return Number(this);
+};
+
 app()
   .then((app) => {
     const port = process.env.PORT ?? 8080;
