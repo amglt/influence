@@ -12,8 +12,7 @@ import {
   usePeriodGames,
 } from '@Api/pvp-management/pvp-management.queries';
 import { useParams } from 'react-router-dom';
-import { getPlayersStringFromPvpGame } from '@Utils';
-import { format } from 'date-fns';
+import { format, getPlayersStringFromPvpGame } from '@Utils';
 import { Space } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useState } from 'react';
@@ -90,7 +89,7 @@ export function PeriodGamesList() {
               key: 'timestamp',
               dataIndex: 'timestamp',
               title: 'Date',
-              render: (value) => format(new Date(value), 'dd/MM/yyyy hh:mm:ss'),
+              render: (value) => format(new Date(value)),
             },
             {
               key: 'result',
@@ -139,7 +138,6 @@ export function PeriodGamesList() {
             },
             {
               key: 'actions',
-              dataIndex: 'actions',
               render: (_, record) => {
                 return (
                   <Space>

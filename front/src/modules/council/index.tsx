@@ -1,19 +1,13 @@
-import { useAuth0 } from '@auth0/auth0-react';
 import { Outlet } from 'react-router-dom';
-import { Text } from '@Components/Typography';
+import { useSelector } from '@Store/';
+import { AppPermissions } from '@Models/root.models';
 
 export function Council() {
-  const { user } = useAuth0();
+  const { user } = useSelector((state) => state.root);
 
-  function render() {
-    if (!user) {
-      return (
-        <div>
-          <Text>Vous devez être connecté pour avoir accès à ce contenu</Text>
-        </div>
-      );
-    }
-  }
-
-  return !!user ? <Outlet /> : <Text></Text>;
+  return !user.permissions.includes(AppPermissions.IsCouncil) ? (
+    <div>Vous n'avez pas accès à ce contenu</div>
+  ) : (
+    <Outlet />
+  );
 }

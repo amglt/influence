@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { App } from '@Modules/';
 import { Council } from '@Modules/council';
 import { RolesList } from '@Modules/council/roles/RolesList';
@@ -15,35 +15,33 @@ import { PeriodPlayerGamesList } from '@Modules/pvp-management/periods/PeriodPla
 
 export function Router() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path={'/'} element={<App />}>
-          <Route path={'recruitment'} element={<Recruitment />}>
-            <Route path={'accounts'} element={<AccountsList />} />
-            <Route path={'characters'} element={<CharactersList />} />
-          </Route>
-          <Route path={'pvp-management-management'} element={<PvpManagement />}>
-            <Route path={'periods'} element={<PeriodsList />} />
-            <Route
-              path={'periods/:periodId/games'}
-              element={<PeriodGamesList />}
-            />
-            <Route
-              path={'periods/:periodId/players'}
-              element={<PeriodPlayersPointsList />}
-            />
-            <Route
-              path={'periods/:periodId/games/:playerId'}
-              element={<PeriodPlayerGamesList />}
-            />
-            <Route path={'scale'} element={<Scale />} />
-          </Route>
-          <Route path={'council'} element={<Council />}>
-            <Route path={'roles'} element={<RolesList />} />
-            <Route path={'users'} element={<UsersList />} />
-          </Route>
+    <Routes>
+      <Route path={'/'} element={<App />}>
+        <Route path={'recruitment'} element={<Recruitment />}>
+          <Route path={'accounts'} element={<AccountsList />} />
+          <Route path={'characters'} element={<CharactersList />} />
         </Route>
-      </Routes>
-    </BrowserRouter>
+        <Route path={'pvp-management-management'} element={<PvpManagement />}>
+          <Route path={'periods'} element={<PeriodsList />} />
+          <Route
+            path={'periods/:periodId/games'}
+            element={<PeriodGamesList />}
+          />
+          <Route
+            path={'periods/:periodId/players'}
+            element={<PeriodPlayersPointsList />}
+          />
+          <Route
+            path={'periods/:periodId/games/:playerId'}
+            element={<PeriodPlayerGamesList />}
+          />
+          <Route path={'scale'} element={<Scale />} />
+        </Route>
+        <Route path={'council'} element={<Council />}>
+          <Route path={'roles'} element={<RolesList />} />
+          <Route path={'users'} element={<UsersList />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }

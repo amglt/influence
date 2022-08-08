@@ -4,7 +4,7 @@ import { useUsers } from '@Api/council/users/users.queries';
 import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
 import { ColumnsType } from 'antd/lib/table';
-import { format } from 'date-fns';
+import { format } from '@Utils';
 import { Space } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
@@ -72,7 +72,7 @@ export function UsersList() {
       key: 'last_login',
       dataIndex: 'last_login',
       title: 'Dernière connexion',
-      render: (value) => format(new Date(value), 'dd/MM/yyyy hh:mm'),
+      render: (value) => format(new Date(value)),
       filtered: true,
       sorter: (a, b) =>
         new Date(b.last_login).getTime() - new Date(a.last_login).getTime(),
@@ -81,7 +81,7 @@ export function UsersList() {
       key: 'created_at',
       dataIndex: 'created_at',
       title: 'Date de création',
-      render: (value) => format(new Date(value), 'dd/MM/yyyy'),
+      render: (value) => format(new Date(value)),
       filtered: true,
       sorter: (a, b) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),

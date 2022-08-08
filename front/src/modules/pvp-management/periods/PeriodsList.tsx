@@ -6,7 +6,7 @@ import { DeleteOutlined, EyeOutlined, UserOutlined } from '@ant-design/icons';
 import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
 import { Period } from '@Models/pvp-management.models';
 import { usePeriods } from '@Api/pvp-management/pvp-management.queries';
-import { format } from 'date-fns';
+import { format } from '@Utils';
 import {
   useCreatePeriod,
   useDeletePeriod,
@@ -65,7 +65,7 @@ export function PeriodsList() {
               sorter: (a, b) =>
                 new Date(b.startDate).getTime() -
                 new Date(a.startDate).getTime(),
-              render: (value) => format(new Date(value), 'dd/MM/yyyy hh:mm'),
+              render: (value) => format(new Date(value)),
             },
             {
               key: 'endDate',
@@ -77,8 +77,7 @@ export function PeriodsList() {
                   ? new Date(b.endDate).getTime() -
                     new Date(a.endDate).getTime()
                   : 0,
-              render: (value) =>
-                value ? format(new Date(value), 'dd/MM/yyyy hh:mm') : undefined,
+              render: (value) => (value ? format(new Date(value)) : undefined),
             },
             {
               key: 'actions',
@@ -101,11 +100,9 @@ export function PeriodsList() {
                           title: (
                             <span>
                               Vous êtes sur le point de supprimer la periode
-                              allant du{' '}
-                              {format(new Date(record.startDate), 'dd/MM/yyyy')}{' '}
-                              au{' '}
+                              allant du {format(new Date(record.startDate))} au{' '}
                               {record.endDate
-                                ? format(new Date(record.endDate), 'dd/MM/yyyy')
+                                ? format(new Date(record.endDate))
                                 : '?'}
                               . Etes-vous certain de vouloir de le supprimer ?
                             </span>

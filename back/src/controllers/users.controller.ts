@@ -3,6 +3,7 @@ import { checkPermissions } from '../middlewares/permission.middleware';
 import { getManagementClient } from '../shared/utils';
 import jwt_decode from 'jwt-decode';
 import { DecodedToken } from '../models/root.models';
+import { User } from '../models/users.models';
 
 const usersRouter = Router();
 
@@ -157,7 +158,39 @@ usersRouter.put(
 
       return res.status(200).send({});
     } catch (err) {
-      console.log(err);
+      return res.status(500).send({ message: err });
+    }
+  },
+);
+
+usersRouter.put(
+  '/:userId/info',
+  checkPermissions('write:users'),
+  async (req: Request<any, any, User>, res: Response) => {
+    try {
+      const body = req.body;
+
+      const userId = req.params.userId;
+      if (!userId) return res.status(400).send({ message: 'User ID manquant' });
+
+      const client = getManagementClient(
+        'read:users update:users update:users_app_metadata',
+      );
+      const members = await client.getUsers();
+
+      if (members.find((m) => m.user_id === userId)) {
+        await client.updateUser(
+          { id: userId },
+          {
+            nickname: body.nickname,
+            picture: body.picture,
+            name: body.name,
+          },
+        );
+      }
+
+      return res.status(200).send({});
+    } catch (err) {
       return res.status(500).send({ message: err });
     }
   },

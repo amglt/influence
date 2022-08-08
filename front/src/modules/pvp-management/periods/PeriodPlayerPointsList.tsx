@@ -1,7 +1,7 @@
 import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
 import { Listing } from '@Components/Listing';
-import { PeriodPlayerPoints, PvpGame } from '@Models/pvp-management.models';
+import { PeriodPlayerPoints } from '@Models/pvp-management.models';
 import { usePeriodPlayers } from '@Api/pvp-management/pvp-management.queries';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Space } from 'antd';
