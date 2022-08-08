@@ -28,8 +28,9 @@ export function PeriodPlayersPointsList() {
           columns={[
             {
               key: 'playerName',
-              dataIndex: 'playerName',
+              dataIndex: 'player',
               title: 'Joueur',
+              render: (value) => value.nickname,
             },
             {
               key: 'points',

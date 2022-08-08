@@ -12,6 +12,7 @@ const initialState: RootState = {
     username: '',
     picture: '',
     nickname: '',
+    guild: '',
     updated_at: new Date(),
     id: 0,
     blocked: true,

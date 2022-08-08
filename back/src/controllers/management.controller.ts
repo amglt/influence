@@ -1,4 +1,6 @@
 import { Router, Request, Response } from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
 

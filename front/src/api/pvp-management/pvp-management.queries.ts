@@ -3,7 +3,7 @@ import { useApi } from '@Hooks/api';
 import {
   Period,
   PeriodPlayerPoints,
-  PvpGame,
+  PvpGameWithPlayers,
   Scale,
 } from '@Models/pvp-management.models';
 
@@ -29,7 +29,7 @@ export function usePeriodGames(periodId?: string) {
 
   return useQuery(
     [PvpManagementQueriesKeys.PeriodGames],
-    () => get<{ games: PvpGame[] }>(`/periods/${periodId}/games`),
+    () => get<{ games: PvpGameWithPlayers[] }>(`/periods/${periodId}/games`),
     {
       enabled: !!periodId,
     },
@@ -53,7 +53,7 @@ export function usePeriodPlayerGames(periodId?: string, playerId?: string) {
 
   return useQuery(
     [PvpManagementQueriesKeys.PeriodPlayerGames],
-    () => get<PvpGame[]>(`/periods/${periodId}/games/${playerId}`),
+    () => get<PvpGameWithPlayers[]>(`/periods/${periodId}/games/${playerId}`),
     {
       enabled: !!periodId && !!playerId,
     },
@@ -69,13 +69,5 @@ export function useScale(onSuccess?: (data: Scale) => void) {
     {
       onSuccess,
     },
-  );
-}
-
-export function useGames() {
-  const { get } = useApi();
-
-  return useQuery([PvpManagementQueriesKeys.Games], () =>
-    get<PvpGame[]>('/pvp-games'),
   );
 }

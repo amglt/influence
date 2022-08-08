@@ -181,6 +181,7 @@ pvpGamesRouter.put(
           id: Number(gameId),
         },
       });
+      console.log(game);
       if (!scale || !game)
         return res.status(400).send({ message: 'Scale ou game introuvable' });
 
@@ -259,6 +260,57 @@ pvpGamesRouter.put(
               totalPoints: {
                 decrement: gamePoints,
               },
+            },
+          });
+        } else if (
+          game.status === PvpGameStatus.Accepted &&
+          status === PvpGameStatus.Accepted
+        ) {
+          await prisma.pvpGame.update({
+            where: {
+              id: Number(gameId),
+            },
+            data: {
+              status,
+              gamePoints,
+              bigOpponent: req.body.isBigOpponent,
+            },
+          });
+          await prisma.playerPeriod.update({
+            where: {
+              playerId_periodId: {
+                periodId: game.periodId,
+                playerId: player,
+              },
+            },
+            data: {
+              totalPoints: {
+                decrement: game.gamePoints,
+              },
+            },
+          });
+          await prisma.playerPeriod.update({
+            where: {
+              playerId_periodId: {
+                periodId: game.periodId,
+                playerId: player,
+              },
+            },
+            data: {
+              totalPoints: {
+                increment: gamePoints,
+              },
+            },
+          });
+        } else {
+          await prisma.pvpGame.update({
+            where: {
+              id: Number(gameId),
+            },
+            data: {
+              status,
+              gamePoints: 0,
+              bigOpponent: req.body.isBigOpponent,
             },
           });
         }
@@ -439,7 +491,7 @@ pvpGamesRouter.delete(
             },
           },
         });
-        if (playerPeriod) {
+        if (playerPeriod && game.status === PvpGameStatus.Accepted) {
           await prisma.playerPeriod.update({
             where: {
               playerId_periodId: {

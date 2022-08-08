@@ -103,10 +103,10 @@ async def generate_game(client, message, game_type, game):
                                            timeout=None)
     if reaction.emoji == '✅':
         await put(f"/pvp-games/{created_game.get('id')}",
-                  data={"isBigAlliance": True, "status": PvpGameStatus.Accepted.value})
+                  data={"isBigOpponent": True, "status": PvpGameStatus.Accepted.value})
     elif reaction.emoji == '☑️':
         await put(f"/pvp-games/{created_game.get('id')}",
-                  data={"isBigAlliance": False, "status": PvpGameStatus.Accepted.value})
+                  data={"isBigOpponent": False, "status": PvpGameStatus.Accepted.value})
     elif reaction.emoji == '❌':
         await put(f"/pvp-games/{created_game.get('id')}",
                   data={"status": PvpGameStatus.Rejected.value})
@@ -137,14 +137,14 @@ async def handle_ava(client: Client, message: Message):
             "type": game_type.value,
             "result": game_result.value,
             "screenshotUrl": message.attachments[0].url,
-            "player1": f"oauth2|discord|{message.author.id}",
+            "player1": message.author.id,
             "player1Name": None,
             "player1Guild": get_guild_from_roles(message.author.roles).name,
             "player2": None,
             "player3": None,
             "player4": None,
             "player5": None,
-            "requester": f"oauth2|discord|{message.author.id}"
+            "requester": message.author.id
         }
         await generate_game(client, message, game_type, game)
 
@@ -158,26 +158,26 @@ async def handle_perco_prism(client: Client, message: Message):
             "type": game_type.value,
             "result": game_result.value,
             "screenshotUrl": message.attachments[0].url,
-            "player1": f"oauth2|discord|{message.mentions[0].id}",
+            "player1": message.mentions[0].id,
             "player1Name": None,
             "player1Guild": get_guild_from_roles(message.mentions[0].roles).name,
             "player2": None,
             "player3": None,
             "player4": None,
             "player5": None,
-            "requester": f"oauth2|discord|{message.author.id}"
+            "requester": message.author.id
         }
         if index_exists(message.mentions, 1):
-            game["player2"] = f"oauth2|discord|{message.mentions[1].id}"
+            game["player2"] = message.mentions[1].id
             game["player2Guild"] = get_guild_from_roles(message.mentions[1].roles).name
         if index_exists(message.mentions, 2):
-            game["player3"] = f"oauth2|discord|{message.mentions[2].id}"
+            game["player3"] = message.mentions[2].id
             game["player3Guild"] = get_guild_from_roles(message.mentions[2].roles).name
         if index_exists(message.mentions, 3):
-            game["player4"] = f"oauth2|discord|{message.mentions[3].id}"
+            game["player4"] = message.mentions[3].id
             game["player4Guild"] = get_guild_from_roles(message.mentions[3].roles).name
         if index_exists(message.mentions, 4):
-            game["player5"] = f"oauth2|discord|{message.mentions[4].id}"
+            game["player5"] = message.mentions[4].id
             game["player5Guild"] = get_guild_from_roles(message.mentions[4].roles).name
 
         await generate_game(client, message, game_type, game)

@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model MachineToMachine {
+  clientId              Int                     @id
+  clientSecret          String
+  permissions           Permission[]
+}
+
 model User {
   id                    BigInt                   @id
   username              String
@@ -34,6 +40,7 @@ model Permission {
   id             Int                     @id @default(autoincrement())
   name           String
   roles          Role[]
+  machines       MachineToMachine[]
 }
 
 model Role {
@@ -116,15 +123,13 @@ model PvpGame {
   timestamp               DateTime
   bigOpponent             Boolean        @default(false)
   gamePoints              Float
-  requester               String
+  requester               BigInt
 }
 
 model PlayerPeriod {
   playerId                BigInt
   player                  User           @relation(fields: [playerId], references: [id])
   periodId                Int
-  playerName              String         @default("")
-  playerGuild             String         @default("")
   period                  Period         @relation(fields: [periodId], references: [id])
   totalPoints             Float
   @@id([playerId, periodId])

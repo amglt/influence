@@ -205,6 +205,13 @@ async function seedPermissionsAndConcilRole() {
       name: 'write:wallets',
     },
   });
+  await prisma.permission.upsert({
+    where: { id: 30 },
+    update: {},
+    create: {
+      name: 'write:machines',
+    },
+  });
 
   const permissionsIdsToConnect = [
     { id: 1 },
@@ -236,6 +243,7 @@ async function seedPermissionsAndConcilRole() {
     { id: 27 },
     { id: 28 },
     { id: 29 },
+    { id: 30 },
   ];
 
   await prisma.role.upsert({

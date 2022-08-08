@@ -20,13 +20,11 @@ class TokenInfo:
 async def get_token():
     headers = {"content-type": "application/json"}
     payload = {
-        "client_id": os.getenv("CLIENT_ID"),
-        "client_secret": os.getenv("CLIENT_SECRET"),
-        "audience": os.getenv("AUDIENCE"),
-        "grant_type": "client_credentials"
+        "clientId": int(os.getenv("CLIENT_ID")),
+        "clientSecret": os.getenv("CLIENT_SECRET")
     }
     async with aiohttp.ClientSession(headers=headers) as session:
-        url = f"https://{os.getenv('DOMAIN')}/oauth/token"
+        url = f"{os.getenv('API_URL')}/machine/token"
         async with session.post(url, data=dumps(payload)) as res:
             data = await res.read()
             decoded_data = loads(data.decode("utf-8"))

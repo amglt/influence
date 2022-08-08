@@ -17,7 +17,7 @@ def my_stats_is_valid(message):
 
 async def handle_my_stats(message):
     if my_stats_is_valid(message):
-        stats = await get(f"/pvp-games/oauth2|discord|{message.author.id}/stats")
+        stats = await get(f"/pvp-games/{message.author.id}/stats")
         if stats.get('totalGames') > 0:
             total_games = stats.get('totalGames')
             embed = Embed(title="Mes stats",

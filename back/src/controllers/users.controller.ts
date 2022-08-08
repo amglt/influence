@@ -100,7 +100,47 @@ usersRouter.post(
 );
 
 usersRouter.put(
-  '/:userId',
+  '/check',
+  checkPermissions('write:users'),
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      if (!body.hasOwnProperty('members'))
+        return res.status(400).send({ message: 'Members manquant' });
+
+      for (const member of body.members) {
+        await prisma.user.upsert({
+          where: {
+            id: member.id,
+          },
+          update: {
+            username: member.name,
+            nickname: member.nickname,
+            guild: member.guild,
+            updated_at: new Date(),
+            picture: member.picture,
+          },
+          create: {
+            id: member.id,
+            username: member.name,
+            nickname: member.nickname,
+            guild: member.guild,
+            updated_at: new Date(),
+            created_at: new Date(),
+            picture: member.picture,
+          },
+        });
+      }
+
+      return res.status(200).send({});
+    } catch (err) {
+      return res.status(500).send({ message: err });
+    }
+  },
+);
+
+usersRouter.put(
+  '/:userId/roles',
   checkPermissions('write:users'),
   async (req: Request, res: Response) => {
     try {
@@ -138,37 +178,6 @@ usersRouter.patch(
         where: { id: Number(userId) },
         data: { blocked: body.blocked },
       });
-      return res.status(200).send({});
-    } catch (err) {
-      return res.status(500).send({ message: err });
-    }
-  },
-);
-
-usersRouter.put(
-  '/nickname',
-  checkPermissions('write:users'),
-  async (req: Request, res: Response) => {
-    try {
-      const body = req.body;
-      if (!body.hasOwnProperty('members'))
-        return res.status(400).send({ message: 'Members manquant' });
-
-      const users = await prisma.user.findMany();
-
-      for (const member of body.members) {
-        if (users.find((u) => u.id === member.id)) {
-          await prisma.user.update({
-            where: {
-              id: member.id,
-            },
-            data: {
-              nickname: member.nickname,
-            },
-          });
-        }
-      }
-
       return res.status(200).send({});
     } catch (err) {
       return res.status(500).send({ message: err });

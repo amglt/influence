@@ -23,11 +23,9 @@ export const checkPermissions =
           message: `Vous n'avez pas la permission d'obtenir ce contenu`,
         });
       } else {
-        return res
-          .status(403)
-          .send({
-            message: "Vous n'avez pas la permission d'obtenir ce contenu",
-          });
+        return res.status(403).send({
+          message: "Vous n'avez pas la permission d'obtenir ce contenu",
+        });
       }
     }
   };

@@ -164,9 +164,12 @@ export function Layout(props: LayoutProps) {
               'influstack-returnTo',
               window.location.pathname,
             );
-            window.location.href = `https://discord.com/api/oauth2/authorize?response_type=code&client_id=1005121591958581448&scope=identify&state=15773059ghq9183habn&redirect_uri=${encodeURI(
-              window.location.origin + '/login',
-            )}&prompt=none`;
+            const clientId = process.env.DISCORD_CLIENT_ID;
+            if (clientId) {
+              window.location.href = `https://discord.com/api/oauth2/authorize?response_type=code&client_id=${clientId}&scope=identify&state=15773059ghq9183habn&redirect_uri=${encodeURI(
+                window.location.origin + '/login',
+              )}&prompt=none`;
+            }
           }}
         >
           <UserOutlined className={'user-icon'} style={{ color: 'white' }} />

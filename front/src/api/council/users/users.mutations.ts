@@ -10,7 +10,7 @@ export function useEditUser() {
 
   return useMutation(
     (request: { userId: number; body: { role: Role } }) =>
-      put(`/users/${request.userId}`, { ...request.body }),
+      put(`/users/${request.userId}/role`, { ...request.body }),
     {
       onSuccess: async () => {
         await queryClient.refetchQueries([UsersQueriesKey.Users]);

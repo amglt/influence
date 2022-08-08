@@ -42,9 +42,11 @@ export interface User {
   username: string;
   nickname: string;
   picture: string;
+  guild: string;
   updated_at: Date;
   id: number;
   blocked: boolean;
+  roleId?: number;
 }
 
 export interface UserWithRole extends User {
