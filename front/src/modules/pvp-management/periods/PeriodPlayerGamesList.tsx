@@ -25,10 +25,13 @@ import {
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useForm } from 'antd/lib/form/Form';
+import { AppPermissions } from '@Models/root.models';
+import { useSelector } from '@Store/';
 
 export function PeriodPlayerGamesList() {
   const params = useParams();
 
+  const { user } = useSelector((state) => state.root);
   const [isEditGameModalOpen, setIsEditGameModalOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState<PvpGame | undefined>(
     undefined,
@@ -85,6 +88,8 @@ export function PeriodPlayerGamesList() {
               key: 'id',
               dataIndex: 'id',
               title: 'ID',
+              filtered: true,
+              sorter: (a, b) => a.id - b.id,
               width: 50,
             },
             {
@@ -103,17 +108,22 @@ export function PeriodPlayerGamesList() {
               key: 'result',
               dataIndex: 'result',
               title: 'Résultat',
+              filtered: true,
+              sorter: (a, b) => a.result - b.result,
               render: (value) => PvpGameResult[value],
             },
             {
               key: 'type',
               dataIndex: 'type',
               title: 'Type',
+              filtered: true,
+              sorter: (a, b) => a.type - b.type,
               render: (value) => PvpGameType[value],
             },
             {
               key: 'players',
               title: 'Joueurs',
+              filtered: true,
               render: (_, record) => getPlayersStringFromPvpGame(record),
             },
             {
@@ -141,22 +151,30 @@ export function PeriodPlayerGamesList() {
               render: (_, record) => {
                 return (
                   <Space>
-                    <EditOutlined
-                      onClick={() => {
-                        setSelectedGame(record);
-                        setIsEditGameModalOpen(true);
-                      }}
-                    />
-                    <DeleteOutlined
-                      onClick={() =>
-                        ModalConfirmDelete({
-                          title:
-                            'Vous êtes sur le point de supprimer une partie pvp',
-                          content: 'Cette action est irréversible',
-                          onOk: () => deleteGame(record.id),
-                        })
-                      }
-                    />
+                    {user.permissions.includes(
+                      AppPermissions.WritePVPGames,
+                    ) && (
+                      <EditOutlined
+                        onClick={() => {
+                          setSelectedGame(record);
+                          setIsEditGameModalOpen(true);
+                        }}
+                      />
+                    )}
+                    {user.permissions.includes(
+                      AppPermissions.DeletePVPGames,
+                    ) && (
+                      <DeleteOutlined
+                        onClick={() =>
+                          ModalConfirmDelete({
+                            title:
+                              'Vous êtes sur le point de supprimer une partie pvp',
+                            content: 'Cette action est irréversible',
+                            onOk: () => deleteGame(record.id),
+                          })
+                        }
+                      />
+                    )}
                   </Space>
                 );
               },

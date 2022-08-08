@@ -7,11 +7,7 @@ import {
   PvpGameStatus,
   PvpGameType,
 } from '../models/pvpGames.models';
-import {
-  getManagementClient,
-  getRuntimeEnv,
-  RuntimeEnv,
-} from '../shared/utils';
+import { getManagementClient } from '../shared/utils';
 
 const pvpGamesRouter = Router();
 
@@ -138,80 +134,44 @@ pvpGamesRouter.post(
         });
 
       let game: PvpGame;
-      if (getRuntimeEnv() === RuntimeEnv.Influ) {
-        const client = getManagementClient('read:users read:user_idp_tokens');
-        game = await prisma.pvpGame.create({
-          data: {
-            requester: body.requester,
-            status: PvpGameStatus.Pending,
-            periodId: currentPeriod.id,
-            player1: body.player1,
-            player1Name: (await client.getUser({ id: body.player1 })).name,
-            player1Guild: body.player1Guild,
-            player2: body.player2,
-            player2Name: body.player2
-              ? (
-                  await client.getUser({ id: body.player2 })
-                ).name
-              : null,
-            player2Guild: body.player2Guild,
-            player3: body.player3,
-            player3Name: body.player3
-              ? (
-                  await client.getUser({ id: body.player3 })
-                ).name
-              : null,
-            player3Guild: body.player3Guild,
-            player4: body.player4,
-            player4Name: body.player4
-              ? (
-                  await client.getUser({ id: body.player4 })
-                ).name
-              : null,
-            player4Guild: body.player4Guild,
-            player5: body.player5,
-            player5Name: body.player5
-              ? (
-                  await client.getUser({ id: body.player5 })
-                ).name
-              : null,
-            player5Guild: body.player5Guild,
-            result: body.result,
-            type: body.type,
-            screenshotUrl: body.screenshotUrl,
-            timestamp: new Date().toISOString(),
-            gamePoints: 0,
-          },
-        });
-      } else {
-        game = await prisma.pvpGame.create({
-          data: {
-            requester: body.requester,
-            status: PvpGameStatus.Pending,
-            periodId: currentPeriod.id,
-            player1: body.player1,
-            player1Name: body.player1Name,
-            player1Guild: body.player1Guild,
-            player2: body.player2,
-            player2Name: body.player2Name,
-            player2Guild: body.player2Guild,
-            player3: body.player3,
-            player3Name: body.player3Name,
-            player3Guild: body.player3Guild,
-            player4: body.player4,
-            player4Name: body.player4Name,
-            player4Guild: body.player4Guild,
-            player5: body.player5,
-            player5Name: body.player5Name,
-            player5Guild: body.player5Guild,
-            result: body.result,
-            type: body.type,
-            screenshotUrl: body.screenshotUrl,
-            timestamp: new Date().toISOString(),
-            gamePoints: 0,
-          },
-        });
-      }
+      const client = getManagementClient('read:users read:user_idp_tokens');
+      const users = await client.getUsers();
+      game = await prisma.pvpGame.create({
+        data: {
+          requester: body.requester,
+          status: PvpGameStatus.Pending,
+          periodId: currentPeriod.id,
+          player1: body.player1,
+          player1Name: users.find((user) => user.user_id === body.player1)
+            ?.nickname,
+          player1Guild: body.player1Guild,
+          player2: body.player2,
+          player2Name: body.player2
+            ? users.find((user) => user.user_id === body.player2)?.nickname
+            : null,
+          player2Guild: body.player2Guild,
+          player3: body.player3,
+          player3Name: body.player3
+            ? users.find((user) => user.user_id === body.player3)?.nickname
+            : null,
+          player3Guild: body.player3Guild,
+          player4: body.player4,
+          player4Name: body.player4
+            ? users.find((user) => user.user_id === body.player4)?.nickname
+            : null,
+          player4Guild: body.player4Guild,
+          player5: body.player5,
+          player5Name: body.player5
+            ? users.find((user) => user.user_id === body.player5)?.nickname
+            : null,
+          player5Guild: body.player5Guild,
+          result: body.result,
+          type: body.type,
+          screenshotUrl: body.screenshotUrl,
+          timestamp: new Date().toISOString(),
+          gamePoints: 0,
+        },
+      });
 
       return res.status(201).send(game);
     } catch (e) {

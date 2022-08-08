@@ -13,8 +13,11 @@ import {
 } from '@Api/pvp-management/pvp-management.mutations';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from '@Store/';
+import { AppPermissions } from '@Models/root.models';
 
 export function PeriodsList() {
+  const { user } = useSelector((state) => state.root);
   const [isAddPeriodModalOpen, setIsAddPeriodModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -52,9 +55,14 @@ export function PeriodsList() {
         ]}
       />
       <Content>
-        <Button type={'primary'} onClick={() => setIsAddPeriodModalOpen(true)}>
-          Créer une période
-        </Button>
+        {user.permissions.includes(AppPermissions.WritePeriods) && (
+          <Button
+            type={'primary'}
+            onClick={() => setIsAddPeriodModalOpen(true)}
+          >
+            Créer une période
+          </Button>
+        )}
         <Listing<Period>
           columns={[
             {
@@ -94,24 +102,29 @@ export function PeriodsList() {
                         navigate(`${record.id}/players`);
                       }}
                     />
-                    <DeleteOutlined
-                      onClick={() =>
-                        ModalConfirmDelete({
-                          title: (
-                            <span>
-                              Vous êtes sur le point de supprimer la periode
-                              allant du {format(new Date(record.startDate))} au{' '}
-                              {record.endDate
-                                ? format(new Date(record.endDate))
-                                : '?'}
-                              . Etes-vous certain de vouloir de le supprimer ?
-                            </span>
-                          ),
-                          content: 'Cette action est irréversible',
-                          onOk: () => deletePeriod(record.id),
-                        })
-                      }
-                    />
+                    {user.permissions.includes(
+                      AppPermissions.DeletePeriods,
+                    ) && (
+                      <DeleteOutlined
+                        onClick={() =>
+                          ModalConfirmDelete({
+                            title: (
+                              <span>
+                                Vous êtes sur le point de supprimer la periode
+                                allant du {format(new Date(record.startDate))}{' '}
+                                au{' '}
+                                {record.endDate
+                                  ? format(new Date(record.endDate))
+                                  : '?'}
+                                . Etes-vous certain de vouloir de le supprimer ?
+                              </span>
+                            ),
+                            content: 'Cette action est irréversible',
+                            onOk: () => deletePeriod(record.id),
+                          })
+                        }
+                      />
+                    )}
                   </Space>
                 );
               },

@@ -1,22 +1,17 @@
-import {
-  Col,
-  Form,
-  InputNumber,
-  Row,
-  Typography,
-  Divider,
-  Space,
-  Button,
-} from 'antd';
+import { Col, Form, InputNumber, Row, Typography, Divider, Button } from 'antd';
 import { Breadcrumb } from '@Components/Breadcrumb';
 import { Content } from '@Components/Content';
 import { useScale } from '@Api/pvp-management/pvp-management.queries';
 import { useForm } from 'antd/lib/form/Form';
 import { useSaveScale } from '@Api/pvp-management/pvp-management.mutations';
+import { useSelector } from '@Store/';
+import { AppPermissions } from '@Models/root.models';
 
 const { Title } = Typography;
 
 export function Scale() {
+  const { user } = useSelector((state) => state.root);
+
   const { data: scaleData } = useScale();
   const { mutate: saveScale } = useSaveScale();
   const [form] = useForm();
@@ -47,6 +42,8 @@ export function Scale() {
       avaLoose: values.avaLoose,
     });
   };
+
+  const canEditScale = user.permissions.includes(AppPermissions.WriteScale);
 
   return (
     <>
@@ -89,15 +86,17 @@ export function Scale() {
             }}
             onFinish={onSaveScale}
           >
-            <Row>
-              <Col span={24}>
-                <Form.Item>
-                  <Button type="primary" htmlType={'submit'}>
-                    Enregistrer
-                  </Button>
-                </Form.Item>
-              </Col>
-            </Row>
+            {canEditScale ? (
+              <Row>
+                <Col span={24}>
+                  <Form.Item>
+                    <Button type="primary" htmlType={'submit'}>
+                      Enregistrer
+                    </Button>
+                  </Form.Item>
+                </Col>
+              </Row>
+            ) : undefined}
             <div>
               <Row>
                 <Col span={24}>
@@ -112,70 +111,70 @@ export function Scale() {
                     label={'Big perco attack win'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'bigPercoAttackLoose'}
                     label={'Big perco attack loose'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'bigPercoND'}
                     label={'Big perco no def'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'bigPercoDefWin'}
                     label={'Big perco def win'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'bigPercoDefLoose'}
                     label={'Big perco def loose'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'bigPrismAttackWin'}
                     label={'Big prisme attack win'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'bigPrismAttackLoose'}
                     label={'Big prisme attack loose'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'bigPrismND'}
                     label={'Big prisme no def'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'bigPrismDefWin'}
                     label={'Big prisme def win'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'bigPrismDefLoose'}
                     label={'Big prisme def loose'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -184,70 +183,70 @@ export function Scale() {
                     label={'Perco attack win'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'percoAttackLoose'}
                     label={'Perco attack loose'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'percoND'}
                     label={'Perco no def'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'percoDefWin'}
                     label={'Perco def win'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'percoDefLoose'}
                     label={'Perco def loose'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'prismAttackWin'}
                     label={'Prisme attack win'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'prismAttackLoose'}
                     label={'Prisme attack loose'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'prismND'}
                     label={'Prism no def'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'prismDefWin'}
                     label={'Prisme def win'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'prismDefLoose'}
                     label={'Prisme def loose'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -256,14 +255,14 @@ export function Scale() {
                     label={'AvA win'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
                     name={'avaLoose'}
                     label={'AvA loose'}
                     rules={[{ required: true }]}
                   >
-                    <InputNumber min={0} step={0.01} />
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                 </Col>
               </Row>

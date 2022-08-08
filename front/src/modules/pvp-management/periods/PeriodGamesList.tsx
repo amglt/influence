@@ -24,10 +24,13 @@ import {
 } from '@Api/pvp-management/pvp-management.mutations';
 import { useQueryClient } from 'react-query';
 import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
+import { useSelector } from '@Store/';
+import { AppPermissions } from '@Models/root.models';
 
 export function PeriodGamesList() {
   const params = useParams();
 
+  const { user } = useSelector((state) => state.root);
   const [isEditGameModalOpen, setIsEditGameModalOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState<PvpGame | undefined>(
     undefined,
@@ -141,22 +144,30 @@ export function PeriodGamesList() {
               render: (_, record) => {
                 return (
                   <Space>
-                    <EditOutlined
-                      onClick={() => {
-                        setSelectedGame(record);
-                        setIsEditGameModalOpen(true);
-                      }}
-                    />
-                    <DeleteOutlined
-                      onClick={() =>
-                        ModalConfirmDelete({
-                          title:
-                            'Vous êtes sur le point de supprimer une partie pvp',
-                          content: 'Cette action est irréversible',
-                          onOk: () => deleteGame(record.id),
-                        })
-                      }
-                    />
+                    {user.permissions.includes(
+                      AppPermissions.WritePVPGames,
+                    ) && (
+                      <EditOutlined
+                        onClick={() => {
+                          setSelectedGame(record);
+                          setIsEditGameModalOpen(true);
+                        }}
+                      />
+                    )}
+                    {user.permissions.includes(
+                      AppPermissions.DeletePVPGames,
+                    ) && (
+                      <DeleteOutlined
+                        onClick={() =>
+                          ModalConfirmDelete({
+                            title:
+                              'Vous êtes sur le point de supprimer une partie pvp',
+                            content: 'Cette action est irréversible',
+                            onOk: () => deleteGame(record.id),
+                          })
+                        }
+                      />
+                    )}
                   </Space>
                 );
               },

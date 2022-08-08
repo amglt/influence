@@ -69,7 +69,10 @@ export function Layout(props: LayoutProps) {
           ],
         });
       }
-      if (user.permissions.includes(AppPermissions.IsPVPManager)) {
+      if (
+        user.permissions.includes(AppPermissions.IsPVP) ||
+        user.permissions.includes(AppPermissions.IsLogistic)
+      ) {
         updatedMenuItems.push({
           key: 'pvp-management-management',
           icon: <ScissorOutlined />,

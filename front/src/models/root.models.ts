@@ -1,11 +1,19 @@
 export const enum AppPermissions {
-  IsCouncil = 'is:council',
-  IsAdmin = 'is:admin',
-  IsMember = 'is:member',
-  IsPVPManager = 'is:pvp:manager',
-  IsRecruitment = 'is:recruitment',
-  DeleteUser = 'delete:users',
   BanUser = 'ban:users',
+  DeletePeriods = 'delete:periods',
+  DeletePVPGames = 'delete:pvp-games',
+  DeleteUser = 'delete:users',
+  IsAdmin = 'is:admin',
+  IsCouncil = 'is:council',
+  IsLogistic = 'is:logistic',
+  IsMember = 'is:member',
+  IsPVP = 'is:pvp',
+  IsRecruitment = 'is:recruitment',
+  ReadPeriods = 'read:periods',
+  ReadScale = 'read:scale',
+  WritePeriods = 'write:periods',
+  WritePVPGames = 'write:pvp-games',
+  WriteScale = 'write:scale',
 }
 
 export type ApiError = {
