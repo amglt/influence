@@ -78,28 +78,28 @@ model Period {
 
 model Scale {
   id                        Int            @id @default(autoincrement())
-  percoAttackWinPoints      Float
-  percoAttackLoosePoints    Float
-  percoDefWinPoints         Float
-  percoDefLoosePoints       Float
-  percoNDPoints             Float
-  prismAttackWinPoints      Float
-  prismAttackLoosePoints    Float
-  prismDefWinPoints         Float
-  prismDefLoosePoints       Float
-  prismNDPoints             Float
-  bigPercoAttackWinPoints   Float
-  bigPercoAttackLoosePoints Float
-  bigPercoDefWinPoints      Float
-  bigPercoDefLoosePoints    Float
-  bigPercoNDPoints          Float
-  bigPrismAttackWinPoints   Float
-  bigPrismAttackLoosePoints Float
-  bigPrismNDPoints          Float
-  bigPrismDefWinPoints      Float
-  bigPrismDefLoosePoints    Float
-  avaWin                    Float
-  avaLoose                  Float
+  percoAttackWinPoints      Decimal        @db.Decimal(29,2)
+  percoAttackLoosePoints    Decimal        @db.Decimal(29,2)
+  percoDefWinPoints         Decimal        @db.Decimal(29,2)
+  percoDefLoosePoints       Decimal        @db.Decimal(29,2)
+  percoNDPoints             Decimal        @db.Decimal(29,2)
+  prismAttackWinPoints      Decimal        @db.Decimal(29,2)
+  prismAttackLoosePoints    Decimal        @db.Decimal(29,2)
+  prismDefWinPoints         Decimal        @db.Decimal(29,2)
+  prismDefLoosePoints       Decimal        @db.Decimal(29,2)
+  prismNDPoints             Decimal        @db.Decimal(29,2)
+  bigPercoAttackWinPoints   Decimal        @db.Decimal(29,2)
+  bigPercoAttackLoosePoints Decimal        @db.Decimal(29,2)
+  bigPercoDefWinPoints      Decimal        @db.Decimal(29,2)
+  bigPercoDefLoosePoints    Decimal        @db.Decimal(29,2)
+  bigPercoNDPoints          Decimal        @db.Decimal(29,2)
+  bigPrismAttackWinPoints   Decimal        @db.Decimal(29,2)
+  bigPrismAttackLoosePoints Decimal        @db.Decimal(29,2)
+  bigPrismNDPoints          Decimal        @db.Decimal(29,2)
+  bigPrismDefWinPoints      Decimal        @db.Decimal(29,2)
+  bigPrismDefLoosePoints    Decimal        @db.Decimal(29,2)
+  avaWin                    Decimal        @db.Decimal(29,2)
+  avaLoose                  Decimal        @db.Decimal(29,2)
 }
 
 model PvpGame {
@@ -122,7 +122,7 @@ model PvpGame {
   screenshotUrl           String
   timestamp               DateTime
   bigOpponent             Boolean        @default(false)
-  gamePoints              Float
+  gamePoints              Decimal        @db.Decimal(29,2)
   requester               BigInt
 }
 
@@ -131,6 +131,6 @@ model PlayerPeriod {
   player                  User           @relation(fields: [playerId], references: [id])
   periodId                Int
   period                  Period         @relation(fields: [periodId], references: [id])
-  totalPoints             Float
+  totalPoints             Decimal        @db.Decimal(29,2)
   @@id([playerId, periodId])
 }
