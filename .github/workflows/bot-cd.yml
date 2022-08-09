@@ -1,4 +1,4 @@
-name: Back CD
+name: Bot CD
 
 on:
   push:
