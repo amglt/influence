@@ -4,8 +4,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-console.log(process.env.DISCORD_CLIENT_ID);
-
 const DIST_DIR = path.join(__dirname, 'dist');
 const PORT = process.env.PORT || 8080;
 const app = express();
