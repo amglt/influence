@@ -2,7 +2,6 @@ import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import jwt_decode from 'jwt-decode';
 import { DecodedToken } from '../models/root.models';
-import { User } from '../models/users.models';
 import { prisma } from '../db';
 
 const usersRouter = Router();
@@ -140,7 +139,7 @@ usersRouter.put(
 );
 
 usersRouter.put(
-  '/:userId/roles',
+  '/:userId/role',
   checkPermissions('write:users'),
   async (req: Request, res: Response) => {
     try {
