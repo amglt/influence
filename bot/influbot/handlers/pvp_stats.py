@@ -85,6 +85,7 @@ async def handle_my_stats(message):
                                       f"{stats.get('gamesStats').get('avaLost') / ava_games * 100:.2f}%")
 
             await message.author.send(embed=embed)
-            await message.reply(content="Je t'ai envoyé tes stats par message privé")
         else:
             await message.author.send("Aucune partie validée n'a été trouvée à ton nom")
+
+        await message.reply(content="Je t'ai envoyé tes stats par message privé")
