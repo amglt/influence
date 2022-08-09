@@ -181,7 +181,6 @@ pvpGamesRouter.put(
           id: Number(gameId),
         },
       });
-      console.log(game);
       if (!scale || !game)
         return res.status(400).send({ message: 'Scale ou game introuvable' });
 
@@ -358,10 +357,21 @@ pvpGamesRouter.get(
           ],
         },
       });
+      const playerPeriod = await prisma.playerPeriod.findFirst({
+        where: {
+          player: {
+            id: Number(userId),
+          },
+          period: {
+            id: currentPeriod.id,
+          },
+        },
+      });
 
       const stats =
         games.length > 0
           ? {
+              totalPoints: playerPeriod?.totalPoints ?? 0,
               totalGames: games.length,
               gamesStats: {
                 wonGames: games.filter(
@@ -450,6 +460,7 @@ pvpGamesRouter.get(
               },
             }
           : {
+              totalPoints: 0,
               totalGames: 0,
               gamesStats: {},
             };

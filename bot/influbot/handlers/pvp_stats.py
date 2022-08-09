@@ -19,9 +19,11 @@ async def handle_my_stats(message):
     if my_stats_is_valid(message):
         stats = await get(f"/pvp-games/{message.author.id}/stats")
         if stats.get('totalGames') > 0:
+            total_points = stats.get('totalPoints')
             total_games = stats.get('totalGames')
             embed = Embed(title="Mes stats",
                           description=f"Stats de {message.author.display_name} pour la session actuelle")
+            embed.add_field(name="Total de points", value=f"{total_points}", inline=False)
             embed.add_field(name="Total de parties", value=f"{total_games}", inline=False)
             embed.add_field(name="Parties gagnées",
                             value=f"{stats.get('gamesStats').get('wonGames')}/{total_games} - "
