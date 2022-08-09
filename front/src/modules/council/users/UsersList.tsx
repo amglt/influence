@@ -69,6 +69,13 @@ export function UsersList() {
       sorter: (a, b) => a.username.localeCompare(b.username),
     },
     {
+      key: 'nickname',
+      dataIndex: 'nickname',
+      title: 'Nickname',
+      filtered: true,
+      sorter: (a, b) => a.nickname.localeCompare(b.nickname),
+    },
+    {
       key: 'created_at',
       dataIndex: 'created_at',
       title: 'Date de création',
