@@ -166,6 +166,7 @@ export function Layout(props: LayoutProps) {
             );
             const clientId = process.env.DISCORD_CLIENT_ID;
             if (clientId) {
+              console.log('ok');
               window.location.href = `https://discord.com/api/oauth2/authorize?response_type=code&client_id=${clientId}&scope=identify&state=15773059ghq9183habn&redirect_uri=${encodeURI(
                 window.location.origin + '/login',
               )}&prompt=none`;
