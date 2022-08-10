@@ -67,9 +67,20 @@ export function AddEditAccountModal(props: AddEditAccountModalProps) {
               { required: true, message: "L'utilisateur est obligatoire" },
             ]}
           >
-            <Select placeholder="Selectionnez l'utilisateur auquel le compte Dofus doit être associé">
+            <Select
+              showSearch
+              optionFilterProp="children"
+              placeholder="Selectionnez l'utilisateur auquel le compte Dofus doit être associé"
+              filterSort={(optionA, optionB) =>
+                (optionA!.children as unknown as string)
+                  .toLowerCase()
+                  .localeCompare(
+                    (optionB.children as unknown as string).toLowerCase(),
+                  )
+              }
+            >
               {users.map((user) => (
-                <Option value={user.id}>{user.username}</Option>
+                <Option value={user.id}>{user.nickname}</Option>
               ))}
             </Select>
           </Form.Item>
