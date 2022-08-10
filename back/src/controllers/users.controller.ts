@@ -14,7 +14,11 @@ usersRouter.get(
       const users = await prisma.user.findMany();
       return res
         .status(200)
-        .send(users.map((u) => ({ ...u, id: Number(u.id) })));
+        .send(
+          users
+            .map((u) => ({ ...u, id: Number(u.id) }))
+            .sort((a, b) => a.nickname.localeCompare(b.nickname)),
+        );
     } catch (err) {
       console.log(err);
       return res.status(500).send({ message: err });
