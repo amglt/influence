@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
+import { PlayerPeriodWithTotalPoints } from '../models/periods.models';
 
 const periodRouter = Router();
 
@@ -64,7 +65,7 @@ periodRouter.get(
       if (!periodId)
         return res.status(400).send({ message: 'PeriodId nécessaire' });
 
-      const players = await prisma.playerPeriod.findMany({
+      const playersPeriods = await prisma.playerPeriod.findMany({
         where: {
           periodId: Number(periodId),
         },
@@ -73,7 +74,37 @@ periodRouter.get(
         },
       });
 
-      return res.status(200).send(players);
+      const playersPeriodsWithPoints: PlayerPeriodWithTotalPoints[] = [];
+      for (const playerPeriod of playersPeriods) {
+        const playerGames = await prisma.pvpGame.findMany({
+          where: {
+            AND: [
+              { periodId: Number(periodId) },
+              {
+                OR: [
+                  { player1Id: playerPeriod.player.id },
+                  { player2Id: playerPeriod.player.id },
+                  { player3Id: playerPeriod.player.id },
+                  { player4Id: playerPeriod.player.id },
+                  { player5Id: playerPeriod.player.id },
+                ],
+              },
+            ],
+          },
+        });
+        const totalPoints = Number(
+          playerGames
+            .reduce(
+              (previousValue, currentValue) =>
+                previousValue + Number(currentValue.gamePoints),
+              0,
+            )
+            .toFixed(2),
+        );
+        playersPeriodsWithPoints.push({ ...playerPeriod, totalPoints });
+      }
+
+      return res.status(200).send(playersPeriodsWithPoints);
     } catch (e) {
       return res.status(500).send({ message: e });
     }

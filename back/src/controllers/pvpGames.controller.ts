@@ -221,13 +221,8 @@ pvpGamesRouter.put(
             create: {
               periodId: game.periodId,
               playerId: player,
-              totalPoints: gamePoints,
             },
-            update: {
-              totalPoints: {
-                increment: gamePoints,
-              },
-            },
+            update: {},
           });
         } else if (
           game.status === PvpGameStatus.Accepted &&
@@ -253,13 +248,8 @@ pvpGamesRouter.put(
             create: {
               periodId: game.periodId,
               playerId: player,
-              totalPoints: 0,
             },
-            update: {
-              totalPoints: {
-                decrement: gamePoints,
-              },
-            },
+            update: {},
           });
         } else if (
           game.status === PvpGameStatus.Accepted &&
@@ -273,32 +263,6 @@ pvpGamesRouter.put(
               status,
               gamePoints,
               bigOpponent: req.body.isBigOpponent,
-            },
-          });
-          await prisma.playerPeriod.update({
-            where: {
-              playerId_periodId: {
-                periodId: game.periodId,
-                playerId: player,
-              },
-            },
-            data: {
-              totalPoints: {
-                decrement: game.gamePoints,
-              },
-            },
-          });
-          await prisma.playerPeriod.update({
-            where: {
-              playerId_periodId: {
-                periodId: game.periodId,
-                playerId: player,
-              },
-            },
-            data: {
-              totalPoints: {
-                increment: gamePoints,
-              },
             },
           });
         } else {
@@ -357,21 +321,20 @@ pvpGamesRouter.get(
           ],
         },
       });
-      const playerPeriod = await prisma.playerPeriod.findFirst({
-        where: {
-          player: {
-            id: Number(userId),
-          },
-          period: {
-            id: currentPeriod.id,
-          },
-        },
-      });
+      const totalPoints = Number(
+        games
+          .reduce(
+            (previousValue, currentValue) =>
+              previousValue + Number(currentValue),
+            0,
+          )
+          .toFixed(2),
+      );
 
       const stats =
         games.length > 0
           ? {
-              totalPoints: playerPeriod?.totalPoints ?? 0,
+              totalPoints: totalPoints,
               totalGames: games.length,
               gamesStats: {
                 wonGames: games.filter(
@@ -487,37 +450,6 @@ pvpGamesRouter.delete(
       });
       if (!game)
         return res.status(400).send({ message: 'Partie PVP non trouvée' });
-
-      const gamePlayers = [game.player1Id];
-      if (game.player2Id) gamePlayers.push(game.player2Id);
-      if (game.player3Id) gamePlayers.push(game.player3Id);
-      if (game.player4Id) gamePlayers.push(game.player4Id);
-      if (game.player5Id) gamePlayers.push(game.player5Id);
-      for (const player of gamePlayers) {
-        const playerPeriod = await prisma.playerPeriod.findUnique({
-          where: {
-            playerId_periodId: {
-              periodId: game.periodId,
-              playerId: player,
-            },
-          },
-        });
-        if (playerPeriod && game.status === PvpGameStatus.Accepted) {
-          await prisma.playerPeriod.update({
-            where: {
-              playerId_periodId: {
-                periodId: game.periodId,
-                playerId: player,
-              },
-            },
-            data: {
-              totalPoints: {
-                decrement: game.gamePoints,
-              },
-            },
-          });
-        }
-      }
 
       await prisma.pvpGame.delete({
         where: {
