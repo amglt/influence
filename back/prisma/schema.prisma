@@ -131,6 +131,5 @@ model PlayerPeriod {
   player                  User           @relation(fields: [playerId], references: [id])
   periodId                Int
   period                  Period         @relation(fields: [periodId], references: [id])
-  totalPoints             Decimal        @db.Decimal(29,2)
   @@id([playerId, periodId])
 }
