@@ -11,7 +11,13 @@ usersRouter.get(
   checkPermissions('read:users'),
   async (_: Request, res: Response) => {
     try {
-      const users = await prisma.user.findMany();
+      const users = await prisma.user.findMany({
+        orderBy: [
+          {
+            nickname: 'asc',
+          },
+        ],
+      });
       return res
         .status(200)
         .send(users.map((u) => ({ ...u, id: Number(u.id) })));
