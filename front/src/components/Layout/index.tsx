@@ -32,7 +32,7 @@ export function Layout(props: LayoutProps) {
   const { children } = props;
 
   const navigate = useNavigate();
-  const { user, discordToken } = useSelector((state) => state.root);
+  const { user } = useSelector((state) => state.root);
   const dispatch = useDispatch();
 
   const [collapsed, setCollapsed] = useState(true);
@@ -121,19 +121,8 @@ export function Layout(props: LayoutProps) {
             dispatch(resetRoot());
             const clientId = process.env.DISCORD_CLIENT_ID;
             const clientSecret = process.env.DISCORD_CLIENT_SECRET;
-            if (clientId && clientSecret)
-              axios
-                .post(
-                  `https://discord.com/api/oauth2/token/revoke`,
-                  new URLSearchParams({
-                    client_id: clientId,
-                    client_secret: clientSecret,
-                    token: discordToken,
-                  }),
-                )
-                .then(() => {
-                  navigate('/');
-                });
+            if (clientId && clientSecret) {
+            }
           },
         },
       ]}
