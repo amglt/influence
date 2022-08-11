@@ -126,12 +126,14 @@ export function PeriodsList() {
               render: (_, record) => {
                 return (
                   <Space>
-                    <EditOutlined
-                      onClick={() => {
-                        setSelectedPeriod(record);
-                        setIsEditPeriodModalOpen(true);
-                      }}
-                    />
+                    {user.permissions.includes(AppPermissions.WritePeriods) && (
+                      <EditOutlined
+                        onClick={() => {
+                          setSelectedPeriod(record);
+                          setIsEditPeriodModalOpen(true);
+                        }}
+                      />
+                    )}
                     <EyeOutlined
                       onClick={() => {
                         navigate(`${record.id}/games`);

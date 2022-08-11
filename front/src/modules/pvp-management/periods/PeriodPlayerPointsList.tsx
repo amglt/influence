@@ -7,10 +7,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Space } from 'antd';
 import { EyeOutlined, CheckOutlined } from '@ant-design/icons';
 import { useEditPeriodRewarded } from '@Api/pvp-management/pvp-management.mutations';
+import { useSelector } from '@Store/';
+import { AppPermissions } from '@Models/root.models';
 
 export function PeriodPlayersPointsList() {
   const params = useParams();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.root);
 
   const { data: gamesData, isLoading: areGamesLoading } = usePeriodPlayers(
     params.periodId,
@@ -57,22 +60,25 @@ export function PeriodPlayersPointsList() {
               title: 'Payé ?',
               filtered: true,
               sorter: (a, b) => Number(a.rewarded) - Number(b.rewarded),
-              render: (value, record) =>
-                value ? (
-                  <CheckOutlined />
-                ) : (
-                  <Button
-                    onClick={() => {
-                      payPlayer({
-                        periodId: record.periodId,
-                        playerId: record.playerId,
-                        rewarded: true,
-                      });
-                    }}
-                  >
-                    Payer
-                  </Button>
-                ),
+              render: (value, record) => {
+                if (value) return <CheckOutlined />;
+                if (user.permissions.includes(AppPermissions.WritePeriods)) {
+                  return (
+                    <Button
+                      onClick={() => {
+                        payPlayer({
+                          periodId: record.periodId,
+                          playerId: record.playerId,
+                          rewarded: true,
+                        });
+                      }}
+                    >
+                      Payer
+                    </Button>
+                  );
+                }
+                return <span />;
+              },
             },
             {
               key: 'actions',
