@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useApi } from '@Hooks/api';
-import { RolesQueriesKey } from '@Api/council/roles/roles.queries';
-import { Permission } from '@Models/root.models';
 import { notification } from 'antd';
+import { useApi } from '../../../hooks/api';
+import { RolesQueriesKey } from './roles.queries';
+import { Permission } from '../../../models/root.models';
 
 export function useDeleteRole() {
   const { del } = useApi();

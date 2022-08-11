@@ -1,5 +1,5 @@
 import { FormInstance, Modal, Form, Select, Checkbox } from 'antd';
-import { PvpGameStatus } from '@Models/pvp-management.models';
+import { PvpGameStatus } from '../models/pvp-management.models';
 
 export interface UpdateGameModalProps {
   isOpen: boolean;

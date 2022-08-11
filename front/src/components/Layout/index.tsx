@@ -10,16 +10,18 @@ import {
   UsergroupAddOutlined,
   ScissorOutlined,
   CalendarOutlined,
+  DollarOutlined,
+  WalletOutlined,
   NumberOutlined,
+  HistoryOutlined,
 } from '@ant-design/icons';
 import './layout.less';
 import logo from '../../../public/assets/logo.png';
 import { useNavigate } from 'react-router-dom';
-import { Text } from '@Components/Typography';
-import { useDispatch, useSelector } from '@Store/';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
-import { AppPermissions } from '@Models/root.models';
-import { resetRoot } from '@Store/root.slice';
+import { useDispatch, useSelector } from '../../store';
+import { AppPermissions } from '../../models/root.models';
+import { resetRoot } from '../../store/root.slice';
 
 const { Header, Sider } = AntLayout;
 
@@ -41,6 +43,27 @@ export function Layout(props: LayoutProps) {
     const updatedMenuItems = [];
     if (user.id) {
       setCollapsed(false);
+      if (user.permissions.includes(AppPermissions.IsLogistic)) {
+        updatedMenuItems.push({
+          key: 'influtons',
+          icon: <DollarOutlined />,
+          label: 'Influtons',
+          children: [
+            {
+              key: 'wallets',
+              label: 'Porte-monnaies',
+              icon: <WalletOutlined />,
+              onClick: () => navigate('/influtons/wallets'),
+            },
+            {
+              key: 'transactions',
+              label: 'Historique',
+              icon: <HistoryOutlined />,
+              onClick: () => navigate('/influtons/history'),
+            },
+          ],
+        });
+      }
       if (user.permissions.includes(AppPermissions.IsRecruitment)) {
         updatedMenuItems.push({
           key: 'recruitment',
@@ -162,7 +185,7 @@ export function Layout(props: LayoutProps) {
           }}
         >
           <UserOutlined className={'user-icon'} style={{ color: 'white' }} />
-          <Text style={{ color: 'white' }}>Se connecter</Text>
+          <div style={{ color: 'white' }}>Se connecter</div>
         </span>
       );
     }

@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query';
-import { useApi } from '@Hooks/api';
-import { User, UserWithRole } from '@Models/root.models';
 import { FormInstance } from 'antd';
+import { useApi } from '../../../hooks/api';
+import { User, UserWithRole } from '../../../models/root.models';
 
-export enum UsersQueriesKey {
+export enum UsersQueriesKeys {
   Users = 'Users',
   User = 'User',
 }
@@ -11,14 +11,14 @@ export enum UsersQueriesKey {
 export function useUsers() {
   const { get } = useApi();
 
-  return useQuery(UsersQueriesKey.Users, () => get<User[]>('/users'));
+  return useQuery(UsersQueriesKeys.Users, () => get<User[]>('/users'));
 }
 
 export function useUser(id?: number, form?: FormInstance) {
   const { get } = useApi();
 
   return useQuery(
-    [UsersQueriesKey.User, id],
+    [UsersQueriesKeys.User, id],
     () => get<UserWithRole>(`/users/${id}`),
     {
       enabled: !!id,

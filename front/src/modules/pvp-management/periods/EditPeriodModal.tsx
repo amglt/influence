@@ -1,5 +1,5 @@
 import { Form, FormInstance, Input, Modal } from 'antd';
-import { Period } from '@Models/pvp-management.models';
+import { Period } from '../../../models/pvp-management.models';
 
 export interface EditPeriodModalProps {
   isVisible: boolean;

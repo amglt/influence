@@ -1,18 +1,21 @@
-import { Listing } from '@Components/Listing';
-import { User } from '@Models/root.models';
-import { useUsers } from '@Api/council/users/users.queries';
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
 import { ColumnsType } from 'antd/lib/table';
-import { format } from '@Utils';
 import { Space } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
-import { useDeleteUser, useEditUser } from '@Api/council/users/users.mutations';
-import { EditUserModal } from '@Modules/council/users/EditUserModal';
 import { useState } from 'react';
 import { useForm } from 'antd/lib/form/Form';
-import { useRoles } from '@Api/council/roles/roles.queries';
+import { useUsers } from '../../../api/council/users/users.queries';
+import { useRoles } from '../../../api/council/roles/roles.queries';
+import {
+  useDeleteUser,
+  useEditUser,
+} from '../../../api/council/users/users.mutations';
+import { User } from '../../../models/root.models';
+import { format } from '../../../utils';
+import { ModalConfirmDelete } from '../../../components/ModalConfirmDelete';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { EditUserModal } from './EditUserModal';
+import { Listing } from '../../../components/Listing';
 
 export function UsersList() {
   const { data: usersData } = useUsers();

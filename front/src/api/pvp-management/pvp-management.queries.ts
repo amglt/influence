@@ -1,11 +1,11 @@
 import { useQuery } from 'react-query';
-import { useApi } from '@Hooks/api';
+import { useApi } from '../../hooks/api';
 import {
   Period,
   PeriodPlayerWithPoints,
   PvpGameWithPlayers,
   Scale,
-} from '@Models/pvp-management.models';
+} from '../../models/pvp-management.models';
 
 export enum PvpManagementQueriesKeys {
   Periods = 'Periods',

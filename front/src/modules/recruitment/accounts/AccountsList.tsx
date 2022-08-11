@@ -1,23 +1,23 @@
-import { Listing } from '@Components/Listing';
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
-import { Account } from '@Models/account.models';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import {
-  useAccount,
-  useAccounts,
-} from '@Api/recruitment/accounts/accounts.queries';
-import {
-  useAddAccount,
-  useDeleteAccount,
-  useEditAccount,
-} from '@Api/recruitment/accounts/accounts.mutations';
-import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
 import { Button, Space } from 'antd';
 import { useState } from 'react';
 import { useForm } from 'antd/lib/form/Form';
 import { AddEditAccountModal } from './AddEditAccountModal';
-import { useUsers } from '@Api/council/users/users.queries';
+import { Account } from '../../../models/account.models';
+import {
+  useAccount,
+  useAccounts,
+} from '../../../api/recruitment/accounts/accounts.queries';
+import { useUsers } from '../../../api/council/users/users.queries';
+import {
+  useAddAccount,
+  useDeleteAccount,
+  useEditAccount,
+} from '../../../api/recruitment/accounts/accounts.mutations';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { Listing } from '../../../components/Listing';
+import { ModalConfirmDelete } from '../../../components/ModalConfirmDelete';
 
 export function AccountsList() {
   const [isAddEditAccountModalOpen, setIsAddEditAccountModalOpen] =

@@ -1,7 +1,11 @@
 import { useQuery } from 'react-query';
-import { useApi } from '@Hooks/api';
-import { Permission, Role, RoleWithPermissions } from '@Models/root.models';
 import { FormInstance } from 'antd';
+import { useApi } from '../../../hooks/api';
+import {
+  Permission,
+  Role,
+  RoleWithPermissions,
+} from '../../../models/root.models';
 
 export enum RolesQueriesKey {
   Roles = 'Roles',

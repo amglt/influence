@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { useApi } from '@Hooks/api';
-import { Account } from '@Models/account.models';
 import { FormInstance } from 'antd';
+import { useApi } from '../../../hooks/api';
+import { Account } from '../../../models/account.models';
 
 export enum AccountsQueriesKey {
   Accounts = 'Accounts',

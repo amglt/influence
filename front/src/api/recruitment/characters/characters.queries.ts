@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { useApi } from '@Hooks/api';
-import { Character } from '@Models/character.model';
 import { FormInstance } from 'antd';
+import { useApi } from '../../../hooks/api';
+import { Character } from '../../../models/character.model';
 
 export enum CharactersQueriesKey {
   Characters = 'Characters',

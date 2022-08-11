@@ -1,5 +1,5 @@
-import { AppUser } from '@Models/root.models';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AppUser } from '../models/root.models';
 
 export type RootState = {
   user: AppUser;

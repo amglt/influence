@@ -1,23 +1,23 @@
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Space } from 'antd';
+import { useState } from 'react';
+import { useForm } from 'antd/lib/form/Form';
+import { Permission, Role } from '../../../models/root.models';
 import {
   usePermissions,
   useRole,
   useRoles,
-} from '@Api/council/roles/roles.queries';
-import { Listing } from '@Components/Listing';
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
-import { Permission, Role } from '@Models/root.models';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+} from '../../../api/council/roles/roles.queries';
 import {
   useAddRole,
   useDeleteRole,
   useEditRole,
-} from '@Api/council/roles/roles.mutations';
-import { Button, Space } from 'antd';
-import { useState } from 'react';
-import { AddEditRoleModal } from '@Modules/council/roles/AddEditRoleModal';
-import { useForm } from 'antd/lib/form/Form';
-import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
+} from '../../../api/council/roles/roles.mutations';
+import { AddEditRoleModal } from './AddEditRoleModal';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { Listing } from '../../../components/Listing';
+import { ModalConfirmDelete } from '../../../components/ModalConfirmDelete';
 
 export function RolesList() {
   const [isAddEditRoleModalOpen, setIsAddEditRoleModalOpen] = useState(false);

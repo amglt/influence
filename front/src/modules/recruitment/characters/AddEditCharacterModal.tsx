@@ -1,10 +1,10 @@
-import { Character } from '@Models/character.model';
 import { Form, Input, Select, FormInstance, Modal } from 'antd';
 import React from 'react';
-import { Spinner } from '@Components/Spinner';
-import { Account } from '@Models/account.models';
 import { Classes, Ranks } from '../../../shared/root.enums';
-import DatePicker from '@Components/DatePicker';
+import { Account } from '../../../models/account.models';
+import { Character } from '../../../models/character.model';
+import { Spinner } from '../../../components/Spinner';
+import DatePicker from '../../../components/DatePicker';
 
 export interface AddEditCharacterModalProps {
   isOpen: boolean;

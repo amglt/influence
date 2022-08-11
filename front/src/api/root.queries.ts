@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
-import { useApi } from '@Hooks/api';
-import { AppUser } from '@Models/root.models';
-import { useSelector } from '@Store/';
+import { useApi } from '../hooks/api';
+import { useSelector } from '../store';
+import { AppUser } from '../models/root.models';
 
 export function useCurrentUser() {
   const { get } = useApi();

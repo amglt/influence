@@ -1,14 +1,14 @@
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
-import { Listing } from '@Components/Listing';
-import { PeriodPlayerWithPoints } from '@Models/pvp-management.models';
-import { usePeriodPlayers } from '@Api/pvp-management/pvp-management.queries';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Space } from 'antd';
 import { EyeOutlined, CheckOutlined } from '@ant-design/icons';
-import { useEditPeriodRewarded } from '@Api/pvp-management/pvp-management.mutations';
-import { useSelector } from '@Store/';
-import { AppPermissions } from '@Models/root.models';
+import { usePeriodPlayers } from '../../../api/pvp-management/pvp-management.queries';
+import { useSelector } from '../../../store';
+import { useEditPeriodRewarded } from '../../../api/pvp-management/pvp-management.mutations';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { Listing } from '../../../components/Listing';
+import { PeriodPlayerWithPoints } from '../../../models/pvp-management.models';
+import { AppPermissions } from '../../../models/root.models';
 
 export function PeriodPlayersPointsList() {
   const params = useParams();

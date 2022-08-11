@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { notification } from 'antd';
-import { store } from '@Store/';
-import { ApiError } from '@Models/root.models';
-import { isApiError } from '@Utils';
 import { ReactNode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { ApiError } from '../models/root.models';
+import { isApiError } from '../utils';
+import { store } from '../store';
 
 export interface ProvidersProps {
   children?: ReactNode;

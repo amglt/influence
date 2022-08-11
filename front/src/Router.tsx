@@ -1,24 +1,31 @@
 import { Routes, Route } from 'react-router-dom';
-import { App } from '@Modules/';
-import { Council } from '@Modules/council';
-import { RolesList } from '@Modules/council/roles/RolesList';
-import { AccountsList } from '@Modules/recruitment/accounts/AccountsList';
-import { Recruitment } from '@Modules/recruitment';
-import { CharactersList } from '@Modules/recruitment/characters/CharactersList';
-import { UsersList } from '@Modules/council/users/UsersList';
-import { PeriodsList } from '@Modules/pvp-management/periods/PeriodsList';
-import { PvpManagement } from '@Modules/pvp-management';
-import { Scale } from '@Modules/pvp-management/scale/Scale';
-import { PeriodGamesList } from '@Modules/pvp-management/periods/PeriodGamesList';
-import { PeriodPlayersPointsList } from '@Modules/pvp-management/periods/PeriodPlayerPointsList';
-import { PeriodPlayerGamesList } from '@Modules/pvp-management/periods/PeriodPlayerGamesList';
-import { Login } from '@Modules/login';
+import { App } from './modules';
+import { Login } from './modules/login';
+import { Influtons } from './modules/influtons';
+import { WalletsList } from './modules/influtons/wallets/WalletsList';
+import { TransactionsList } from './modules/influtons/transactions/TransactionsList';
+import { Recruitment } from './modules/recruitment';
+import { AccountsList } from './modules/recruitment/accounts/AccountsList';
+import { CharactersList } from './modules/recruitment/characters/CharactersList';
+import { PvpManagement } from './modules/pvp-management';
+import { PeriodsList } from './modules/pvp-management/periods/PeriodsList';
+import { PeriodGamesList } from './modules/pvp-management/periods/PeriodGamesList';
+import { PeriodPlayersPointsList } from './modules/pvp-management/periods/PeriodPlayerPointsList';
+import { PeriodPlayerGamesList } from './modules/pvp-management/periods/PeriodPlayerGamesList';
+import { Scale } from './modules/pvp-management/scale/Scale';
+import { Council } from './modules/council';
+import { RolesList } from './modules/council/roles/RolesList';
+import { UsersList } from './modules/council/users/UsersList';
 
 export function Router() {
   return (
     <Routes>
       <Route path={'/'} element={<App />}>
         <Route path={'login'} element={<Login />} />
+        <Route path={'influtons'} element={<Influtons />}>
+          <Route path={'wallets'} element={<WalletsList />} />
+          <Route path={'history'} element={<TransactionsList />} />
+        </Route>
         <Route path={'recruitment'} element={<Recruitment />}>
           <Route path={'accounts'} element={<AccountsList />} />
           <Route path={'characters'} element={<CharactersList />} />

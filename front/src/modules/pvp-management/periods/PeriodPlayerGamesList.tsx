@@ -1,32 +1,31 @@
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
-import { Listing } from '@Components/Listing';
-import {
-  PvpGameWithPlayers,
-  PvpGameResult,
-  PvpGameStatus,
-  PvpGameType,
-} from '@Models/pvp-management.models';
-import {
-  PvpManagementQueriesKeys,
-  usePeriodPlayerGames,
-} from '@Api/pvp-management/pvp-management.queries';
 import { useParams } from 'react-router-dom';
-import { getPlayersStringFromPvpGame } from '@Utils';
-import { format } from '@Utils';
 import { Space } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
-import { UpdateGameModal } from '@Components/UpdateGameModal';
-import {
-  useDeleteGame,
-  useEditGame,
-} from '@Api/pvp-management/pvp-management.mutations';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useForm } from 'antd/lib/form/Form';
-import { AppPermissions } from '@Models/root.models';
-import { useSelector } from '@Store/';
+import { useSelector } from '../../../store';
+import {
+  PvpGameResult,
+  PvpGameStatus,
+  PvpGameType,
+  PvpGameWithPlayers,
+} from '../../../models/pvp-management.models';
+import {
+  PvpManagementQueriesKeys,
+  usePeriodPlayerGames,
+} from '../../../api/pvp-management/pvp-management.queries';
+import {
+  useDeleteGame,
+  useEditGame,
+} from '../../../api/pvp-management/pvp-management.mutations';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { UpdateGameModal } from '../../../components/UpdateGameModal';
+import { Listing } from '../../../components/Listing';
+import { format, getPlayersStringFromPvpGame } from '../../../utils';
+import { AppPermissions } from '../../../models/root.models';
+import { ModalConfirmDelete } from '../../../components/ModalConfirmDelete';
 
 export function PeriodPlayerGamesList() {
   const params = useParams();

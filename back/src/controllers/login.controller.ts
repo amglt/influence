@@ -65,6 +65,11 @@ loginRouter.post('/', async (req: Request, res: Response) => {
           updated_at: new Date(),
           username: username,
           id: Number(id),
+          wallet: {
+            create: {
+              balance: 0,
+            },
+          },
         },
         include: {
           role: {
@@ -72,6 +77,7 @@ loginRouter.post('/', async (req: Request, res: Response) => {
               permissions: true,
             },
           },
+          wallet: true,
         },
       });
 
@@ -96,7 +102,6 @@ loginRouter.post('/', async (req: Request, res: Response) => {
       });
     }
   } catch (err) {
-    console.log(err);
     return res.status(500).send({ message: err });
   }
 });
