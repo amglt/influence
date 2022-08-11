@@ -113,6 +113,8 @@ usersRouter.put(
       if (!body.hasOwnProperty('members'))
         return res.status(400).send({ message: 'Members manquant' });
 
+      console.log(body.members);
+
       for (const member of body.members) {
         await prisma.user.upsert({
           where: {
@@ -133,12 +135,17 @@ usersRouter.put(
             updated_at: new Date(),
             created_at: new Date(),
             picture: member.picture,
-            wallet: {
-              create: {
-                balance: 0,
-              },
-            },
           },
+        });
+        await prisma.wallet.upsert({
+          where: {
+            userId: member.id,
+          },
+          create: {
+            balance: 0,
+            userId: member.id,
+          },
+          update: {},
         });
       }
 

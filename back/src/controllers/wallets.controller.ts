@@ -23,6 +23,24 @@ walletsRouter.get(
 );
 
 walletsRouter.get(
+  '/:userId',
+  checkPermissions('read:wallets'),
+  async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
+      const wallet = await prisma.wallet.findFirst({
+        where: {
+          userId: Number(userId),
+        },
+      });
+      return res.status(200).send(wallet);
+    } catch (e) {
+      return res.status(500).send({ message: e });
+    }
+  },
+);
+
+walletsRouter.get(
   '/transactions',
   checkPermissions('read:wallets'),
   async (req: Request, res: Response) => {
@@ -54,8 +72,16 @@ walletsRouter.post(
   checkPermissions('write:wallets'),
   async (req: Request, res: Response) => {
     try {
-      const { walletFromId, walletToId, amount, requesterId } = req.body;
-      if (!walletFromId && !walletToId)
+      const {
+        walletFromId,
+        walletToId,
+        amount,
+        requesterId,
+        userFromId,
+        userToId,
+      } = req.body;
+
+      if (!walletFromId && !walletToId && !userFromId && !userToId)
         return res
           .status(400)
           .send({ message: 'Un moins un porte-feuille doit être renseigné' });
@@ -75,11 +101,30 @@ walletsRouter.post(
             id: Number(walletFromId),
           },
         });
+      if (userFromId)
+        walletFrom = await prisma.wallet.findFirst({
+          include: {
+            user: true,
+          },
+          where: {
+            userId: Number(userFromId),
+          },
+        });
+
       let walletTo: Wallet | null = null;
       if (walletToId)
         walletTo = await prisma.wallet.findFirst({
           where: {
             id: Number(walletToId),
+          },
+        });
+      if (userToId)
+        walletTo = await prisma.wallet.findFirst({
+          where: {
+            userId: Number(userToId),
+          },
+          include: {
+            user: true,
           },
         });
 
@@ -90,7 +135,7 @@ walletsRouter.post(
             .send({ message: `Vous n'avez pas les fonds suffisants` });
 
         await prisma.wallet.update({
-          where: { id: Number(walletFromId) },
+          where: { id: Number(walletFrom.id) },
           data: {
             balance: {
               decrement: amount,
@@ -98,7 +143,7 @@ walletsRouter.post(
           },
         });
         await prisma.wallet.update({
-          where: { id: Number(walletToId) },
+          where: { id: Number(walletTo.id) },
           data: {
             balance: {
               increment: amount,
@@ -107,14 +152,14 @@ walletsRouter.post(
         });
         await prisma.walletTransaction.create({
           data: {
-            walletFromId: Number(walletFromId),
-            walletToId: Number(walletToId),
+            walletFromId: Number(walletFrom.id),
+            walletToId: Number(walletTo.id),
             amount: Number(amount),
             requesterId: Number(requesterId),
             createdAt: new Date(),
           },
         });
-      } else if (!walletFrom) {
+      } else if (!walletFrom && walletTo) {
         await prisma.wallet.update({
           where: { id: walletToId },
           data: { balance: { increment: amount } },
@@ -122,20 +167,20 @@ walletsRouter.post(
         await prisma.walletTransaction.create({
           data: {
             walletFromId: null,
-            walletToId: Number(walletToId),
+            walletToId: Number(walletTo.id),
             amount: Number(amount),
             requesterId: Number(requesterId),
             createdAt: new Date(),
           },
         });
-      } else {
+      } else if (walletFrom && !walletTo) {
         if (walletFrom.balance < amount)
           return res
             .status(400)
             .send({ message: `Vous n'avez pas les fonds suffisants` });
 
         await prisma.wallet.update({
-          where: { id: Number(walletFromId) },
+          where: { id: Number(walletFrom.id) },
           data: {
             balance: {
               decrement: amount,
@@ -144,7 +189,7 @@ walletsRouter.post(
         });
         await prisma.walletTransaction.create({
           data: {
-            walletFromId: Number(walletFromId),
+            walletFromId: Number(walletFrom.id),
             walletToId: null,
             amount: Number(amount),
             requesterId: Number(requesterId),
@@ -154,6 +199,7 @@ walletsRouter.post(
       }
       return res.status(200).send({});
     } catch (e) {
+      console.log(e);
       return res.status(500).send({ message: e });
     }
   },
