@@ -15,7 +15,7 @@ export function TransactionsList() {
       <Breadcrumb
         items={[
           { key: 'influtons', label: 'Influtons' },
-          { key: 'wallets', label: 'Porte-monnaies' },
+          { key: 'wallets', label: 'Historique' },
         ]}
       />
       <Content>

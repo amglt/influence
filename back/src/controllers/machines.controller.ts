@@ -30,25 +30,23 @@ machinesRouter.post(
       const generatedId = Math.floor(100000 + Math.random() * 900000);
       const generatedPassword = genPassword();
       bcrypt.hash(generatedPassword, saltRounds, async function (err, hash) {
+        const permissions = await prisma.permission.findMany();
+        const machinePermissionNames = [
+          'write:users',
+          'write:pvp-games',
+          'read:pvp-games',
+          'delete:pvp-games',
+          'write:wallets',
+          'read:wallets',
+        ];
         await prisma.machineToMachine.create({
           data: {
             clientId: generatedId,
             clientSecret: hash,
             permissions: {
-              connect: [
-                {
-                  id: 9,
-                },
-                {
-                  id: 25,
-                },
-                {
-                  id: 26,
-                },
-                {
-                  id: 27,
-                },
-              ],
+              connect: permissions
+                .filter((p) => machinePermissionNames.includes(p.name))
+                .map((p) => ({ id: p.id })),
             },
           },
         });

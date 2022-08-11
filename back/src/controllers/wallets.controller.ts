@@ -14,9 +14,45 @@ walletsRouter.get(
         include: {
           user: true,
         },
+        orderBy: {
+          user: {
+            nickname: 'asc',
+          },
+        },
       });
       return res.status(200).send(wallets);
     } catch (e) {
+      return res.status(500).send({ message: e });
+    }
+  },
+);
+
+walletsRouter.get(
+  '/transactions',
+  checkPermissions('read:wallets'),
+  async (req: Request, res: Response) => {
+    try {
+      const transactions = await prisma.walletTransaction.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+        include: {
+          requester: true,
+          walletFrom: {
+            include: {
+              user: true,
+            },
+          },
+          walletTo: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      return res.status(200).send(transactions);
+    } catch (e) {
+      console.log(e);
       return res.status(500).send({ message: e });
     }
   },
@@ -34,33 +70,6 @@ walletsRouter.get(
         },
       });
       return res.status(200).send(wallet);
-    } catch (e) {
-      return res.status(500).send({ message: e });
-    }
-  },
-);
-
-walletsRouter.get(
-  '/transactions',
-  checkPermissions('read:wallets'),
-  async (req: Request, res: Response) => {
-    try {
-      const transactions = await prisma.walletTransaction.findMany({
-        include: {
-          requester: true,
-          walletFrom: {
-            include: {
-              user: true,
-            },
-          },
-          walletTo: {
-            include: {
-              user: true,
-            },
-          },
-        },
-      });
-      return res.status(200).send(transactions);
     } catch (e) {
       return res.status(500).send({ message: e });
     }
