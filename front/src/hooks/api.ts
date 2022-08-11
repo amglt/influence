@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders } from 'axios';
-import { useSelector } from '@Store/';
+import { useSelector } from '../store';
 
 const reqInstance = axios.create();
 

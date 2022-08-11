@@ -1,6 +1,6 @@
-import { useSelector } from '@Store/';
 import { Outlet } from 'react-router-dom';
-import { AppPermissions } from '@Models/root.models';
+import { useSelector } from '../../store';
+import { AppPermissions } from '../../models/root.models';
 
 export function PvpManagement() {
   const { user } = useSelector((state) => state.root);

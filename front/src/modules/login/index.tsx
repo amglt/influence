@@ -1,8 +1,8 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useDispatch } from '@Store/';
-import { setToken, setUser } from '@Store/root.slice';
+import { useDispatch } from '../../store';
+import { setToken, setUser } from '../../store/root.slice';
 
 export function Login() {
   const [searchParams] = useSearchParams();

@@ -1,21 +1,21 @@
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
 import { Button, Modal, Space } from 'antd';
-import { Listing } from '@Components/Listing';
 import { EyeOutlined, UserOutlined, EditOutlined } from '@ant-design/icons';
-import { Period } from '@Models/pvp-management.models';
-import { usePeriods } from '@Api/pvp-management/pvp-management.queries';
-import { format } from '@Utils';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'antd/es/form/Form';
+import { useSelector } from '../../../store';
+import { Period } from '../../../models/pvp-management.models';
+import { usePeriods } from '../../../api/pvp-management/pvp-management.queries';
 import {
   useCreatePeriod,
   useEditPeriodReward,
-} from '@Api/pvp-management/pvp-management.mutations';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from '@Store/';
-import { AppPermissions } from '@Models/root.models';
-import { EditPeriodModal } from '@Modules/pvp-management/periods/EditPeriodModal';
-import { useForm } from 'antd/es/form/Form';
+} from '../../../api/pvp-management/pvp-management.mutations';
+import { EditPeriodModal } from './EditPeriodModal';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { AppPermissions } from '../../../models/root.models';
+import { Listing } from '../../../components/Listing';
+import { format } from '../../../utils';
 
 export function PeriodsList() {
   const { user } = useSelector((state) => state.root);

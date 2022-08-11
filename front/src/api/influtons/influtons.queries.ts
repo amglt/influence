@@ -1,6 +1,6 @@
-import { useApi } from '@Hooks/api';
 import { useQuery } from 'react-query';
-import { Transaction, Wallet } from '@Models/influtons.models';
+import { Transaction, Wallet } from '../../models/influtons.models';
+import { useApi } from '../../hooks/api';
 
 export enum InflutonQueriesKeys {
   Wallets = 'Wallets',

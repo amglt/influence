@@ -1,8 +1,8 @@
-import { useApi } from '@Hooks/api';
 import { useMutation, useQueryClient } from 'react-query';
-import { PvpManagementQueriesKeys } from '@Api/pvp-management/pvp-management.queries';
-import { PvpGameStatus, Scale } from '@Models/pvp-management.models';
 import { notification } from 'antd';
+import { PvpManagementQueriesKeys } from './pvp-management.queries';
+import { useApi } from '../../hooks/api';
+import { PvpGameStatus, Scale } from '../../models/pvp-management.models';
 
 export function useDeletePeriod() {
   const { del } = useApi();

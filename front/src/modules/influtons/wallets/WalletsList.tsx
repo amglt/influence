@@ -1,13 +1,13 @@
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
 import { Form, InputNumber, Modal, Space } from 'antd';
-import { Listing } from '@Components/Listing';
-import { Wallet } from '@Models/influtons.models';
-import { useWallets } from '@Api/influtons/influtons.queries';
 import { MailOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { useCreateWalletTransaction } from '@Api/influtons/influtons.mutations';
 import { useForm } from 'antd/es/form/Form';
+import { Wallet } from '../../../models/influtons.models';
+import { useWallets } from '../../../api/influtons/influtons.queries';
+import { useCreateWalletTransaction } from '../../../api/influtons/influtons.mutations';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { Listing } from '../../../components/Listing';
 
 export function WalletsList() {
   const [isSendMoneyModalOpen, setIsSendMoneyModalOpen] = useState(false);

@@ -1,24 +1,24 @@
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
-import { Listing } from '@Components/Listing';
-import { Character } from '@Models/character.model';
 import { Button, Space } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import { useForm } from 'antd/lib/form/Form';
+import { AddEditCharacterModal } from './AddEditCharacterModal';
+import { Character } from '../../../models/character.model';
 import {
-  useCharacters,
   useCharacter,
-} from '@Api/recruitment/characters/characters.queries';
+  useCharacters,
+} from '../../../api/recruitment/characters/characters.queries';
+import { useAccounts } from '../../../api/recruitment/accounts/accounts.queries';
 import {
   useAddCharacter,
   useDeleteCharacter,
   useEditCharacter,
-} from '@Api/recruitment/characters/characters.mutations';
-import { useState } from 'react';
-import { useForm } from 'antd/lib/form/Form';
-import { AddEditCharacterModal } from './AddEditCharacterModal';
-import { useAccounts } from '@Api/recruitment/accounts/accounts.queries';
-import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
-import { format } from '@Utils';
+} from '../../../api/recruitment/characters/characters.mutations';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { Listing } from '../../../components/Listing';
+import { format } from '../../../utils';
+import { ModalConfirmDelete } from '../../../components/ModalConfirmDelete';
 
 export function CharactersList() {
   const [isAddEditCharacterModalOpen, setIsAddEditCharacterModalOpen] =

@@ -1,6 +1,6 @@
-import { useSelector } from '@Store/';
 import { Outlet } from 'react-router-dom';
-import { AppPermissions } from '@Models/root.models';
+import { AppPermissions } from '../../models/root.models';
+import { useSelector } from '../../store';
 
 export function Influtons() {
   const { user } = useSelector((state) => state.root);

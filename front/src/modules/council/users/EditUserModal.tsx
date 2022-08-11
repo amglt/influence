@@ -1,7 +1,7 @@
 import { FormInstance, Modal, Form, Input, Select } from 'antd';
-import { Role, User } from '@Models/root.models';
-import { useUser } from '@Api/council/users/users.queries';
-import { Spinner } from '@Components/Spinner';
+import { Role, User } from '../../../models/root.models';
+import { useUser } from '../../../api/council/users/users.queries';
+import { Spinner } from '../../../components/Spinner';
 
 export interface EditUserModalProps {
   isVisible: boolean;

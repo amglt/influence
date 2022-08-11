@@ -1,31 +1,31 @@
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
-import { Listing } from '@Components/Listing';
-import {
-  PvpGameWithPlayers,
-  PvpGameResult,
-  PvpGameStatus,
-  PvpGameType,
-} from '@Models/pvp-management.models';
-import {
-  PvpManagementQueriesKeys,
-  usePeriodGames,
-} from '@Api/pvp-management/pvp-management.queries';
 import { useParams } from 'react-router-dom';
-import { format, getPlayersStringFromPvpGame } from '@Utils';
 import { Space } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import { UpdateGameModal } from '@Components/UpdateGameModal';
 import { useForm } from 'antd/lib/form/Form';
+import { useQueryClient } from 'react-query';
+import { useSelector } from '../../../store';
+import {
+  PvpGameResult,
+  PvpGameStatus,
+  PvpGameType,
+  PvpGameWithPlayers,
+} from '../../../models/pvp-management.models';
+import {
+  PvpManagementQueriesKeys,
+  usePeriodGames,
+} from '../../../api/pvp-management/pvp-management.queries';
 import {
   useDeleteGame,
   useEditGame,
-} from '@Api/pvp-management/pvp-management.mutations';
-import { useQueryClient } from 'react-query';
-import { ModalConfirmDelete } from '@Components/ModalConfirmDelete';
-import { useSelector } from '@Store/';
-import { AppPermissions } from '@Models/root.models';
+} from '../../../api/pvp-management/pvp-management.mutations';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { UpdateGameModal } from '../../../components/UpdateGameModal';
+import { Listing } from '../../../components/Listing';
+import { format, getPlayersStringFromPvpGame } from '../../../utils';
+import { AppPermissions } from '../../../models/root.models';
+import { ModalConfirmDelete } from '../../../components/ModalConfirmDelete';
 
 export function PeriodGamesList() {
   const params = useParams();

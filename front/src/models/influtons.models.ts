@@ -1,4 +1,4 @@
-import { User } from '@Models/root.models';
+import { User } from './root.models';
 
 export type Wallet = {
   id: number;

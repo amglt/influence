@@ -18,11 +18,10 @@ import {
 import './layout.less';
 import logo from '../../../public/assets/logo.png';
 import { useNavigate } from 'react-router-dom';
-import { Text } from '@Components/Typography';
-import { useDispatch, useSelector } from '@Store/';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
-import { AppPermissions } from '@Models/root.models';
-import { resetRoot } from '@Store/root.slice';
+import { useDispatch, useSelector } from '../../store';
+import { AppPermissions } from '../../models/root.models';
+import { resetRoot } from '../../store/root.slice';
 
 const { Header, Sider } = AntLayout;
 
@@ -186,7 +185,7 @@ export function Layout(props: LayoutProps) {
           }}
         >
           <UserOutlined className={'user-icon'} style={{ color: 'white' }} />
-          <Text style={{ color: 'white' }}>Se connecter</Text>
+          <div style={{ color: 'white' }}>Se connecter</div>
         </span>
       );
     }

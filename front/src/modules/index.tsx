@@ -1,6 +1,6 @@
-import { Layout } from '@Components/Layout';
 import { Outlet } from 'react-router-dom';
-import { useCurrentUser } from '@Api/root.queries';
+import { useCurrentUser } from '../api/root.queries';
+import { Layout } from '../components/Layout';
 
 export function App() {
   const { status: userStatus } = useCurrentUser();

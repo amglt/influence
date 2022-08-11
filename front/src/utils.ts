@@ -1,7 +1,7 @@
-import { ApiError } from '@Models/root.models';
-import { PvpGameWithPlayers } from '@Models/pvp-management.models';
 import { format as fnsFormat, utcToZonedTime } from 'date-fns-tz';
 import fr from 'date-fns/locale/fr';
+import { ApiError } from './models/root.models';
+import { PvpGameWithPlayers } from './models/pvp-management.models';
 
 export function isApiError(err: ApiError | unknown): err is ApiError {
   return (err as ApiError).message !== undefined;

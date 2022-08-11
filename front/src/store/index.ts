@@ -4,7 +4,7 @@ import {
   useDispatch as useReduxDispatch,
   useSelector as useReduxSelector,
 } from 'react-redux';
-import { rootSlice } from '@Store/root.slice';
+import { rootSlice } from './root.slice';
 
 export const store = configureStore({
   reducer: {

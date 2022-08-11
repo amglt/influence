@@ -1,7 +1,6 @@
 import { CharactersQueriesKey } from './characters.queries';
 import { useMutation, useQueryClient } from 'react-query';
-import { useApi } from '@Hooks/api';
-import { Account } from '@Models/account.models';
+import { useApi } from '../../../hooks/api';
 
 export function useDeleteCharacter() {
   const { del } = useApi();

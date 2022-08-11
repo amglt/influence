@@ -1,11 +1,11 @@
 import { Col, Form, InputNumber, Row, Typography, Divider, Button } from 'antd';
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
-import { useScale } from '@Api/pvp-management/pvp-management.queries';
 import { useForm } from 'antd/lib/form/Form';
-import { useSaveScale } from '@Api/pvp-management/pvp-management.mutations';
-import { useSelector } from '@Store/';
-import { AppPermissions } from '@Models/root.models';
+import { useSelector } from '../../../store';
+import { useScale } from '../../../api/pvp-management/pvp-management.queries';
+import { useSaveScale } from '../../../api/pvp-management/pvp-management.mutations';
+import { AppPermissions } from '../../../models/root.models';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
 
 const { Title } = Typography;
 

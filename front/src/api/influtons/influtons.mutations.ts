@@ -1,8 +1,8 @@
-import { useApi } from '@Hooks/api';
 import { useMutation, useQueryClient } from 'react-query';
 import { notification } from 'antd';
-import { InflutonQueriesKeys } from '@Api/influtons/influtons.queries';
-import { useSelector } from '@Store/';
+import { useApi } from '../../hooks/api';
+import { useSelector } from '../../store';
+import { InflutonQueriesKeys } from './influtons.queries';
 
 export function useCreateWalletTransaction() {
   const { post } = useApi();

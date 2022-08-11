@@ -1,10 +1,10 @@
-import { Breadcrumb } from '@Components/Breadcrumb';
-import { Content } from '@Components/Content';
-import { Listing } from '@Components/Listing';
-import { Transaction } from '@Models/influtons.models';
-import { useTransactions } from '@Api/influtons/influtons.queries';
 import React from 'react';
-import { format } from '@Utils';
+import { useTransactions } from '../../../api/influtons/influtons.queries';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { Content } from '../../../components/Content';
+import { Listing } from '../../../components/Listing';
+import { Transaction } from '../../../models/influtons.models';
+import { format } from '../../../utils';
 
 export function TransactionsList() {
   const { data: transactions, isLoading: isLoadingTransactions } =
