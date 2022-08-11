@@ -13,12 +13,19 @@ import { PeriodGamesList } from '@Modules/pvp-management/periods/PeriodGamesList
 import { PeriodPlayersPointsList } from '@Modules/pvp-management/periods/PeriodPlayerPointsList';
 import { PeriodPlayerGamesList } from '@Modules/pvp-management/periods/PeriodPlayerGamesList';
 import { Login } from '@Modules/login';
+import { WalletsList } from '@Modules/influtons/wallets/WalletsList';
+import { Influtons } from '@Modules/influtons';
+import { TransactionsList } from '@Modules/influtons/transactions/TransactionsList';
 
 export function Router() {
   return (
     <Routes>
       <Route path={'/'} element={<App />}>
         <Route path={'login'} element={<Login />} />
+        <Route path={'influtons'} element={<Influtons />}>
+          <Route path={'wallets'} element={<WalletsList />} />
+          <Route path={'history'} element={<TransactionsList />} />
+        </Route>
         <Route path={'recruitment'} element={<Recruitment />}>
           <Route path={'accounts'} element={<AccountsList />} />
           <Route path={'characters'} element={<CharactersList />} />

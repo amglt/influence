@@ -133,6 +133,11 @@ usersRouter.put(
             updated_at: new Date(),
             created_at: new Date(),
             picture: member.picture,
+            wallet: {
+              create: {
+                balance: 0,
+              },
+            },
           },
         });
       }

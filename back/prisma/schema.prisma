@@ -17,23 +17,25 @@ model MachineToMachine {
 }
 
 model User {
-  id                    BigInt                   @id
-  username              String
-  guild                 String?
-  nickname              String
-  created_at            DateTime
-  updated_at            DateTime
-  picture               String
-  roleId                Int?
-  role                  Role?                    @relation(fields: [roleId], references: [id])
-  blocked               Boolean                  @default(false)
-  player1pvpGames       PvpGame[]                @relation("Player1")
-  player2pvpGames       PvpGame[]                @relation("Player2")
-  player3pvpGames       PvpGame[]                @relation("Player3")
-  player4pvpGames       PvpGame[]                @relation("Player4")
-  player5pvpGames       PvpGame[]                @relation("Player5")
-  accounts              Account[]
-  playerPeriods         PlayerPeriod[]
+  id                        BigInt                   @id
+  username                  String
+  guild                     String?
+  nickname                  String
+  created_at                DateTime
+  updated_at                DateTime
+  picture                   String
+  roleId                    Int?
+  role                      Role?                    @relation(fields: [roleId], references: [id])
+  blocked                   Boolean                  @default(false)
+  player1pvpGames           PvpGame[]                @relation("Player1")
+  player2pvpGames           PvpGame[]                @relation("Player2")
+  player3pvpGames           PvpGame[]                @relation("Player3")
+  player4pvpGames           PvpGame[]                @relation("Player4")
+  player5pvpGames           PvpGame[]                @relation("Player5")
+  accounts                  Account[]
+  playerPeriods             PlayerPeriod[]
+  wallet                    Wallet?
+  walletTransactionRequests WalletTransaction[]
 }
 
 model Permission {
@@ -134,4 +136,25 @@ model PlayerPeriod {
   period                  Period         @relation(fields: [periodId], references: [id])
   rewarded                Boolean        @default(false)
   @@id([playerId, periodId])
+}
+
+model Wallet {
+  id                      Int            @id @default(autoincrement())
+  userId                  BigInt         @unique
+  user                    User           @relation(fields: [userId], references: [id])
+  balance                 Int
+  walletFromTransactions  WalletTransaction[]   @relation("WalletFrom")
+  walletToTransactions  WalletTransaction[]     @relation("WalletTo")
+}
+
+model WalletTransaction {
+  id                      Int            @id @default(autoincrement())
+  walletFromId            Int?
+  walletFrom              Wallet?        @relation("WalletFrom", fields: [walletFromId], references: [id])
+  walletToId              Int?
+  walletTo                Wallet?        @relation("WalletTo", fields: [walletToId], references: [id])
+  requesterId             BigInt?
+  requester               User?           @relation(fields: [requesterId], references: [id])
+  amount                  Int
+  createdAt               DateTime
 }

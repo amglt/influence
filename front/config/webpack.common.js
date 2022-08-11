@@ -54,7 +54,7 @@ module.exports = {
     alias: {
       '@Components': path.resolve('./src/components'),
       '@Hooks': path.resolve('./src/hooks'),
-      '@Modules': path.resolve('./src/modules'),
+      '@Modules': path.resolve('./src/influtons'),
       '@Models': path.resolve('./src/models'),
       '@Store': path.resolve('./src/store'),
       '@Api': path.resolve('./src/api'),

@@ -10,7 +10,10 @@ import {
   UsergroupAddOutlined,
   ScissorOutlined,
   CalendarOutlined,
+  DollarOutlined,
+  WalletOutlined,
   NumberOutlined,
+  HistoryOutlined,
 } from '@ant-design/icons';
 import './layout.less';
 import logo from '../../../public/assets/logo.png';
@@ -41,6 +44,27 @@ export function Layout(props: LayoutProps) {
     const updatedMenuItems = [];
     if (user.id) {
       setCollapsed(false);
+      if (user.permissions.includes(AppPermissions.IsLogistic)) {
+        updatedMenuItems.push({
+          key: 'influtons',
+          icon: <DollarOutlined />,
+          label: 'Influtons',
+          children: [
+            {
+              key: 'wallets',
+              label: 'Porte-monnaies',
+              icon: <WalletOutlined />,
+              onClick: () => navigate('/influtons/wallets'),
+            },
+            {
+              key: 'transactions',
+              label: 'Historique',
+              icon: <HistoryOutlined />,
+              onClick: () => navigate('/influtons/history'),
+            },
+          ],
+        });
+      }
       if (user.permissions.includes(AppPermissions.IsRecruitment)) {
         updatedMenuItems.push({
           key: 'recruitment',

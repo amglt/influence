@@ -13,6 +13,7 @@ import { scaleRouter } from './controllers/scale.controller';
 import { pvpGamesRouter } from './controllers/pvpGames.controller';
 import { loginRouter } from './controllers/login.controller';
 import { machinesRouter } from './controllers/machines.controller';
+import { walletsRouter } from './controllers/wallets.controller';
 
 export const app = async () => {
   const app = express();
@@ -42,6 +43,7 @@ export const app = async () => {
   app.use('/periods', periodRouter);
   app.use('/scale', scaleRouter);
   app.use('/pvp-games', pvpGamesRouter);
+  app.use('/wallets', walletsRouter);
 
   return app;
 };
