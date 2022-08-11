@@ -10,15 +10,76 @@ periodRouter.get(
   checkPermissions('read:periods'),
   async (req: Request, res: Response) => {
     try {
-      const periods = await prisma.period.findMany();
-      return res
-        .status(200)
-        .send(
-          periods.sort(
-            (a, b) =>
-              new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
-          ),
-        );
+      const periods = await prisma.period.findMany({
+        orderBy: {
+          startDate: 'desc',
+        },
+      });
+      return res.status(200).send(
+        periods.map((p) => ({
+          ...p,
+          reward: Number(p.reward),
+        })),
+      );
+    } catch (e) {
+      return res.status(500).send({ message: e });
+    }
+  },
+);
+
+periodRouter.patch(
+  '/:periodId/reward',
+  checkPermissions('write:periods'),
+  async (req: Request, res: Response) => {
+    try {
+      const periodId = req.params.periodId;
+      if (!periodId)
+        return res.status(400).send({ message: 'PeriodId nécessaire' });
+
+      const { reward } = req.body;
+      if (!reward)
+        return res.status(400).send({ message: 'Récompense manquante' });
+
+      await prisma.period.update({
+        where: {
+          id: Number(periodId),
+        },
+        data: {
+          reward: Number(reward),
+        },
+      });
+      return res.status(200).send({});
+    } catch (e) {
+      return res.status(500).send({ message: e });
+    }
+  },
+);
+
+periodRouter.patch(
+  '/reward-paiement',
+  checkPermissions('write:periods'),
+  async (req: Request, res: Response) => {
+    try {
+      const { rewarded, periodId, playerId } = req.body;
+      if (!periodId)
+        return res.status(400).send({ message: 'PeriodId nécessaire' });
+      if (!playerId)
+        return res.status(400).send({ message: 'PlayerId nécessaire' });
+      if (!rewarded)
+        return res.status(400).send({ message: 'Statut du paiement manquant' });
+
+      await prisma.playerPeriod.update({
+        where: {
+          playerId_periodId: {
+            periodId: Number(periodId),
+            playerId: Number(playerId),
+          },
+        },
+        data: {
+          rewarded: Boolean(rewarded),
+        },
+      });
+      return res.status(200).send({});
     } catch (e) {
       return res.status(500).send({ message: e });
     }
@@ -71,8 +132,29 @@ periodRouter.get(
         },
         include: {
           player: true,
+          period: true,
+        },
+        orderBy: {
+          player: {
+            nickname: 'asc',
+          },
         },
       });
+
+      const games = await prisma.pvpGame.findMany({
+        where: {
+          periodId: Number(periodId),
+        },
+      });
+      const totalGamesPoints = Number(
+        games
+          .reduce(
+            (previousValue, currentGame) =>
+              previousValue + Number(currentGame.gamePoints),
+            0,
+          )
+          .toFixed(2),
+      );
 
       const playersPeriodsWithPoints: PlayerPeriodWithTotalPoints[] = [];
       for (const playerPeriod of playersPeriods) {
@@ -101,7 +183,15 @@ periodRouter.get(
             )
             .toFixed(2),
         );
-        playersPeriodsWithPoints.push({ ...playerPeriod, totalPoints });
+        let reward = 0;
+        const playerPeriodReward = Number(playerPeriod.period.reward);
+        if (totalGamesPoints > 0) {
+          const participation = Number(
+            (totalPoints / totalGamesPoints).toFixed(2),
+          );
+          reward = Number((playerPeriodReward * participation).toFixed(2));
+        }
+        playersPeriodsWithPoints.push({ ...playerPeriod, totalPoints, reward });
       }
 
       return res.status(200).send(playersPeriodsWithPoints);

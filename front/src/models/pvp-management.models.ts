@@ -4,6 +4,7 @@ export interface Period {
   id: number;
   startDate: Date;
   endDate?: Date;
+  reward: number;
 }
 
 export interface Scale {
@@ -66,10 +67,11 @@ export interface PvpGameWithPlayers {
   period: Period;
 }
 
-export interface PeriodPlayerPoints {
-  playerId: string;
+export interface PeriodPlayerWithPoints {
+  playerId: number;
   periodId: number;
+  player: User;
   totalPoints: number;
-  playerName: string;
-  playerGuild: string;
+  reward: number;
+  rewarded: boolean;
 }

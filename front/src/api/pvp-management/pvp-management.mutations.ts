@@ -19,6 +19,46 @@ export function useDeletePeriod() {
   });
 }
 
+export function useEditPeriodReward() {
+  const { patch } = useApi();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (request: { periodId: number; reward: number }) =>
+      patch(`/periods/${request.periodId}/reward`, { reward: request.reward }),
+    {
+      onSuccess: async () => {
+        await queryClient.refetchQueries(PvpManagementQueriesKeys.Periods);
+        notification.success({
+          placement: 'bottomRight',
+          message: 'Période correctement editée',
+        });
+      },
+    },
+  );
+}
+
+export function useEditPeriodRewarded() {
+  const { patch } = useApi();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (request: { periodId: number; playerId: number; rewarded: boolean }) =>
+      patch(`/periods/reward-paiement`, request),
+    {
+      onSuccess: async () => {
+        await queryClient.refetchQueries(
+          PvpManagementQueriesKeys.PeriodPlayers,
+        );
+        notification.success({
+          placement: 'bottomRight',
+          message: 'Joueur payé',
+        });
+      },
+    },
+  );
+}
+
 export function useCreatePeriod() {
   const { post } = useApi();
   const queryClient = useQueryClient();
