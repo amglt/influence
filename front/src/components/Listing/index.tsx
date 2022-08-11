@@ -112,6 +112,9 @@ export function Listing<DataType extends object = {}>(
     <Table
       columns={getCols()}
       dataSource={data?.map((d) => ({ key: uuid(), ...d }))}
+      pagination={{
+        pageSize: 20,
+      }}
       {...tableProps}
     />
   );

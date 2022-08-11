@@ -2,18 +2,18 @@ import { useQuery } from 'react-query';
 import { useApi } from '@Hooks/api';
 import {
   Period,
-  PeriodPlayerPoints,
+  PeriodPlayerWithPoints,
   PvpGameWithPlayers,
   Scale,
 } from '@Models/pvp-management.models';
 
 export enum PvpManagementQueriesKeys {
   Periods = 'Periods',
+  Period = 'Period',
   PeriodGames = 'PeriodGames',
   PeriodPlayers = 'PeriodPlayers',
   PeriodPlayerGames = 'PeriodPlayerGames',
   Scale = 'Scale',
-  Games = 'Games',
 }
 
 export function usePeriods() {
@@ -41,7 +41,7 @@ export function usePeriodPlayers(periodId?: string) {
 
   return useQuery(
     [PvpManagementQueriesKeys.PeriodPlayers],
-    () => get<PeriodPlayerPoints[]>(`/periods/${periodId}/players`),
+    () => get<PeriodPlayerWithPoints[]>(`/periods/${periodId}/players`),
     {
       enabled: !!periodId,
     },

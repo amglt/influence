@@ -37,43 +37,44 @@ model User {
 }
 
 model Permission {
-  id             Int                     @id @default(autoincrement())
+  id             Int                      @id @default(autoincrement())
   name           String
   roles          Role[]
   machines       MachineToMachine[]
 }
 
 model Role {
-  id             Int                     @id @default(autoincrement())
+  id             Int                      @id @default(autoincrement())
   name           String
   permissions    Permission[]
   users          User[]
 }
 
 model Account {
-  id            Int                      @id @default(autoincrement())
-  name          String                   @unique
+  id            Int                       @id @default(autoincrement())
+  name          String                    @unique
   userId        BigInt
-  user          User                     @relation(fields: [userId], references: [id])
+  user          User                      @relation(fields: [userId], references: [id])
   characters    Character[]
 }
 
 model Character {
-  id                      Int            @id @default(autoincrement())
-  name                    String         @unique
+  id                      Int             @id @default(autoincrement())
+  name                    String          @unique
   class                   String
   rank                    String
-  account                 Account        @relation(fields: [accountId], references: [id])
+  account                 Account         @relation(fields: [accountId], references: [id])
   accountId               Int
   recruitmentDate         DateTime
 }
 
 model Period {
-  id                      Int            @id @default(autoincrement())
+  id                      Int             @id @default(autoincrement())
   startDate               DateTime
   endDate                 DateTime?
   pvpGames                PvpGame[]
   playersPeriods          PlayerPeriod[]
+  reward                  Decimal         @db.Decimal(29,2) @default(0)
 }
 
 model Scale {
@@ -131,5 +132,6 @@ model PlayerPeriod {
   player                  User           @relation(fields: [playerId], references: [id])
   periodId                Int
   period                  Period         @relation(fields: [periodId], references: [id])
+  rewarded                Boolean        @default(false)
   @@id([playerId, periodId])
 }

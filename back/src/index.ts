@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { app } from './app';
 import { prisma } from './db';
+import { Decimal } from '@prisma/client/runtime';
 
 dotenv.config();
 

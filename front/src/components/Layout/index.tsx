@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from '@Store/';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { AppPermissions } from '@Models/root.models';
 import { resetRoot } from '@Store/root.slice';
-import axios from 'axios';
 
 const { Header, Sider } = AntLayout;
 
@@ -41,6 +40,7 @@ export function Layout(props: LayoutProps) {
   useEffect(() => {
     const updatedMenuItems = [];
     if (user.id) {
+      setCollapsed(false);
       if (user.permissions.includes(AppPermissions.IsRecruitment)) {
         updatedMenuItems.push({
           key: 'recruitment',
