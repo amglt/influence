@@ -1,4 +1,4 @@
-name: Bot CD
+name: PVR Bot CD
 
 on:
   push:
