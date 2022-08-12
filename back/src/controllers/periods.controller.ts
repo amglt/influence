@@ -194,13 +194,22 @@ periodRouter.get(
       });
       const playerWithPoints: PlayerWithPoints[] = [];
       for (const playerPeriod of playersPeriods) {
-        const playerGames = [
-          ...playerPeriod.player.player1pvpGames,
-          ...playerPeriod.player.player2pvpGames,
-          ...playerPeriod.player.player3pvpGames,
-          ...playerPeriod.player.player4pvpGames,
-          ...playerPeriod.player.player5pvpGames,
-        ];
+        const playerGames = await prisma.pvpGame.findMany({
+          where: {
+            AND: [
+              { periodId: Number(currentPeriod.id) },
+              {
+                OR: [
+                  { player1Id: playerPeriod.player.id },
+                  { player2Id: playerPeriod.player.id },
+                  { player3Id: playerPeriod.player.id },
+                  { player4Id: playerPeriod.player.id },
+                  { player5Id: playerPeriod.player.id },
+                ],
+              },
+            ],
+          },
+        });
         const playerTotalPoints = Number(
           playerGames
             .reduce(
