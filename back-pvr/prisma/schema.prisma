@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model MachineToMachine {
+  clientId              Int                     @id
+  clientSecret          String
+  permissions           Permission[]
+}
+
+model User {
+  id                        BigInt                   @id
+  username                  String
+  guild                     String?
+  nickname                  String
+  created_at                DateTime
+  updated_at                DateTime
+  picture                   String
+  roleId                    Int?
+  role                      Role?                    @relation(fields: [roleId], references: [id])
+  blocked                   Boolean                  @default(false)
+  player1pvpGames           PvpGame[]                @relation("Player1")
+  player2pvpGames           PvpGame[]                @relation("Player2")
+  player3pvpGames           PvpGame[]                @relation("Player3")
+  player4pvpGames           PvpGame[]                @relation("Player4")
+  player5pvpGames           PvpGame[]                @relation("Player5")
+  accounts                  Account[]
+  playerPeriods             PlayerPeriod[]
+  wallet                    Wallet?
+  walletTransactionRequests WalletTransaction[]
+}
+
+model Permission {
+  id             Int                      @id @default(autoincrement())
+  name           String
+  roles          Role[]
+  machines       MachineToMachine[]
+}
+
+model Role {
+  id             Int                      @id @default(autoincrement())
+  name           String
+  permissions    Permission[]
+  users          User[]
+}
+
+model Account {
+  id            Int                       @id @default(autoincrement())
+  name          String                    @unique
+  userId        BigInt
+  user          User                      @relation(fields: [userId], references: [id])
+  characters    Character[]
+}
+
+model Character {
+  id                      Int             @id @default(autoincrement())
+  name                    String          @unique
+  class                   String
+  rank                    String
+  account                 Account         @relation(fields: [accountId], references: [id])
+  accountId               Int
+  recruitmentDate         DateTime
+}
+
+model Period {
+  id                      Int             @id @default(autoincrement())
+  startDate               DateTime
+  endDate                 DateTime?
+  pvpGames                PvpGame[]
+  playersPeriods          PlayerPeriod[]
+  reward                  Decimal         @db.Decimal(29,2) @default(0)
+}
+
+model Scale {
+  id                        Int            @id @default(autoincrement())
+  percoAttackWinPoints      Decimal        @db.Decimal(29,2)
+  percoAttackLoosePoints    Decimal        @db.Decimal(29,2)
+  percoDefWinPoints         Decimal        @db.Decimal(29,2)
+  percoDefLoosePoints       Decimal        @db.Decimal(29,2)
+  percoNDPoints             Decimal        @db.Decimal(29,2)
+  prismAttackWinPoints      Decimal        @db.Decimal(29,2)
+  prismAttackLoosePoints    Decimal        @db.Decimal(29,2)
+  prismDefWinPoints         Decimal        @db.Decimal(29,2)
+  prismDefLoosePoints       Decimal        @db.Decimal(29,2)
+  prismNDPoints             Decimal        @db.Decimal(29,2)
+  bigPercoAttackWinPoints   Decimal        @db.Decimal(29,2)
+  bigPercoAttackLoosePoints Decimal        @db.Decimal(29,2)
+  bigPercoDefWinPoints      Decimal        @db.Decimal(29,2)
+  bigPercoDefLoosePoints    Decimal        @db.Decimal(29,2)
+  bigPercoNDPoints          Decimal        @db.Decimal(29,2)
+  bigPrismAttackWinPoints   Decimal        @db.Decimal(29,2)
+  bigPrismAttackLoosePoints Decimal        @db.Decimal(29,2)
+  bigPrismNDPoints          Decimal        @db.Decimal(29,2)
+  bigPrismDefWinPoints      Decimal        @db.Decimal(29,2)
+  bigPrismDefLoosePoints    Decimal        @db.Decimal(29,2)
+  avaWin                    Decimal        @db.Decimal(29,2)
+  avaLoose                  Decimal        @db.Decimal(29,2)
+}
+
+model PvpGame {
+  id                      Int            @id @default(autoincrement())
+  result                  Int
+  type                    Int
+  status                  Int
+  player1Id               BigInt
+  player1                 User           @relation("Player1", fields: [player1Id], references: [id])
+  player2Id               BigInt?
+  player2                 User?          @relation("Player2", fields: [player2Id], references: [id])
+  player3Id               BigInt?
+  player3                 User?          @relation("Player3", fields: [player3Id], references: [id])
+  player4Id               BigInt?
+  player4                 User?          @relation("Player4", fields: [player4Id], references: [id])
+  player5Id               BigInt?
+  player5                 User?          @relation("Player5", fields: [player5Id], references: [id])
+  period                  Period         @relation(fields: [periodId], references: [id])
+  periodId                Int
+  screenshotUrl           String
+  timestamp               DateTime
+  bigOpponent             Boolean        @default(false)
+  gamePoints              Decimal        @db.Decimal(29,2)
+  requester               BigInt
+}
+
+model PlayerPeriod {
+  playerId                BigInt
+  player                  User           @relation(fields: [playerId], references: [id])
+  periodId                Int
+  period                  Period         @relation(fields: [periodId], references: [id])
+  rewarded                Boolean        @default(false)
+  @@id([playerId, periodId])
+}
+
+model Wallet {
+  id                      Int            @id @default(autoincrement())
+  userId                  BigInt         @unique
+  user                    User           @relation(fields: [userId], references: [id])
+  balance                 Int
+  walletFromTransactions  WalletTransaction[]   @relation("WalletFrom")
+  walletToTransactions  WalletTransaction[]     @relation("WalletTo")
+}
+
+model WalletTransaction {
+  id                      Int            @id @default(autoincrement())
+  walletFromId            Int?
+  walletFrom              Wallet?        @relation("WalletFrom", fields: [walletFromId], references: [id])
+  walletToId              Int?
+  walletTo                Wallet?        @relation("WalletTo", fields: [walletToId], references: [id])
+  requesterId             BigInt?
+  requester               User?           @relation(fields: [requesterId], references: [id])
+  amount                  Int
+  createdAt               DateTime
+}
