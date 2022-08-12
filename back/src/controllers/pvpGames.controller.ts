@@ -325,7 +325,7 @@ pvpGamesRouter.get(
         games
           .reduce(
             (previousValue, currentValue) =>
-              previousValue + Number(currentValue),
+              previousValue + Number(currentValue.gamePoints),
             0,
           )
           .toFixed(2),
