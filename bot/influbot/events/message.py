@@ -5,6 +5,7 @@ from discord import Message, Client
 from influbot.handlers.influtons import handle_influtons_request, handle_wallet_request
 from influbot.handlers.pvp import handle_perco_prism, handle_remove_transaction, handle_ava
 from influbot.handlers.pvp_stats import handle_my_stats
+from influbot.handlers.pvp_tops import handle_pvp_tops
 from influbot.shared.models import EnabledModules
 
 
@@ -16,7 +17,7 @@ async def handle_message(client: Client, message: Message):
     enabled_modules = os.getenv("ENABLED_MODULES").split(",")
 
     # PVP
-    if EnabledModules.Pvp in enabled_modules:
+    if EnabledModules.Pvp.value in enabled_modules:
         if message.channel.id == int(os.getenv("PVP_SCREENS_CHANNEL_ID")):
             if content.startswith('.p') or content.startswith('.pr'):
                 await handle_perco_prism(client, message)
@@ -27,9 +28,11 @@ async def handle_message(client: Client, message: Message):
         if message.channel.id == int(os.getenv("PVP_INFO_CHANNEL_ID")):
             if content.startswith('.ms') or content.startswith('.mystats'):
                 await handle_my_stats(message)
+            if content.startswith('.pvp'):
+                await handle_pvp_tops(message)
 
     # Influtons
-    if EnabledModules.Influtons in enabled_modules:
+    if EnabledModules.Influtons.value in enabled_modules:
         if message.channel.id == int(os.getenv("INFLUTONS_CHANNEL_ID")):
             if content.startswith('.give'):
                 await handle_influtons_request(message)

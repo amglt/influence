@@ -97,7 +97,7 @@ export function Layout(props: LayoutProps) {
           user.permissions.includes(AppPermissions.IsLogistic))
       ) {
         updatedMenuItems.push({
-          key: 'pvp-management-management',
+          key: 'pvp-management',
           icon: <ScissorOutlined />,
           label: 'PVP management',
           children: [
@@ -105,13 +105,13 @@ export function Layout(props: LayoutProps) {
               key: 'periods',
               label: 'Périodes',
               icon: <CalendarOutlined />,
-              onClick: () => navigate('/pvp-management-management/periods'),
+              onClick: () => navigate('/pvp-management/periods'),
             },
             {
               key: 'scale',
               label: 'Barème',
               icon: <NumberOutlined />,
-              onClick: () => navigate('/pvp-management-management/scale'),
+              onClick: () => navigate('/pvp-management/scale'),
             },
           ],
         });

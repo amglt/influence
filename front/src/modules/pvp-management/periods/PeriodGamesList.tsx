@@ -125,6 +125,11 @@ export function PeriodGamesList() {
               render: (_, record) => getPlayersStringFromPvpGame(record),
             },
             {
+              key: 'gamePoints',
+              dataIndex: 'gamePoints',
+              title: 'Points',
+            },
+            {
               key: 'screenshot',
               dataIndex: 'screenshotUrl',
               title: 'Screenshot',

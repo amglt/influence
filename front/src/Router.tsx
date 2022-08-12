@@ -39,7 +39,7 @@ export function Router() {
           </Route>
         )}
         {enabledModules.includes(EnabledModules.Pvp) && (
-          <Route path={'pvp-management-management'} element={<PvpManagement />}>
+          <Route path={'pvp-management'} element={<PvpManagement />}>
             <Route path={'periods'} element={<PeriodsList />} />
             <Route
               path={'periods/:periodId/games'}
