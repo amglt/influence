@@ -1,26 +1,26 @@
 import { createElement, ReactNode, useEffect, useState } from 'react';
 import { Dropdown, Layout as AntLayout, Menu, Space } from 'antd';
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  StarOutlined,
-  CrownOutlined,
-  UserOutlined,
-  DownOutlined,
-  UsergroupAddOutlined,
-  ScissorOutlined,
   CalendarOutlined,
+  CrownOutlined,
   DollarOutlined,
-  WalletOutlined,
-  NumberOutlined,
+  DownOutlined,
   HistoryOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  NumberOutlined,
+  ScissorOutlined,
+  StarOutlined,
+  UsergroupAddOutlined,
+  UserOutlined,
+  WalletOutlined,
 } from '@ant-design/icons';
 import './layout.less';
 import logo from '../../../public/assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { useDispatch, useSelector } from '../../store';
-import { AppPermissions } from '../../models/root.models';
+import { AppPermissions, EnabledModules } from '../../models/root.models';
 import { resetRoot } from '../../store/root.slice';
 
 const { Header, Sider } = AntLayout;
@@ -33,7 +33,7 @@ export function Layout(props: LayoutProps) {
   const { children } = props;
 
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.root);
+  const { user, enabledModules } = useSelector((state) => state.root);
   const dispatch = useDispatch();
 
   const [collapsed, setCollapsed] = useState(true);
@@ -43,7 +43,10 @@ export function Layout(props: LayoutProps) {
     const updatedMenuItems = [];
     if (user.id) {
       setCollapsed(false);
-      if (user.permissions.includes(AppPermissions.IsLogistic)) {
+      if (
+        enabledModules.includes(EnabledModules.Influtons) &&
+        user.permissions.includes(AppPermissions.IsLogistic)
+      ) {
         updatedMenuItems.push({
           key: 'influtons',
           icon: <DollarOutlined />,
@@ -64,7 +67,10 @@ export function Layout(props: LayoutProps) {
           ],
         });
       }
-      if (user.permissions.includes(AppPermissions.IsRecruitment)) {
+      if (
+        enabledModules.includes(EnabledModules.Recruitment) &&
+        user.permissions.includes(AppPermissions.IsRecruitment)
+      ) {
         updatedMenuItems.push({
           key: 'recruitment',
           icon: <UsergroupAddOutlined />,
@@ -86,8 +92,9 @@ export function Layout(props: LayoutProps) {
         });
       }
       if (
-        user.permissions.includes(AppPermissions.IsPVP) ||
-        user.permissions.includes(AppPermissions.IsLogistic)
+        enabledModules.includes(EnabledModules.Pvp) &&
+        (user.permissions.includes(AppPermissions.IsPVP) ||
+          user.permissions.includes(AppPermissions.IsLogistic))
       ) {
         updatedMenuItems.push({
           key: 'pvp-management-management',
@@ -132,7 +139,7 @@ export function Layout(props: LayoutProps) {
       }
     }
     setMenuItems(updatedMenuItems);
-  }, [navigate, user.permissions, user.id]);
+  }, [navigate, user.permissions, user.id, enabledModules]);
 
   const userMenu = (
     <Menu
