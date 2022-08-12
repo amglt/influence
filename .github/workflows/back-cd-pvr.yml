@@ -12,7 +12,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      working-directory: back-pvr/
+      working-directory: back/
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       NODE_ENV: production
 
