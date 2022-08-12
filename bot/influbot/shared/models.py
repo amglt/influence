@@ -1,6 +1,11 @@
 from enum import Enum
 
 
+class EnabledModules(Enum):
+    Influtons = "Influtons"
+    Pvp = "Pvp"
+
+
 class BotError(Exception):
     def __init__(self, message: str, description: str = None):
         self.message = message

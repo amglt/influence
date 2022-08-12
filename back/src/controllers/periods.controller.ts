@@ -1,7 +1,11 @@
 import { Router, Request, Response } from 'express';
 import { checkPermissions } from '../middlewares/permission.middleware';
 import { prisma } from '../db';
-import { PlayerPeriodWithTotalPoints } from '../models/periods.models';
+import {
+  GuildWithPoints,
+  PlayerPeriodWithTotalPoints,
+  PlayerWithPoints,
+} from '../models/periods.models';
 
 const periodRouter = Router();
 
@@ -80,6 +84,148 @@ periodRouter.patch(
         },
       });
       return res.status(200).send({});
+    } catch (e) {
+      return res.status(500).send({ message: e });
+    }
+  },
+);
+
+periodRouter.get(
+  '/top/guilds',
+  checkPermissions('read:pvp-games'),
+  async (req: Request, res: Response) => {
+    try {
+      const currentPeriod = await prisma.period.findFirst({
+        where: {
+          endDate: null,
+        },
+      });
+      if (!currentPeriod)
+        return res.status(400).send({ message: 'Aucune période active' });
+
+      const games = await prisma.pvpGame.findMany({
+        where: {
+          periodId: currentPeriod.id,
+        },
+        include: {
+          player1: true,
+          player2: true,
+          player3: true,
+          player4: true,
+          player5: true,
+        },
+      });
+      const guildsWithPoints: GuildWithPoints[] = [];
+      for (const game of games) {
+        const gameGuilds = [];
+        gameGuilds.push(game.player1.guild);
+        if (game.player2) gameGuilds.push(game.player2.guild);
+        if (game.player3) gameGuilds.push(game.player3.guild);
+        if (game.player4) gameGuilds.push(game.player4.guild);
+        if (game.player5) gameGuilds.push(game.player5.guild);
+        const uniqueGuilds = Array.from(new Set(gameGuilds.filter((g) => !!g)));
+        for (const guild of uniqueGuilds) {
+          if (guild) {
+            const foundGuildIndex = guildsWithPoints.findIndex(
+              (g) => g.guild === guild,
+            );
+            if (foundGuildIndex > -1) {
+              guildsWithPoints[foundGuildIndex].totalPoints += Number(
+                game.gamePoints,
+              );
+            } else {
+              guildsWithPoints.push({
+                guild,
+                totalPoints: Number(game.gamePoints),
+              });
+            }
+          }
+        }
+      }
+
+      return res.status(200).send(
+        guildsWithPoints
+          .map((g) => ({
+            guild: g.guild,
+            totalPoints: Number(g.totalPoints.toFixed(2)),
+          }))
+          .sort((a, b) => b.totalPoints - a.totalPoints),
+      );
+    } catch (e) {
+      return res.status(500).send({ message: e });
+    }
+  },
+);
+
+periodRouter.get(
+  '/top/:topNumber',
+  checkPermissions('read:pvp-games'),
+  async (req: Request, res: Response) => {
+    try {
+      const { topNumber } = req.params;
+      if (!topNumber || isNaN(Number(topNumber)))
+        return res
+          .status(400)
+          .send({ message: 'Le paramètre doit être numérique' });
+
+      const currentPeriod = await prisma.period.findFirst({
+        where: {
+          endDate: null,
+        },
+      });
+      if (!currentPeriod)
+        return res.status(400).send({ message: 'Aucune période active' });
+
+      const playersPeriods = await prisma.playerPeriod.findMany({
+        where: {
+          periodId: currentPeriod.id,
+        },
+        include: {
+          player: {
+            include: {
+              player1pvpGames: true,
+              player2pvpGames: true,
+              player3pvpGames: true,
+              player4pvpGames: true,
+              player5pvpGames: true,
+            },
+          },
+        },
+      });
+      const playerWithPoints: PlayerWithPoints[] = [];
+      for (const playerPeriod of playersPeriods) {
+        const playerGames = [
+          ...playerPeriod.player.player1pvpGames,
+          ...playerPeriod.player.player2pvpGames,
+          ...playerPeriod.player.player3pvpGames,
+          ...playerPeriod.player.player4pvpGames,
+          ...playerPeriod.player.player5pvpGames,
+        ];
+        const playerTotalPoints = Number(
+          playerGames
+            .reduce(
+              (previousValue, currentGame) =>
+                previousValue + Number(currentGame.gamePoints),
+              0,
+            )
+            .toFixed(2),
+        );
+        playerWithPoints.push({
+          id: Number(playerPeriod.player.id),
+          username: playerPeriod.player.username,
+          nickname: playerPeriod.player.nickname,
+          guild: playerPeriod.player.guild?.toString(),
+          totalPoints: playerTotalPoints,
+        });
+      }
+
+      return res
+        .status(200)
+        .send(
+          playerWithPoints
+            .sort((a, b) => b.totalPoints - a.totalPoints)
+            .slice(0, Number(topNumber)),
+        );
     } catch (e) {
       return res.status(500).send({ message: e });
     }

@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppUser } from '../models/root.models';
+import { AppUser, EnabledModules } from '../models/root.models';
 
 export type RootState = {
   user: AppUser;
   token: string;
+  enabledModules: EnabledModules[];
 };
 
 const initialState: RootState = {
@@ -19,6 +20,7 @@ const initialState: RootState = {
     permissions: [],
   },
   token: '',
+  enabledModules: [],
 };
 
 export const rootSlice = createSlice({
@@ -31,10 +33,14 @@ export const rootSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
+    setEnabledModules: (state, action: PayloadAction<EnabledModules[]>) => {
+      state.enabledModules = action.payload;
+    },
     resetRoot: (state) => {
       Object.assign(state, initialState);
     },
   },
 });
 
-export const { setUser, setToken, resetRoot } = rootSlice.actions;
+export const { setUser, setToken, setEnabledModules, resetRoot } =
+  rootSlice.actions;

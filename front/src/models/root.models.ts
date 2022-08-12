@@ -1,3 +1,10 @@
+export const enum EnabledModules {
+  Council = 'Council',
+  Influtons = 'Influtons',
+  Pvp = 'Pvp',
+  Recruitment = 'Recruitment',
+}
+
 export const enum AppPermissions {
   BanUser = 'ban:users',
   DeletePeriods = 'delete:periods',
