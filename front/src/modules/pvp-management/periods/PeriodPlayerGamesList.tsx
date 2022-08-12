@@ -67,7 +67,7 @@ export function PeriodPlayerGamesList() {
     <>
       <Breadcrumb
         items={[
-          { key: 'pvp-management-management', label: 'PVP Management' },
+          { key: 'pvp-management', label: 'PVP Management' },
           { key: 'periodGames', label: 'Parties pendant période' },
         ]}
       />

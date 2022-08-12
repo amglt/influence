@@ -24,7 +24,7 @@ export function PeriodPlayersPointsList() {
     <>
       <Breadcrumb
         items={[
-          { key: 'pvp-management-management', label: 'PVP Management' },
+          { key: 'pvp-management', label: 'PVP Management' },
           { key: 'periodsPlayers', label: 'Joueurs et points' },
         ]}
       />
@@ -87,7 +87,7 @@ export function PeriodPlayersPointsList() {
                   <EyeOutlined
                     onClick={() => {
                       navigate(
-                        `/pvp-management-management/periods/${params.periodId}/games/${record.playerId}`,
+                        `/pvp-management/periods/${params.periodId}/games/${record.playerId}`,
                       );
                     }}
                   />
