@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - back/**
+      - back-pvr/**
 
   workflow_dispatch:
 

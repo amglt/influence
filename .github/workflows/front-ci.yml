@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - front/**
+      - front-pvr/**
 
   workflow_dispatch:
 
