@@ -1,4 +1,6 @@
 from discord import Client, Message, Intents
+
+from influbot.events.member_update import member_update
 from influbot.events.ready import handle_ready
 from influbot.events.message import handle_message
 from influbot.api.api import ApiError
@@ -12,6 +14,11 @@ client = Client(intents=intents)
 @client.event
 async def on_ready():
     await handle_ready(client)
+
+
+@client.event
+async def on_member_update(before, after):
+    await member_update(before, after)
 
 
 @client.event
