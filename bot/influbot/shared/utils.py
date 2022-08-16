@@ -1,5 +1,7 @@
 import os
 
+from discord import Role
+
 from influbot.shared.models import PvpResult, PvpType, RuntimeEnv, AllianceGuild
 
 
@@ -59,16 +61,16 @@ def get_runtime_env():
             return RuntimeEnv.Influ
 
 
-def get_guild_from_roles(roles):
-    if 992948334396440600 in roles:
+def get_guild_from_roles(roles: list[Role]):
+    if any(role for role in roles if role.id == 992948334396440600):
         return AllianceGuild.Influ
-    elif 992948334396440599 in roles:
+    elif any(role for role in roles if role.id == 992948334396440599):
         return AllianceGuild.Vegas
-    elif 992948334375489634 in roles:
+    elif any(role for role in roles if role.id == 992948334375489634):
         return AllianceGuild.Priapes
-    elif 1003429686744993869 in roles:
+    elif any(role for role in roles if role.id == 1003429686744993869):
         return AllianceGuild.Pure
-    elif 1003429760573120533 in roles:
+    elif any(role for role in roles if role.id == 1003429760573120533):
         return AllianceGuild.Reformed
     else:
         return AllianceGuild.Influ
