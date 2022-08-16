@@ -41,6 +41,14 @@ export function PeriodPlayersPointsList() {
               render: (value) => value.nickname,
             },
             {
+              key: 'guild',
+              dataIndex: 'player',
+              title: 'Guilde',
+              filtered: true,
+              sorter: (a, b) => a.player.guild.localeCompare(b.player.guild),
+              render: (value) => value.guild,
+            },
+            {
               key: 'points',
               title: 'Total points',
               dataIndex: 'totalPoints',
