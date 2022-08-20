@@ -40,9 +40,9 @@ async def handle_pvp_tops(message: Message):
                     actual_step = x * 25
                     next_step = x + 1 * 25
                     for index, player_data in enumerate(top_data[actual_step:next_step]):
-                        embed.add_field(name=f"{index + 1 + x * 25}. {player_data.get('nickname')}",
+                        embed.add_field(name=f"{index + 1 + actual_step}. {player_data.get('nickname')}",
                                         value=player_data.get('totalPoints'), inline=False)
-                        await message.reply(embed=embed)
+                    await message.reply(embed=embed)
 
         if args[2] == 'guilds':
             top_data = await get(f"/periods/top/guilds")
