@@ -38,7 +38,7 @@ async def handle_pvp_tops(message: Message):
                 for x in range(max_data):
                     embed = Embed(title=f"Top {top_number} des joueurs période actuelle")
                     actual_step = x * 25
-                    next_step = x + 1 * 25
+                    next_step = (x + 1) * 25
                     for index, player_data in enumerate(top_data[actual_step:next_step]):
                         embed.add_field(name=f"{index + 1 + actual_step}. {player_data.get('nickname')}",
                                         value=player_data.get('totalPoints'), inline=False)
