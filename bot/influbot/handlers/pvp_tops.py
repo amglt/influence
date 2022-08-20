@@ -25,10 +25,24 @@ async def handle_pvp_tops(message: Message):
         if args[2].isnumeric():
             top_number = args[2]
             top_data = await get(f"/periods/top/{top_number}")
-            embed = Embed(title=f"Top {top_number} des joueurs période actuelle")
-            for index, player_data in enumerate(top_data):
-                embed.add_field(name=f"{index+1}. {player_data.get('nickname')}", value=player_data.get('totalPoints'), inline=False)
-            await message.reply(embed=embed)
+
+            if len(top_data <= 25):
+                embed = Embed(title=f"Top {top_number} des joueurs période actuelle")
+                for index, player_data in enumerate(top_data):
+                    embed.add_field(name=f"{index+1}. {player_data.get('nickname')}",
+                                    value=player_data.get('totalPoints'), inline=False)
+                    await message.reply(embed=embed)
+            else:
+                rest = len(top_data) % 25
+                max_data = len(top_data) // 25 if rest == 0 else len(top_data) // 25 + 1
+                for x in range(max_data):
+                    embed = Embed(title=f"Top {top_number} des joueurs période actuelle")
+                    actual_step = x * 25
+                    next_step = x + 1 * 25
+                    for index, player_data in enumerate(top_data[actual_step:next_step]):
+                        embed.add_field(name=f"{index + 1 + x * 25}. {player_data.get('nickname')}",
+                                        value=player_data.get('totalPoints'), inline=False)
+                        await message.reply(embed=embed)
 
         if args[2] == 'guilds':
             top_data = await get(f"/periods/top/guilds")
