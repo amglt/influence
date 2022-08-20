@@ -26,7 +26,7 @@ async def handle_pvp_tops(message: Message):
             top_number = args[2]
             top_data = await get(f"/periods/top/{top_number}")
 
-            if len(top_data <= 25):
+            if len(top_data) <= 25:
                 embed = Embed(title=f"Top {top_number} des joueurs période actuelle")
                 for index, player_data in enumerate(top_data):
                     embed.add_field(name=f"{index+1}. {player_data.get('nickname')}",
