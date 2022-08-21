@@ -31,7 +31,7 @@ async def handle_pvp_tops(message: Message):
                 for index, player_data in enumerate(top_data):
                     embed.add_field(name=f"{index+1}. {player_data.get('nickname')}",
                                     value=player_data.get('totalPoints'), inline=False)
-                    await message.reply(embed=embed)
+                await message.reply(embed=embed)
             else:
                 rest = len(top_data) % 25
                 max_data = len(top_data) // 25 if rest == 0 else len(top_data) // 25 + 1
