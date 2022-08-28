@@ -40,3 +40,4 @@ class AllianceGuild(Enum):
     Vegas = 2
     Priapes = 3
     Reformed = 4
+    PTR = 5

@@ -17,6 +17,9 @@ usersRouter.get(
             nickname: 'asc',
           },
         ],
+        where: {
+          isMember: true,
+        },
       });
       return res
         .status(200)
@@ -121,6 +124,7 @@ usersRouter.put(
           update: {
             username: member.name,
             nickname: member.nickname,
+            isMember: member.isMember,
             guild: member.guild,
             updated_at: new Date(),
             picture: member.picture,
@@ -129,6 +133,7 @@ usersRouter.put(
             id: member.id,
             username: member.name,
             nickname: member.nickname,
+            isMember: member.isMember,
             guild: member.guild,
             updated_at: new Date(),
             created_at: new Date(),

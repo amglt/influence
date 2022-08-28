@@ -72,5 +72,7 @@ def get_guild_from_roles(roles: list[Role]):
         return AllianceGuild.Pure
     elif any(role for role in roles if role.id == 1003429760573120533):
         return AllianceGuild.Reformed
+    elif any(role for role in roles if role.id == 1011718059867774976):
+        return AllianceGuild.PTR
     else:
         return AllianceGuild.Influ

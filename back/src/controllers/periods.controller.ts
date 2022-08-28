@@ -117,28 +117,30 @@ periodRouter.get(
       });
       const guildsWithPoints: GuildWithPoints[] = [];
       for (const game of games) {
-        const gameGuilds = [];
-        gameGuilds.push(game.player1.guild);
-        if (game.player2) gameGuilds.push(game.player2.guild);
-        if (game.player3) gameGuilds.push(game.player3.guild);
-        if (game.player4) gameGuilds.push(game.player4.guild);
-        if (game.player5) gameGuilds.push(game.player5.guild);
-        const uniqueGuilds = Array.from(new Set(gameGuilds.filter((g) => !!g)));
-        for (const guild of uniqueGuilds) {
-          if (guild) {
-            const foundGuildIndex = guildsWithPoints.findIndex(
-              (g) => g.guild === guild,
+        const gameGuilds: string[] = [];
+        if (!gameGuilds.includes(game.player1.guild))
+          gameGuilds.push(game.player1.guild);
+        if (game.player2 && !gameGuilds.includes(game.player2.guild))
+          gameGuilds.push(game.player2.guild);
+        if (game.player3 && !gameGuilds.includes(game.player3.guild))
+          gameGuilds.push(game.player3.guild);
+        if (game.player4 && !gameGuilds.includes(game.player4.guild))
+          gameGuilds.push(game.player4.guild);
+        if (game.player5 && !gameGuilds.includes(game.player5.guild))
+          gameGuilds.push(game.player5.guild);
+        for (const guild of gameGuilds) {
+          const foundGuildIndex = guildsWithPoints.findIndex(
+            (g) => g.guild === guild,
+          );
+          if (foundGuildIndex > -1) {
+            guildsWithPoints[foundGuildIndex].totalPoints += Number(
+              game.gamePoints,
             );
-            if (foundGuildIndex > -1) {
-              guildsWithPoints[foundGuildIndex].totalPoints += Number(
-                game.gamePoints,
-              );
-            } else {
-              guildsWithPoints.push({
-                guild,
-                totalPoints: Number(game.gamePoints),
-              });
-            }
+          } else {
+            guildsWithPoints.push({
+              guild,
+              totalPoints: Number(game.gamePoints),
+            });
           }
         }
       }

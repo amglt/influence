@@ -19,7 +19,8 @@ model MachineToMachine {
 model User {
   id                        BigInt                   @id
   username                  String
-  guild                     String?
+  guild                     String
+  isMember                  Boolean                  @default(false)
   nickname                  String
   created_at                DateTime
   updated_at                DateTime

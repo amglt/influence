@@ -18,7 +18,8 @@ async def handle_message(client: Client, message: Message):
 
     # PVP
     if EnabledModules.Pvp.value in enabled_modules:
-        if message.channel.id == int(os.getenv("PVP_SCREENS_CHANNEL_ID")):
+        pvp_screens_channels = [int(x) for x in os.getenv("PVP_SCREENS_CHANNEL_ID").split(',')]
+        if message.channel.id in pvp_screens_channels:
             if content.startswith('.p') or content.startswith('.pr'):
                 await handle_perco_prism(client, message)
             if content.startswith('.rt'):
