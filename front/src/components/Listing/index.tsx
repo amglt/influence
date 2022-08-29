@@ -113,7 +113,7 @@ export function Listing<DataType extends object = {}>(
       columns={getCols()}
       dataSource={data?.map((d) => ({ key: uuid(), ...d }))}
       pagination={{
-        pageSize: 20,
+        defaultPageSize: 20,
       }}
       {...tableProps}
     />
