@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Scale" ADD COLUMN     "bigPercoNAPoints" DECIMAL(29,2) NOT NULL DEFAULT 0,
+ADD COLUMN     "percoNAPoints" DECIMAL(29,2) NOT NULL DEFAULT 0;

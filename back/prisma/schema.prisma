@@ -19,7 +19,8 @@ model MachineToMachine {
 model User {
   id                        BigInt                   @id
   username                  String
-  guild                     String?
+  guild                     String
+  isMember                  Boolean                  @default(false)
   nickname                  String
   created_at                DateTime
   updated_at                DateTime
@@ -86,19 +87,23 @@ model Scale {
   percoDefWinPoints         Decimal        @db.Decimal(29,2)
   percoDefLoosePoints       Decimal        @db.Decimal(29,2)
   percoNDPoints             Decimal        @db.Decimal(29,2)
+  percoNAPoints             Decimal        @db.Decimal(29,2) @default(0)
   prismAttackWinPoints      Decimal        @db.Decimal(29,2)
   prismAttackLoosePoints    Decimal        @db.Decimal(29,2)
   prismDefWinPoints         Decimal        @db.Decimal(29,2)
   prismDefLoosePoints       Decimal        @db.Decimal(29,2)
   prismNDPoints             Decimal        @db.Decimal(29,2)
+  prismNAPoints             Decimal        @db.Decimal(29,2) @default(0)
   bigPercoAttackWinPoints   Decimal        @db.Decimal(29,2)
   bigPercoAttackLoosePoints Decimal        @db.Decimal(29,2)
   bigPercoDefWinPoints      Decimal        @db.Decimal(29,2)
   bigPercoDefLoosePoints    Decimal        @db.Decimal(29,2)
   bigPercoNDPoints          Decimal        @db.Decimal(29,2)
+  bigPercoNAPoints          Decimal        @db.Decimal(29,2) @default(0)
   bigPrismAttackWinPoints   Decimal        @db.Decimal(29,2)
   bigPrismAttackLoosePoints Decimal        @db.Decimal(29,2)
   bigPrismNDPoints          Decimal        @db.Decimal(29,2)
+  bigPrismNAPoints          Decimal        @db.Decimal(29,2) @default(0)
   bigPrismDefWinPoints      Decimal        @db.Decimal(29,2)
   bigPrismDefLoosePoints    Decimal        @db.Decimal(29,2)
   avaWin                    Decimal        @db.Decimal(29,2)

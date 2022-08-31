@@ -117,28 +117,67 @@ periodRouter.get(
       });
       const guildsWithPoints: GuildWithPoints[] = [];
       for (const game of games) {
-        const gameGuilds = [];
-        gameGuilds.push(game.player1.guild);
-        if (game.player2) gameGuilds.push(game.player2.guild);
-        if (game.player3) gameGuilds.push(game.player3.guild);
-        if (game.player4) gameGuilds.push(game.player4.guild);
-        if (game.player5) gameGuilds.push(game.player5.guild);
-        const uniqueGuilds = Array.from(new Set(gameGuilds.filter((g) => !!g)));
-        for (const guild of uniqueGuilds) {
-          if (guild) {
-            const foundGuildIndex = guildsWithPoints.findIndex(
-              (g) => g.guild === guild,
-            );
-            if (foundGuildIndex > -1) {
-              guildsWithPoints[foundGuildIndex].totalPoints += Number(
-                game.gamePoints,
-              );
-            } else {
-              guildsWithPoints.push({
-                guild,
-                totalPoints: Number(game.gamePoints),
-              });
-            }
+        const player1Guild = guildsWithPoints.find(
+          (g) => g.guild === game.player1.guild,
+        );
+        if (!player1Guild) {
+          guildsWithPoints.push({
+            guild: game.player1.guild,
+            totalPoints: Number(game.gamePoints.toFixed(2)),
+          });
+        } else {
+          player1Guild.totalPoints += Number(game.gamePoints.toFixed(2));
+        }
+        if (game.player2) {
+          const player2Guild = guildsWithPoints.find(
+            (g) => g.guild === game.player2?.guild,
+          );
+          if (!player2Guild) {
+            guildsWithPoints.push({
+              guild: game.player2.guild,
+              totalPoints: Number(game.gamePoints.toFixed(2)),
+            });
+          } else {
+            player2Guild.totalPoints += Number(game.gamePoints.toFixed(2));
+          }
+        }
+        if (game.player3) {
+          const player3Guild = guildsWithPoints.find(
+            (g) => g.guild === game.player3?.guild,
+          );
+          if (!player3Guild) {
+            guildsWithPoints.push({
+              guild: game.player3.guild,
+              totalPoints: Number(game.gamePoints.toFixed(2)),
+            });
+          } else {
+            player3Guild.totalPoints += Number(game.gamePoints.toFixed(2));
+          }
+        }
+        if (game.player4) {
+          const player4Guild = guildsWithPoints.find(
+            (g) => g.guild === game.player4?.guild,
+          );
+          if (!player4Guild) {
+            guildsWithPoints.push({
+              guild: game.player4.guild,
+              totalPoints: Number(game.gamePoints.toFixed(2)),
+            });
+          } else {
+            player4Guild.totalPoints += Number(game.gamePoints.toFixed(2));
+          }
+        }
+        if (game.player5) {
+          const player5Guild = guildsWithPoints.find(
+            (g) => g.guild === game.player5?.guild,
+          );
+          if (!player5Guild) {
+            guildsWithPoints.push({
+              guild: game.player5.guild,
+              totalPoints: Number(game.gamePoints.toFixed(2)),
+            });
+          } else {
+            player5Guild.totalPoints += Number(game.gamePoints.toFixed(2));
           }
         }
       }

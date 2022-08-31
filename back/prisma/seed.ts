@@ -134,6 +134,10 @@ async function main() {
       bigPrismNDPoints: 0,
       percoNDPoints: 0,
       prismNDPoints: 0,
+      percoNAPoints: 0,
+      bigPercoNAPoints: 0,
+      prismNAPoints: 0,
+      bigPrismNAPoints: 0,
     },
     update: {},
     where: {

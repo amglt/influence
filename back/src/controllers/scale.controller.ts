@@ -52,6 +52,10 @@ scaleRouter.put(
           prismDefLoosePoints: body.prismDefLoosePoints,
           bigPrismNDPoints: body.bigPrismNDPoints,
           bigPercoDefWinPoints: body.bigPercoDefWinPoints,
+          bigPercoNAPoints: body.bigPercoNAPoints,
+          percoNAPoints: body.percoNAPoints,
+          bigPrismNAPoints: body.bigPrismNAPoints,
+          prismNAPoints: body.prismNAPoints,
         },
       });
 

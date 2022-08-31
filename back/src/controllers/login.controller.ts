@@ -41,9 +41,9 @@ loginRouter.post('/', async (req: Request, res: Response) => {
         },
       },
     );
-    const { id, username } = discordRes.data.user;
+    const { id } = discordRes.data.user;
 
-    let user = await prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         id: Number(id),
       },
@@ -56,50 +56,29 @@ loginRouter.post('/', async (req: Request, res: Response) => {
       },
     });
 
-    if (!user)
-      user = await prisma.user.create({
-        data: {
-          picture: '',
-          created_at: new Date(),
-          nickname: username,
-          updated_at: new Date(),
-          username: username,
-          id: Number(id),
-          wallet: {
-            create: {
-              balance: 0,
-            },
-          },
-        },
-        include: {
-          role: {
-            include: {
-              permissions: true,
-            },
-          },
-          wallet: true,
-        },
-      });
+    if (user) {
+      if (user.blocked)
+        return res.status(400).send({ message: 'Utilisateur bloqué' });
 
-    if (user.blocked)
-      return res.status(400).send({ message: 'Utilisateur bloqué' });
-
-    const jwtSecret = process.env.JWT_SECRET;
-    if (jwtSecret) {
-      const userToReturn = {
-        permissions: user.role?.permissions?.map((perm) => perm.name) ?? [],
-        id: user.id.toString(),
-        nickname: user.nickname,
-        username: user.username,
-      };
-      const token = jwt.sign(userToReturn, jwtSecret, { expiresIn: '24h' });
-      return res.status(200).send({
-        accessToken: token,
-        user: {
-          ...userToReturn,
-          id: userToReturn.id.toString(),
-        },
-      });
+      const jwtSecret = process.env.JWT_SECRET;
+      if (jwtSecret) {
+        const userToReturn = {
+          permissions: user.role?.permissions?.map((perm) => perm.name) ?? [],
+          id: user.id.toString(),
+          nickname: user.nickname,
+          username: user.username,
+        };
+        const token = jwt.sign(userToReturn, jwtSecret, { expiresIn: '24h' });
+        return res.status(200).send({
+          accessToken: token,
+          user: {
+            ...userToReturn,
+            id: userToReturn.id.toString(),
+          },
+        });
+      }
+    } else {
+      return res.status(400).send({ message: 'Utilisateur non trouvé' });
     }
   } catch (err) {
     return res.status(500).send({ message: err });

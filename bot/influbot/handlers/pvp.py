@@ -81,9 +81,9 @@ async def remove_reactions(message: Message):
     await message.clear_reactions()
 
 
-def check_pvp_reaction_validity(reaction: Reaction, user: Member, message: Message):
+def check_pvp_reaction_validity(reaction: Reaction, message: Message):
     valid_emote = reaction.emoji == '✅' or reaction.emoji == '☑️' or reaction.emoji == '❌'
-    is_valid = valid_emote and reaction.message.id == message.id and has_pvp_validation_role(user.roles)
+    is_valid = valid_emote and reaction.message.id == message.id
     if not is_valid:
         create_task(remove_reactions(message))
     return is_valid
@@ -107,7 +107,7 @@ async def generate_game(client, message, game_type, game):
 
     sent_message: Message = await message.reply(embed=embed)
     reaction, user = await client.wait_for("reaction_add",
-                                           check=lambda x, y: check_pvp_reaction_validity(x, y, sent_message),
+                                           check=lambda x, y: check_pvp_reaction_validity(x, sent_message),
                                            timeout=None)
     if reaction.emoji == '✅':
         await put(f"/pvp-games/{created_game.get('id')}",

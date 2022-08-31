@@ -6,6 +6,7 @@ export enum PvpGameResult {
   AvaWin,
   AvaLoose,
   ND,
+  NA,
 }
 
 export enum PvpGameType {

@@ -21,6 +21,7 @@ class PvpResult(Enum):
     AvaWin = 4
     AvaLoose = 5
     ND = 6
+    NA = 7
 
 
 class PvpType(Enum):
@@ -40,3 +41,4 @@ class AllianceGuild(Enum):
     Vegas = 2
     Priapes = 3
     Reformed = 4
+    PTR = 5

@@ -18,14 +18,17 @@ async def handle_message(client: Client, message: Message):
 
     # PVP
     if EnabledModules.Pvp.value in enabled_modules:
-        if message.channel.id == int(os.getenv("PVP_SCREENS_CHANNEL_ID")):
+        pvp_screens_channels = [int(x) for x in os.getenv("PVP_SCREENS_CHANNEL_ID").split(',')]
+        if message.channel.id in pvp_screens_channels:
             if content.startswith('.p') or content.startswith('.pr'):
                 await handle_perco_prism(client, message)
             if content.startswith('.rt'):
                 await handle_remove_transaction(message)
             if content.startswith('.a') or content.startswith('.ava'):
                 await handle_ava(client, message)
-        if message.channel.id == int(os.getenv("PVP_INFO_CHANNEL_ID")):
+
+        pvp_info_channels = [int(x) for x in os.getenv("PVP_INFO_CHANNEL_ID").split(',')]
+        if message.channel.id in pvp_info_channels:
             if content.startswith('.ms') or content.startswith('.mystats'):
                 await handle_my_stats(message)
             if content.startswith('.pvp'):
@@ -33,7 +36,8 @@ async def handle_message(client: Client, message: Message):
 
     # Influtons
     if EnabledModules.Influtons.value in enabled_modules:
-        if message.channel.id == int(os.getenv("INFLUTONS_CHANNEL_ID")):
+        influtons_channels = [int(x) for x in os.getenv("INFLUTONS_CHANNEL_ID").split(',')]
+        if message.channel.id in influtons_channels:
             if content.startswith('.give'):
                 await handle_influtons_request(message)
             if content.startswith('.money'):
