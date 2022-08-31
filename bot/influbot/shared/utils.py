@@ -8,7 +8,7 @@ from influbot.shared.models import PvpResult, PvpType, RuntimeEnv, AllianceGuild
 def is_valid_pvp_type(pvp_type: str):
     to_check = pvp_type.lower()
     return to_check == 'aw' or to_check == 'nd' or to_check == 'al' or to_check == 'dw' \
-        or to_check == 'dl' or to_check == 'win' or to_check == 'loose'
+        or to_check == 'dl' or to_check == 'na' or to_check == 'win' or to_check == 'loose'
 
 
 def get_pvp_result_from_type(pvp_type: str):
@@ -25,8 +25,10 @@ def get_pvp_result_from_type(pvp_type: str):
             return PvpResult.AvaWin
         case "loose" | "lose":
             return PvpResult.AvaLoose
-        case _:
+        case "nd":
             return PvpResult.ND
+        case _:
+            return PvpResult.NA
 
 
 def get_pvp_type_from_command(command: str):
@@ -76,3 +78,9 @@ def get_guild_from_roles(roles: list[Role]):
         return AllianceGuild.PTR
     else:
         return AllianceGuild.Influ
+
+
+def batch(iterable, n=1):
+    total_len = len(iterable)
+    for ndx in range(0, total_len, n):
+        yield iterable[ndx:min(ndx + n, total_len)]

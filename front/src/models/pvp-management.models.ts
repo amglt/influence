@@ -28,6 +28,10 @@ export interface Scale {
   bigPrismNDPoints: number;
   bigPrismDefWinPoints: number;
   bigPrismDefLoosePoints: number;
+  bigPrismNAPoints: number;
+  prismNAPoints: number;
+  bigPercoNAPoints: number;
+  percoNAPoints: number;
   avaWin: number;
   avaLoose: number;
 }

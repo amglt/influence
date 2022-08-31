@@ -21,6 +21,7 @@ class PvpResult(Enum):
     AvaWin = 4
     AvaLoose = 5
     ND = 6
+    NA = 7
 
 
 class PvpType(Enum):

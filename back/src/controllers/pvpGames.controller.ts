@@ -39,6 +39,10 @@ function getGameInitialPoints(
           if (isBigOpponent) return scale.bigPercoNDPoints;
           else return scale.percoNDPoints;
         }
+        case PvpGameResult.NA: {
+          if (isBigOpponent) return scale.bigPercoNAPoints;
+          else return scale.percoNAPoints;
+        }
         default:
           return scale.percoNDPoints;
       }
@@ -64,6 +68,10 @@ function getGameInitialPoints(
         case PvpGameResult.ND: {
           if (isBigOpponent) return scale.bigPrismNDPoints;
           else return scale.prismNDPoints;
+        }
+        case PvpGameResult.NA: {
+          if (isBigOpponent) return scale.bigPrismNAPoints;
+          else return scale.prismNAPoints;
         }
         default:
           return scale.prismNDPoints;

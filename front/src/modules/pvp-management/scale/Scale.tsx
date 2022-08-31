@@ -38,6 +38,10 @@ export function Scale() {
       bigPrismNDPoints: values.bigPrismND,
       bigPrismDefWinPoints: values.bigPrismDefWin,
       bigPrismDefLoosePoints: values.bigPrismDefLoose,
+      bigPrismNAPoints: values.bigPrismNAPoints,
+      prismNAPoints: values.prismNAPoints,
+      bigPercoNAPoints: values.bigPercoNAPoints,
+      percoNAPoints: values.percoNAPoints,
       avaWin: values.avaWin,
       avaLoose: values.avaLoose,
     });
@@ -58,8 +62,8 @@ export function Scale() {
           <Form
             key={JSON.stringify(scaleData)}
             form={form}
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
+            labelCol={{ span: 12 }}
+            wrapperCol={{ span: 12 }}
             initialValues={{
               percoAttackWin: scaleData.percoAttackWinPoints,
               percoAttackLoose: scaleData.percoAttackLoosePoints,
@@ -81,6 +85,10 @@ export function Scale() {
               bigPrismND: scaleData.bigPrismNDPoints,
               bigPrismDefWin: scaleData.bigPrismDefWinPoints,
               bigPrismDefLoose: scaleData.bigPrismDefLoosePoints,
+              bigPrismNA: scaleData.bigPrismNAPoints,
+              prismNA: scaleData.prismNAPoints,
+              bigPercoNA: scaleData.bigPercoNAPoints,
+              percoNA: scaleData.percoNAPoints,
               avaWin: scaleData.avaWin,
               avaLoose: scaleData.avaLoose,
             }}
@@ -128,6 +136,13 @@ export function Scale() {
                     <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
+                    name={'bigPercoNA'}
+                    label={'Big perco no attack'}
+                    rules={[{ required: true }]}
+                  >
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
+                  </Form.Item>
+                  <Form.Item
                     name={'bigPercoDefWin'}
                     label={'Big perco def win'}
                     rules={[{ required: true }]}
@@ -158,6 +173,13 @@ export function Scale() {
                   <Form.Item
                     name={'bigPrismND'}
                     label={'Big prisme no def'}
+                    rules={[{ required: true }]}
+                  >
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
+                  </Form.Item>
+                  <Form.Item
+                    name={'bigPrismNA'}
+                    label={'Big prisme no attack'}
                     rules={[{ required: true }]}
                   >
                     <InputNumber disabled={!canEditScale} min={0} step={0.01} />
@@ -200,6 +222,13 @@ export function Scale() {
                     <InputNumber disabled={!canEditScale} min={0} step={0.01} />
                   </Form.Item>
                   <Form.Item
+                    name={'percoNA'}
+                    label={'Perco no attack'}
+                    rules={[{ required: true }]}
+                  >
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
+                  </Form.Item>
+                  <Form.Item
                     name={'percoDefWin'}
                     label={'Perco def win'}
                     rules={[{ required: true }]}
@@ -230,6 +259,13 @@ export function Scale() {
                   <Form.Item
                     name={'prismND'}
                     label={'Prism no def'}
+                    rules={[{ required: true }]}
+                  >
+                    <InputNumber disabled={!canEditScale} min={0} step={0.01} />
+                  </Form.Item>
+                  <Form.Item
+                    name={'prismNA'}
+                    label={'Prism no attack'}
                     rules={[{ required: true }]}
                   >
                     <InputNumber disabled={!canEditScale} min={0} step={0.01} />
