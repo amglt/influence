@@ -58,10 +58,8 @@ charactersRouter.post(
       const body = req.body;
       if (
         !body.hasOwnProperty('name') ||
-        !body.hasOwnProperty('class') ||
         !body.hasOwnProperty('rank') ||
-        !body.hasOwnProperty('accountId') ||
-        !body.hasOwnProperty('recruitmentDate')
+        !body.hasOwnProperty('accountId')
       )
         return res.status(400).send({ message: 'Propriété manquante.' });
 
@@ -72,7 +70,7 @@ charactersRouter.post(
       });
       if (character)
         return res.status(400).send({ message: 'Ce personnage existe déjà.' });
-
+      console.log(body);
       const newCharacter = await prisma.character.create({
         data: {
           name: req.body.name,
@@ -84,6 +82,7 @@ charactersRouter.post(
       });
       return res.status(200).send(newCharacter);
     } catch (err) {
+      console.log(err);
       return res.status(500).send({ message: err });
     }
   },
@@ -120,10 +119,8 @@ charactersRouter.put(
       const characterId = Number(req.params.characterId);
       if (
         !body.hasOwnProperty('name') ||
-        !body.hasOwnProperty('class') ||
         !body.hasOwnProperty('rank') ||
-        !body.hasOwnProperty('accountId') ||
-        !body.hasOwnProperty('recruitmentDate')
+        !body.hasOwnProperty('accountId')
       )
         return res.status(400).send({ message: 'Propriété manquante.' });
 
