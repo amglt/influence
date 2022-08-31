@@ -26,7 +26,6 @@ export function AddEditCharacterModal(props: AddEditCharacterModalProps) {
     selectedCharacter,
     isLoadingCharacter,
   } = props;
-  const { Option } = Select;
 
   return (
     <Modal
@@ -56,11 +55,7 @@ export function AddEditCharacterModal(props: AddEditCharacterModalProps) {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Classe"
-            name="class"
-            rules={[{ required: true, message: 'La classe est obligatoire.' }]}
-          >
+          <Form.Item label="Classe" name="class">
             <Select
               showSearch
               placeholder="Sélectionnez la classe du personnage."
@@ -91,25 +86,15 @@ export function AddEditCharacterModal(props: AddEditCharacterModalProps) {
           >
             <Select
               showSearch
+              optionFilterProp="label"
               placeholder="Sélectionnez le compte du personnage."
-            >
-              {accounts.map((account) => (
-                <Option key={account.id} value={account.id}>
-                  {account.name}
-                </Option>
-              ))}
-            </Select>
+              options={accounts.map((account) => ({
+                label: account.name,
+                value: account.id,
+              }))}
+            />
           </Form.Item>
-          <Form.Item
-            label="Date de recrutement"
-            name="recruitmentDate"
-            rules={[
-              {
-                required: true,
-                message: 'La date de recrutement est obligatoire.',
-              },
-            ]}
-          >
+          <Form.Item label="Date de recrutement" name="recruitmentDate">
             <DatePicker placeholder="" />
           </Form.Item>
         </Form>
