@@ -70,7 +70,6 @@ charactersRouter.post(
       });
       if (character)
         return res.status(400).send({ message: 'Ce personnage existe déjà.' });
-      console.log(body);
       const newCharacter = await prisma.character.create({
         data: {
           name: req.body.name,
@@ -82,7 +81,6 @@ charactersRouter.post(
       });
       return res.status(200).send(newCharacter);
     } catch (err) {
-      console.log(err);
       return res.status(500).send({ message: err });
     }
   },
