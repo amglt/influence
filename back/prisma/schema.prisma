@@ -64,11 +64,11 @@ model Account {
 model Character {
   id                      Int             @id @default(autoincrement())
   name                    String          @unique
-  class                   String
+  class                   String?
   rank                    String
   account                 Account         @relation(fields: [accountId], references: [id])
   accountId               Int
-  recruitmentDate         DateTime
+  recruitmentDate         DateTime?
 }
 
 model Period {

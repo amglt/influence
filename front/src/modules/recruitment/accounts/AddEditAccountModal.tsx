@@ -24,7 +24,6 @@ export function AddEditAccountModal(props: AddEditAccountModalProps) {
     selectedAccount,
     isLoadingAccount,
   } = props;
-  const { Option } = Select;
 
   return (
     <Modal
@@ -53,7 +52,7 @@ export function AddEditAccountModal(props: AddEditAccountModalProps) {
             rules={[
               { required: true, message: 'Le compte Dofus est obligatoire' },
               {
-                pattern: /^[0-9a-zA-Z-]{2,20}#[1-9][0-9]{3}$/,
+                pattern: /^[0-9a-zA-Z-]{2,30}#[1-9][0-9]{3}$/,
                 message: 'Veuillez entrer un nom de compte correct.',
               },
             ]}
@@ -69,12 +68,13 @@ export function AddEditAccountModal(props: AddEditAccountModalProps) {
           >
             <Select
               showSearch
+              optionFilterProp="label"
               placeholder="Selectionnez l'utilisateur auquel le compte Dofus doit être associé"
-            >
-              {users.map((user) => (
-                <Option value={user.id}>{user.nickname}</Option>
-              ))}
-            </Select>
+              options={users.map((user) => ({
+                label: user.nickname,
+                value: user.id,
+              }))}
+            />
           </Form.Item>
         </Form>
       )}
