@@ -42,3 +42,7 @@ class AllianceGuild(Enum):
     Priapes = 3
     Reformed = 4
     PTR = 5
+    Loups = 6
+    ImpactBG = 7
+    VodkaBlue = 8
+    Brouilles = 9

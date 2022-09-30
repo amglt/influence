@@ -85,6 +85,11 @@ export function PeriodGamesList() {
               dataIndex: 'id',
               title: 'ID',
               filtered: true,
+              onFilter: (value, record) =>
+                record.id
+                  .toString()
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) => a.id - b.id,
               width: 50,
             },
@@ -99,6 +104,10 @@ export function PeriodGamesList() {
               dataIndex: 'result',
               title: 'Résultat',
               filtered: true,
+              onFilter: (value, record) =>
+                String(PvpGameResult[record.result])
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) => a.result - b.result,
               render: (value) => PvpGameResult[value],
             },
@@ -107,6 +116,10 @@ export function PeriodGamesList() {
               dataIndex: 'type',
               title: 'Type',
               filtered: true,
+              onFilter: (value, record) =>
+                String(PvpGameType[record.type])
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) => a.type - b.type,
               render: (value) => PvpGameType[value],
             },
@@ -115,6 +128,10 @@ export function PeriodGamesList() {
               dataIndex: 'status',
               title: 'Statut',
               filtered: true,
+              onFilter: (value, record) =>
+                String(PvpGameStatus[record.status])
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) => a.status - b.status,
               render: (value) => PvpGameStatus[value],
             },
@@ -122,6 +139,10 @@ export function PeriodGamesList() {
               key: 'players',
               title: 'Joueurs',
               filtered: true,
+              onFilter: (value, record) =>
+                getPlayersStringFromPvpGame(record)
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               render: (_, record) => getPlayersStringFromPvpGame(record),
             },
             {

@@ -88,6 +88,11 @@ export function PeriodPlayerGamesList() {
               dataIndex: 'id',
               title: 'ID',
               filtered: true,
+              onFilter: (value, record) =>
+                record.id
+                  .toString()
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) => a.id - b.id,
               width: 50,
             },
@@ -98,16 +103,14 @@ export function PeriodPlayerGamesList() {
               render: (value) => format(new Date(value)),
             },
             {
-              key: 'status',
-              dataIndex: 'status',
-              title: 'Statut',
-              render: (value) => PvpGameStatus[value],
-            },
-            {
               key: 'result',
               dataIndex: 'result',
               title: 'Résultat',
               filtered: true,
+              onFilter: (value, record) =>
+                String(PvpGameResult[record.result])
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) => a.result - b.result,
               render: (value) => PvpGameResult[value],
             },
@@ -116,13 +119,33 @@ export function PeriodPlayerGamesList() {
               dataIndex: 'type',
               title: 'Type',
               filtered: true,
+              onFilter: (value, record) =>
+                String(PvpGameType[record.type])
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) => a.type - b.type,
               render: (value) => PvpGameType[value],
+            },
+            {
+              key: 'status',
+              dataIndex: 'status',
+              title: 'Statut',
+              filtered: true,
+              onFilter: (value, record) =>
+                String(PvpGameStatus[record.status])
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
+              sorter: (a, b) => a.status - b.status,
+              render: (value) => PvpGameStatus[value],
             },
             {
               key: 'players',
               title: 'Joueurs',
               filtered: true,
+              onFilter: (value, record) =>
+                getPlayersStringFromPvpGame(record)
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               render: (_, record) => getPlayersStringFromPvpGame(record),
             },
             {

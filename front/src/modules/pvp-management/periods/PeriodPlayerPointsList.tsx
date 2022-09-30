@@ -36,6 +36,10 @@ export function PeriodPlayersPointsList() {
               dataIndex: 'player',
               title: 'Joueur',
               filtered: true,
+              onFilter: (value, record) =>
+                record.player.nickname
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) =>
                 a.player.nickname.localeCompare(b.player.nickname),
               render: (value) => value.nickname,
@@ -45,6 +49,10 @@ export function PeriodPlayersPointsList() {
               dataIndex: 'player',
               title: 'Guilde',
               filtered: true,
+              onFilter: (value, record) =>
+                record.player.guild
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) => a.player.guild.localeCompare(b.player.guild),
               render: (value) => value.guild,
             },
@@ -52,21 +60,18 @@ export function PeriodPlayersPointsList() {
               key: 'points',
               title: 'Total points',
               dataIndex: 'totalPoints',
-              filtered: true,
               sorter: (a, b) => a.totalPoints - b.totalPoints,
             },
             {
               key: 'reward',
               dataIndex: 'reward',
               title: 'Récompense',
-              filtered: true,
               sorter: (a, b) => a.reward - b.reward,
             },
             {
               key: 'rewarded',
               dataIndex: 'rewarded',
               title: 'Payé ?',
-              filtered: true,
               sorter: (a, b) => Number(a.rewarded) - Number(b.rewarded),
               render: (value, record) => {
                 if (value) return <CheckOutlined />;

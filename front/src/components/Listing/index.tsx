@@ -84,10 +84,6 @@ export function Listing<DataType extends object = {}>(
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
-    onFilter: (value, record) =>
-      String(record[dataIndex])
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);

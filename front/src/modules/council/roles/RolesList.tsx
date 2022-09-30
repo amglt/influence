@@ -91,6 +91,10 @@ export function RolesList() {
               dataIndex: 'name',
               title: 'Nom',
               filtered: true,
+              onFilter: (value, record) =>
+                record.name
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) => a.name.localeCompare(b.name),
             },
             {

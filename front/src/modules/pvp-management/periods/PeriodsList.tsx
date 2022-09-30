@@ -99,6 +99,10 @@ export function PeriodsList() {
               dataIndex: 'startDate',
               title: 'Date de départ',
               filtered: true,
+              onFilter: (value, record) =>
+                String(record.startDate)
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) =>
                 new Date(b.startDate).getTime() -
                 new Date(a.startDate).getTime(),
@@ -109,6 +113,10 @@ export function PeriodsList() {
               dataIndex: 'endDate',
               title: 'Date de fin',
               filtered: true,
+              onFilter: (value, record) =>
+                String(record.endDate)
+                  .toLowerCase()
+                  .includes((value as string).toLowerCase()),
               sorter: (a, b) =>
                 a.endDate && b.endDate
                   ? new Date(b.endDate).getTime() -
