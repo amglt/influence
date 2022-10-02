@@ -82,7 +82,7 @@ def get_guild_from_roles(roles: list[Role]):
         return AllianceGuild.Loups
     elif any(role for role in roles if role.id == 1024316819667943464):
         return AllianceGuild.ImpactBG
-    elif any(role for role in roles if role.id == 1024316698796503130):
+    elif any(role for role in roles if role.id == 1026165033803190403):
         return AllianceGuild.VodkaBlue
     else:
         return AllianceGuild.Influ
