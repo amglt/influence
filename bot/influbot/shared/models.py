@@ -43,6 +43,9 @@ class AllianceGuild(Enum):
     Reformed = 4
     PTR = 5
     Loups = 6
-    ImpactBG = 7
+    Impact = 7
     VodkaBlue = 8
     Brouilles = 9
+    Spectral = 10
+    PorkOufs = 11
+    Equinoxe = 12
